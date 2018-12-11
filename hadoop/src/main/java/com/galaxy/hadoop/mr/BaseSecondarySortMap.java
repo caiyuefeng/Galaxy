@@ -1,0 +1,49 @@
+package com.galaxy.hadoop.mr;
+
+import com.galaxy.base.DataType;
+import com.galaxy.hadoop.context.WrappedMapSecondarySortContext;
+import com.galaxy.hadoop.writable.DataTypeKey;
+import org.apache.hadoop.io.Text;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+/**
+ * @author : 蔡月峰
+ * @version : 1.0
+ * @Description: 二次排序 Map基类
+ * @date : 2018/12/11 13:48
+ **/
+public abstract class BaseSecondarySortMap<KI, VI> extends BasePartitionMap<KI, VI, DataTypeKey> {
+
+    private WrappedMapSecondarySortContext<KI, VI> context;
+
+    private String dataType = DataType.OLD.getValue();
+
+    @Override
+    public void setup(Context context) {
+        this.context = new WrappedMapSecondarySortContext<>(context);
+        super.setup(this.context);
+        String path;
+        try {
+            path = getCurrentFileName(context);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            return;
+        }
+        if (path.contains("IMPORT")) {
+            dataType = DataType.OLD.getValue();
+        } else if (path.contains("TOTAL")) {
+            dataType = DataType.NEW.getValue();
+        }
+        this.context.setDefaultSortSeed(new Text(dataType));
+    }
+
+    @Override
+    protected void map(KI key, VI value, Context context) throws IOException, InterruptedException {
+        if (super.take(key, value, this.context)) {
+            // 调用业务逻辑代码
+            map(super.realValue, this.context);
+        }
+    }
+}

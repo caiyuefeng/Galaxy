@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
+ * @Description: 默认的输出文件操作
  * @date : 2018/12/10 17:14
  **/
 public class DefaultOutputFile implements OutputFile {
@@ -27,6 +27,6 @@ public class DefaultOutputFile implements OutputFile {
 
     @Override
     public void take(FileSystem fs, Path srcPath, Path destPath, Configuration conf) throws IOException {
-
+        fs.delete(new Path(srcPath, "_SUCCESS"), true);
     }
 }

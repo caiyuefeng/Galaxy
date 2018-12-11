@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
+ * @Description: 输入文件全量获取
  * @date : 2018/12/10 17:18
  **/
 public class TotalInputFile implements InputFile {
@@ -28,7 +28,7 @@ public class TotalInputFile implements InputFile {
     }
 
     @Override
-    public void begin(FileSystem fs, Configuration conf) throws IOException {
+    public void begin(FileSystem fs, Configuration conf) {
     }
 
     @Override
@@ -38,7 +38,6 @@ public class TotalInputFile implements InputFile {
     }
 
     @Override
-    public void end(FileSystem fs, Configuration conf) throws IOException {
-
+    public void end(FileSystem fs, Configuration conf) {
     }
 }

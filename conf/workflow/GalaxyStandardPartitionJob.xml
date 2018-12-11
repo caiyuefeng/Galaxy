@@ -1,0 +1,49 @@
+<configuration>
+    <property>
+        <name>mapreduce.map.partition</name>
+        <value>com.galaxy.partitioner.TimePartitioner</value>
+        <description>Map阶段分区器</description>
+    </property>
+
+    <property>
+        <name>mapreduce.inputDir</name>
+        <value>/base/relation</value>
+        <description>任务输入路径配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.outputDir</name>
+        <value>/base/galaxy_common_workpath/standard</value>
+        <description>任务输出路径配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.class</name>
+        <value>com.galaxy.demo.DemoMapOne</value>
+        <description>Map调用类配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.class</name>
+        <value>com.galaxy.demo.DemoReduceOne</value>
+        <description>Map调用类配置</description>
+    </property>
+
+    <property>
+        <name>task.type</name>
+        <value>1</value>
+        <description>任务类型。0:通常任务;1:分区任务</description>
+    </property>
+
+    <property>
+        <name>hdfs.input.file.strategy</name>
+        <value>1</value>
+        <description>输入文件策略.0:全量读取;1:通常增量读取;2:分区增量读取</description>
+    </property>
+
+    <property>
+        <name>mapreduce.extends.properties</name>
+        <value>./conf/workflow/test.dict</value>
+        <description>外部配置文件</description>
+    </property>
+</configuration>

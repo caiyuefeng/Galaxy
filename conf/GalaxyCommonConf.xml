@@ -1,0 +1,7 @@
+<configuration>
+    <property>
+        <name>mapreduce.reduce.num</name>
+        <value>4</value>
+        <description>reduce运行节点数</description>
+    </property>
+</configuration>

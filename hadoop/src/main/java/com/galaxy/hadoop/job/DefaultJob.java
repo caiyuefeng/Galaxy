@@ -262,5 +262,11 @@ public class DefaultJob {
         return true;
     }
 
+    public String getJobName() {
+        return jobName;
+    }
 
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
 }

@@ -8,7 +8,7 @@ package com.galaxy.common.galaxyclass;
  **/
 public class ClassUtils {
 
-    public static <T> T getClassInstance(String className, Class<?> destObj) {
+    public static <T> T getClassInstance(String className, Class<T> destObj) {
         if (className != null && !"".equals(className)) {
             try {
                 return (T) Class.forName(className).newInstance();

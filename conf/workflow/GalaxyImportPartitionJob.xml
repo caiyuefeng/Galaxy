@@ -1,0 +1,59 @@
+<configuration>
+    <property>
+        <name>mapreduce.reduce.partition</name>
+        <value>com.galaxy.partitioner.DoubleRelationPartitioner</value>
+        <description>Reduce阶段分区器</description>
+    </property>
+
+    <property>
+        <name>mapreduce.inputDir</name>
+        <value>/base/galaxy_common_workpath/standard</value>
+        <description>任务输入路径配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.outputDir</name>
+        <value>/base/galaxy_common_workpath/relation</value>
+        <description>任务输出路径配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.map.class</name>
+        <value>com.galaxy.demo.DemoMapTwo</value>
+        <description>Map调用类配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.class</name>
+        <value>com.galaxy.demo.DemoReduceTwo</value>
+        <description>Map调用类配置</description>
+    </property>
+
+    <property>
+        <name>mapreduce.group.comparator.class</name>
+        <value>com.galaxy.hadoop.comparator.DataTypeGroupComparator</value>
+        <description>分组器调用类</description>
+    </property>
+    <property>
+        <name>mapreduce.sort.comparator.class</name>
+        <value>com.galaxy.hadoop.comparator.DataTypeSortComparator</value>
+        <description>排序器调用类</description>
+    </property>
+    <property>
+        <name>mapreduce.partitioner.class</name>
+        <value>com.galaxy.hadoop.partition.DataTypePartition</value>
+        <description>分区器调用类</description>
+    </property>
+
+    <property>
+        <name>task.type</name>
+        <value>1</value>
+        <description>任务类型。0:通常任务;1:分区任务</description>
+    </property>
+
+    <property>
+        <name>hdfs.input.file.strategy</name>
+        <value>2</value>
+        <description>输入文件策略.0:全量读取;1:通常增量读取;2:分区增量读取</description>
+    </property>
+</configuration>
