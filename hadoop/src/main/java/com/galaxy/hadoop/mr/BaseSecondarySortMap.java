@@ -1,6 +1,7 @@
 package com.galaxy.hadoop.mr;
 
 import com.galaxy.base.DataType;
+import com.galaxy.base.FileNameType;
 import com.galaxy.hadoop.context.WrappedMapSecondarySortContext;
 import com.galaxy.hadoop.writable.DataTypeKey;
 import org.apache.hadoop.io.Text;
@@ -31,9 +32,10 @@ public abstract class BaseSecondarySortMap<KI, VI> extends BasePartitionMap<KI, 
             e.printStackTrace();
             return;
         }
-        if (path.contains("IMPORT")) {
+        // 获取当前文件的新旧类型
+        if (path.contains(FileNameType.IMPORT.getValue())) {
             dataType = DataType.OLD.getValue();
-        } else if (path.contains("TOTAL")) {
+        } else if (path.contains(FileNameType.TOTAL.getValue())) {
             dataType = DataType.NEW.getValue();
         }
         this.context.setDefaultSortSeed(new Text(dataType));

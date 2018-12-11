@@ -50,6 +50,7 @@ public class TimestampImportInputFile implements InputFile {
     public void begin(FileSystem fs, Configuration conf) throws IOException {
         String jobName = conf.get(JOB_NAME_ITEM);
         Path basePath = new Path(STATUS_PATH, jobName);
+        // 获取上次成功运行的时间戳
         if (fs.exists(basePath)) {
             FileStatus[] fileStatuses = fs.listStatus(basePath);
             if (fileStatuses.length == 0 || !fileStatuses[0].isFile()) {
@@ -62,6 +63,7 @@ public class TimestampImportInputFile implements InputFile {
 
     @Override
     public boolean take(FileSystem fs, Path input, List<Path> realInputs) throws IOException {
+        // 获取输入路径下所有文件
         List<Path> totalPath = new ArrayList<>();
         PathUtils.getAllFile(fs, input, totalPath);
         for (Path path : totalPath) {

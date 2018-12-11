@@ -1,6 +1,7 @@
 package com.galaxy.demo;
 
 import com.galaxy.base.DataType;
+import com.galaxy.base.FileNameType;
 import com.galaxy.hadoop.context.WrappedContext;
 import com.galaxy.hadoop.mr.BasePartitionMap;
 import org.apache.commons.lang.StringUtils;
@@ -27,9 +28,9 @@ public class DemoMapThree extends BasePartitionMap<LongWritable, Text, Text> {
         super.setup(context);
         try {
             String fileName = getCurrentFileName(context);
-            if (fileName.contains("IMPORT")) {
+            if (fileName.contains(FileNameType.IMPORT.getValue())) {
                 dataType = DataType.NEW.getValue();
-            } else if (fileName.contains("TOTAL")) {
+            } else if (fileName.contains(FileNameType.TOTAL.getValue())) {
                 dataType = DataType.OLD.getValue();
             }
             super.context.setDefaultPart(super.partitioner.encode(fileName));

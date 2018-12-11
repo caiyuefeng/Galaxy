@@ -1,5 +1,6 @@
 package com.galaxy.hadoop.file;
 
+import com.galaxy.base.FileNameType;
 import com.galaxy.utils.PathUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -12,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.galaxy.base.ConstantChar.SLASH;
+import static com.galaxy.base.ConstantChar.UNDERLINE;
+import static com.galaxy.base.ConstantPath.RECORD;
 
 /**
  * @author : 蔡月峰
@@ -43,7 +48,7 @@ public class PartitionImportInputFile implements InputFile {
 
     @Override
     public boolean take(FileSystem fs, Path input, List<Path> realInputs) throws IOException {
-        record = new Path(input, "record");
+        record = new Path(input, RECORD);
         if (!fs.exists(record)) {
             LOG.error("无更新分区记录信息!分区路径:[" + record.toString() + "]");
             return false;
@@ -52,9 +57,9 @@ public class PartitionImportInputFile implements InputFile {
         for (FileStatus fileStatus : fileStatuses) {
             // 获取分区信息
             String name = fileStatus.getPath().getName();
-            name = StringUtils.replace(name, "_", "/");
+            name = StringUtils.replace(name, UNDERLINE, SLASH);
             // 将分区信息中最后的IMPORT子分区去除
-            Path inputPath = new Path(input, StringUtils.substringBeforeLast(name, "/"));
+            Path inputPath = new Path(input, StringUtils.substringBeforeLast(name, SLASH));
             inputs.add(inputPath);
             // 获取分区下所有文件，包括新增数据和全量数据
             PathUtils.getAllFile(fs, inputPath, realInputs);
@@ -65,14 +70,16 @@ public class PartitionImportInputFile implements InputFile {
     @Override
     public void end(FileSystem fs, Configuration conf) throws IOException {
         for (Path path : inputs) {
-            Path totalPath = new Path(path, "TOTAL");
+            // 初始化全量路径
+            Path totalPath = new Path(path, FileNameType.TOTAL.getValue());
             PathUtils.makeDir(fs, totalPath);
-            Path importPath = new Path(path, "IMPORT");
-            FileStatus[] fileStatuses = fs.listStatus(importPath);
+            // 初始化增量路径
+            Path importPath = new Path(path, FileNameType.IMPORT.getValue());
             // 将新增路径数据移入全量数据
+            FileStatus[] fileStatuses = fs.listStatus(importPath);
             for (FileStatus fileStatus : fileStatuses) {
                 String name = fileStatus.getPath().getName();
-                name = StringUtils.replace(name, "IMPORT", "TOTAL");
+                name = StringUtils.replace(name, FileNameType.IMPORT.getValue(), FileNameType.TOTAL.getValue());
                 fs.rename(fileStatus.getPath(), new Path(totalPath, name));
             }
         }

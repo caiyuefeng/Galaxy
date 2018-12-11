@@ -3,24 +3,23 @@ package com.galaxy.base;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 数据新旧类型标志
+ * @Description: 增量全量数据文件标志
  * @date : 2018/12/11 20:20
  **/
-public enum DataType {
+public enum FileNameType {
 
     /**
-     * 旧数据类型
+     * 全量
      */
-    OLD("O"),
-
+    TOTAL("TOTAL"),
     /**
-     * 新数据类型
+     * 增量
      */
-    NEW("N");
+    IMPORT("IMPORT");
 
     private String value;
 
-    DataType(String value) {
+    FileNameType(String value) {
         this.value = value;
     }
 
@@ -30,6 +29,6 @@ public enum DataType {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "FileNameType{" + "value=" + value + "}";
     }
 }

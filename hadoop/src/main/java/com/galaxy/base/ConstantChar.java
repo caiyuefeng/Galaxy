@@ -12,6 +12,16 @@ public class ConstantChar {
 
     public static final String UTF8 = "UTF-8";
 
+    /**
+     * 下划线
+     */
+    public static final String UNDERLINE = "_";
+
+    /**
+     * 斜杠符号
+     */
+    public static final String SLASH = "/";
+
     public static final byte[] NEW_LINE;
 
     static {

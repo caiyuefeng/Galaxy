@@ -1,11 +1,16 @@
 package com.galaxy.demo;
 
 import com.galaxy.base.DataType;
+import com.galaxy.base.FileNameType;
 import com.galaxy.hadoop.context.WrappedContext;
 import com.galaxy.hadoop.mr.BasePartitionReduce;
 import org.apache.hadoop.io.Text;
 
 import java.io.IOException;
+
+import static com.galaxy.base.ConstantChar.UNDERLINE;
+import static com.galaxy.base.ConstantCounter.CODE_102;
+import static com.galaxy.base.ConstantCounter.GROUP_100;
 
 /**
  * @author : 蔡月峰
@@ -26,10 +31,11 @@ public class DemoReduceThree extends BasePartitionReduce<Text, Text> {
             }
         }
         if (DataType.OLD.getValue().equals(dataType)) {
-            context.setDefaultPart(context.getDefaultPart() + "_TOTAL");
+            context.setDefaultPart(context.getDefaultPart() + UNDERLINE + FileNameType.TOTAL.getValue());
         } else {
-            context.setDefaultPart(context.getDefaultPart() + "_IMPORT");
+            context.setDefaultPart(context.getDefaultPart() + UNDERLINE + FileNameType.IMPORT.getValue());
         }
+        context.getCounter(GROUP_100,CODE_102).increment(1);
         context.write(key + "\t" + cnt);
     }
 }

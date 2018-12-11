@@ -6,6 +6,8 @@ import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
 
+import static com.galaxy.base.ConstantPath.SUCCESS;
+
 /**
  * @author : 蔡月峰
  * @version : 1.0
@@ -27,6 +29,6 @@ public class DefaultOutputFile implements OutputFile {
 
     @Override
     public void take(FileSystem fs, Path srcPath, Path destPath, Configuration conf) throws IOException {
-        fs.delete(new Path(srcPath, "_SUCCESS"), true);
+        fs.delete(new Path(srcPath, SUCCESS), true);
     }
 }

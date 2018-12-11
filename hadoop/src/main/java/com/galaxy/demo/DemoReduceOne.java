@@ -6,6 +6,9 @@ import com.galaxy.hadoop.mr.BasePartitionReduce;
 import javax.xml.soap.Text;
 import java.io.IOException;
 
+import static com.galaxy.base.ConstantCounter.CODE_102;
+import static com.galaxy.base.ConstantCounter.GROUP_100;
+
 /**
  * @author : 蔡月峰
  * @version : 1.0
@@ -15,6 +18,7 @@ import java.io.IOException;
 public class DemoReduceOne extends BasePartitionReduce<Text, Text> {
     @Override
     public void reduce(String key, Iterable<Text> values, WrappedContext context) throws IOException, InterruptedException {
+        context.getCounter(GROUP_100,CODE_102).increment(1);
         context.write(key);
     }
 }

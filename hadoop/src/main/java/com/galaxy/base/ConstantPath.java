@@ -29,4 +29,15 @@ public class ConstantPath {
      * 任务或工作流执行正在执行标志
      */
     public static final String RUNNING_STATE = "running";
+
+    /**
+     *
+     */
+    public static final String SUCCESS = "_SUCCESS";
+
+
+    /**
+     * 分区信息记录路径
+     */
+    public static final String RECORD = "record";
 }

@@ -27,7 +27,7 @@ public abstract class BasePartitionMap<KI, VI, KO> extends BaseMap<KI, VI, KO, T
     /**
      * Map上下文包装器
      */
-    public WrappedMapPartitionContext context;
+    public WrappedMapPartitionContext<KI,VI> context;
 
     /**
      * 分区器

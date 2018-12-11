@@ -24,7 +24,7 @@ public abstract class BaseSecondarySortReduce extends BasePartitionReduce<DataTy
     /**
      * Reduce上下文包装器
      */
-    private WrappedReduceSecondarySortContext context;
+    private WrappedReduceSecondarySortContext<DataTypeKey, Text> context;
 
     /**
      * Reduce聚合的真实值缓存
@@ -33,7 +33,7 @@ public abstract class BaseSecondarySortReduce extends BasePartitionReduce<DataTy
 
     @Override
     protected void setup(Context context) {
-        this.context = new WrappedReduceSecondarySortContext(context);
+        this.context = new WrappedReduceSecondarySortContext<>(context);
         super.setup(this.context);
     }
 

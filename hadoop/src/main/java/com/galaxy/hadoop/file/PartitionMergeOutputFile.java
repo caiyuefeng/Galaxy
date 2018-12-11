@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.galaxy.base.ConstantChar.SLASH;
+import static com.galaxy.base.ConstantChar.UNDERLINE;
+import static com.galaxy.base.ConstantPath.RECORD;
+import static com.galaxy.base.ConstantPath.SUCCESS;
+
 /**
  * @author : 蔡月峰
  * @version : 1.0
@@ -26,22 +31,24 @@ public class PartitionMergeOutputFile implements OutputFile {
 
     @Override
     public void take(FileSystem fs, Path srcPath, Path destPath, Configuration conf) throws IOException {
+        // 获取输出路径先所有文件
         List<Path> allFiles = new ArrayList<>();
         PathUtils.getAllFile(fs, srcPath, allFiles);
-        Path record = new Path(destPath, "record");
+        // 初始化分区记录根路径
+        Path record = new Path(destPath, RECORD);
         PathUtils.makeDir(fs, record);
+        // 将输出文件移入对应分区
         for (Path path : allFiles) {
-            String fileName = StringUtils.substringAfterLast(path.toString(), "/");
-            if ("_SUCCESS".equals(fileName)) {
+            String fileName = path.getName();
+            if (SUCCESS.equals(fileName)) {
                 continue;
             }
-            int startIndex = fileName.indexOf("PS") + 2;
-            int endIndex = fileName.indexOf("PE");
-            String part = fileName.substring(startIndex, endIndex);
-            part = StringUtils.replace(part, "_", "/");
+            // 截取文件所属的分区
+            String part = fileName.substring(fileName.indexOf("PS") + 2, fileName.indexOf("PE"));
+            part = StringUtils.replace(part, UNDERLINE, SLASH);
             // 生成更新分区记录信息
             fs.createNewFile(new Path(record, part));
-            Path partPath = new Path(destPath, StringUtils.substringBeforeLast(part, "/"));
+            Path partPath = new Path(destPath, StringUtils.substringBeforeLast(part, SLASH));
             // 检查该分区本次是否已经更新过，如果没有则先删除该分区
             if (!alreadyUpdatePart.contains(partPath)) {
                 fs.delete(partPath, true);

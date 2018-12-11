@@ -11,6 +11,7 @@ import java.util.Objects;
  * @author : 蔡月峰
  * @version : 1.0
  * @Description: 新旧数据排序器
+ * 新数据排列靠前，旧数据排列靠后
  * @date : 2018/12/11 14:37
  **/
 public class DataTypeSortComparator extends WritableComparator {

@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.galaxy.base.ConstantCounter.CODE_202;
-import static com.galaxy.base.ConstantCounter.CODE_203;
-import static com.galaxy.base.ConstantCounter.GROUP_200;
+import static com.galaxy.base.ConstantCounter.*;
 
 /**
  * @author : 蔡月峰
@@ -57,6 +55,7 @@ public class DemoReduceTwo extends BaseSecondarySortReduce {
                             .append(first[1]).append("\t")
                             .append("1");
                 }
+                context.getCounter(GROUP_100,CODE_102).increment(1);
                 context.write(builder.toString());
             }
         }

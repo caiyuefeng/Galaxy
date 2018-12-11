@@ -88,7 +88,6 @@ public class DataTypeKey implements WritableComparable<DataTypeKey> {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(value);
     }
 }
