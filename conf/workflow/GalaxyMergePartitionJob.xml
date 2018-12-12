@@ -1,7 +1,7 @@
 <configuration>
     <property>
         <name>mapreduce.map.partition</name>
-        <value>com.galaxy.partitioner.GetCurrentPartitioner</value>
+        <value>com.galaxy.sun.partitioner.GetCurrentPartitioner</value>
         <description>Map阶段分区器</description>
     </property>
 
@@ -19,13 +19,13 @@
 
     <property>
         <name>mapreduce.map.class</name>
-        <value>com.galaxy.demo.DemoMapThree</value>
+        <value>com.galaxy.sun.demo.DemoMapThree</value>
         <description>Map调用类配置</description>
     </property>
 
     <property>
         <name>mapreduce.reduce.class</name>
-        <value>com.galaxy.demo.DemoReduceThree</value>
+        <value>com.galaxy.sun.demo.DemoReduceThree</value>
         <description>Map调用类配置</description>
     </property>
 

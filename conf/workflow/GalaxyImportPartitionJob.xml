@@ -1,7 +1,7 @@
 <configuration>
     <property>
         <name>mapreduce.reduce.partition</name>
-        <value>com.galaxy.partitioner.DoubleRelationPartitioner</value>
+        <value>com.galaxy.sun.partitioner.DoubleRelationPartitioner</value>
         <description>Reduce阶段分区器</description>
     </property>
 
@@ -19,29 +19,29 @@
 
     <property>
         <name>mapreduce.map.class</name>
-        <value>com.galaxy.demo.DemoMapTwo</value>
+        <value>com.galaxy.sun.demo.DemoMapTwo</value>
         <description>Map调用类配置</description>
     </property>
 
     <property>
         <name>mapreduce.reduce.class</name>
-        <value>com.galaxy.demo.DemoReduceTwo</value>
+        <value>com.galaxy.sun.demo.DemoReduceTwo</value>
         <description>Map调用类配置</description>
     </property>
 
     <property>
         <name>mapreduce.group.comparator.class</name>
-        <value>com.galaxy.hadoop.comparator.DataTypeGroupComparator</value>
+        <value>com.galaxy.sun.hadoop.comparator.DataTypeGroupComparator</value>
         <description>分组器调用类</description>
     </property>
     <property>
         <name>mapreduce.sort.comparator.class</name>
-        <value>com.galaxy.hadoop.comparator.DataTypeSortComparator</value>
+        <value>com.galaxy.sun.hadoop.comparator.DataTypeSortComparator</value>
         <description>排序器调用类</description>
     </property>
     <property>
         <name>mapreduce.partitioner.class</name>
-        <value>com.galaxy.hadoop.partition.DataTypePartition</value>
+        <value>com.galaxy.sun.hadoop.partition.DataTypePartition</value>
         <description>分区器调用类</description>
     </property>
 
