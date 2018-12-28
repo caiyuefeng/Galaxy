@@ -19,7 +19,7 @@ import static com.galaxy.sun.base.ConstantConfItem.MAP_REDUCE_PROPERTIES;
  * @Description:
  * @date : 2018/12/11 15:45
  **/
-public class DemoMapOne extends BasePartitionMap<LongWritable, Text, Text> {
+public class DemoMapOne extends BasePartitionMap<LongWritable, Text> {
 
     private Gson gson = new Gson();
 
@@ -28,8 +28,7 @@ public class DemoMapOne extends BasePartitionMap<LongWritable, Text, Text> {
     private final StringBuilder builder = new StringBuilder();
 
     @Override
-    protected void setup(Context context) {
-        super.setup(context);
+    public void setup(WrappedContext context) {
         String bufferValue = context.getConfiguration().get(MAP_REDUCE_PROPERTIES);
         Map<String, String> buffer = gson.fromJson(bufferValue, Map.class);
         for (Map.Entry<String, String> entry : buffer.entrySet()) {

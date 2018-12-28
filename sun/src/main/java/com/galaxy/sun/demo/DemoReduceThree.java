@@ -20,6 +20,11 @@ import static com.galaxy.sun.base.ConstantCounter.GROUP_100;
  **/
 public class DemoReduceThree extends BasePartitionReduce<Text, Text> {
     @Override
+    public void setup(WrappedContext wrappedContext) {
+
+    }
+
+    @Override
     public void reduce(String key, Iterable<Text> values, WrappedContext context) throws IOException, InterruptedException {
         long cnt = 0L;
         String dataType = DataType.OLD.getValue();

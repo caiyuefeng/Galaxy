@@ -19,11 +19,11 @@ public class DemoMain {
             DefaultJob job = new DefaultJob();
             job.setJobName("GalaxyStandardPartitionJob");
             workflow.getJobPool().add(job);
-        } else if ("1".equals(args[1])) {
+        } else if ("1".equals(args[0])) {
             DefaultJob job = new DefaultJob();
             job.setJobName("GalaxyImportPartitionJob");
             workflow.getJobPool().add(job);
-        } else if ("2".equals(args[2])) {
+        } else if ("2".equals(args[0])) {
             DefaultJob job = new DefaultJob();
             job.setJobName("GalaxyMergePartitionJob");
             workflow.getJobPool().add(job);

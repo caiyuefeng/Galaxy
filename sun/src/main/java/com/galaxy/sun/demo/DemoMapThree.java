@@ -3,6 +3,7 @@ package com.galaxy.sun.demo;
 import com.galaxy.sun.base.DataType;
 import com.galaxy.sun.base.FileNameType;
 import com.galaxy.sun.hadoop.context.WrappedContext;
+import com.galaxy.sun.hadoop.context.WrappedMapPartitionContext;
 import com.galaxy.sun.hadoop.mr.BasePartitionMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.LongWritable;
@@ -24,10 +25,12 @@ public class DemoMapThree extends BasePartitionMap<LongWritable, Text, Text> {
     private String dataType = DataType.OLD.getValue();
 
     @Override
-    protected void setup(Context context) {
-        super.setup(context);
+    public void setup(WrappedContext context) {
         try {
-            String fileName = getCurrentFileName(context);
+            if ((context instanceof WrappedMapPartitionContext)){
+                return;
+            }
+            String fileName = getCurrentFileName(((WrappedMapPartitionContext<LongWritable,Text>)context).getContext());
             if (fileName.contains(FileNameType.IMPORT.getValue())) {
                 dataType = DataType.NEW.getValue();
             } else if (fileName.contains(FileNameType.TOTAL.getValue())) {

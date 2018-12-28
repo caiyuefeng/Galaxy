@@ -1,9 +1,13 @@
 package com.galaxy.sun.hadoop.mr;
 
 import com.galaxy.sun.hadoop.context.WrappedContext;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author : 蔡月峰
@@ -40,4 +44,18 @@ public abstract class BaseMap<KI, VI, KO, VO> extends Mapper<KI, VI, KO, VO> {
      */
     public abstract boolean take(KI key, VI value, WrappedContext context);
 
+    private static final String DEFAULT_INPUT_SPLIT_CLASS = "org.apache.hadoop.mapreduce.lib.input,taggedInputSplit";
+
+    public final String getCurrentFileName(Context context) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        InputSplit inputSplit = context.getInputSplit();
+        Class<? extends InputSplit> splitClass = inputSplit.getClass();
+        if (splitClass.getName().equals(DEFAULT_INPUT_SPLIT_CLASS)) {
+            Method method = splitClass.getDeclaredMethod("getInputSplit");
+            method.setAccessible(true);
+            FileSplit fileSplit = (FileSplit) method.invoke(inputSplit);
+            return fileSplit.getPath().toString();
+        }
+        FileSplit fileSplit = (FileSplit) inputSplit;
+        return fileSplit.getPath().toString();
+    }
 }

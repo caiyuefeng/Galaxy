@@ -76,4 +76,8 @@ public class WrappedMapPartitionContext<K, V> implements WrappedContext {
     public void setPartMark(boolean partMark) {
         this.partMark = partMark;
     }
+
+    public Mapper<K, V, Text, Text>.Context getContext() {
+        return context;
+    }
 }

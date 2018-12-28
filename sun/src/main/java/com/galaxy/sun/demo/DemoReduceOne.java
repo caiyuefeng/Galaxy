@@ -17,6 +17,11 @@ import static com.galaxy.sun.base.ConstantCounter.GROUP_100;
  **/
 public class DemoReduceOne extends BasePartitionReduce<Text, Text> {
     @Override
+    public void setup(WrappedContext wrappedContext) {
+
+    }
+
+    @Override
     public void reduce(String key, Iterable<Text> values, WrappedContext context) throws IOException, InterruptedException {
         context.getCounter(GROUP_100,CODE_102).increment(1);
         context.write(key);

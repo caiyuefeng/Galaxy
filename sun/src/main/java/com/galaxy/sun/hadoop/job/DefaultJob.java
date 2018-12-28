@@ -13,6 +13,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Partitioner;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,6 +187,10 @@ public class DefaultJob {
             return false;
         }
 
+        for (Path path : paths) {
+            MultipleInputs.addInputPath(job, path, TextInputFormat.class);
+        }
+
         if (!initMapReduceParameterClass(job)) {
             return false;
         }
@@ -216,9 +222,9 @@ public class DefaultJob {
 
     private Path getRealOutputPath(Configuration conf, Path basePath) {
         switch (GalaxyUtils.getTaskType(conf)) {
-            case 0:
-                return new Path(basePath, "tmp");
             case 1:
+                return new Path(basePath, "tmp");
+            case 0:
                 return basePath;
             default:
                 return basePath;

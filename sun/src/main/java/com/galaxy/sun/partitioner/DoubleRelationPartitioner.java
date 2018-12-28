@@ -1,5 +1,9 @@
 package com.galaxy.sun.partitioner;
 
+import com.galaxy.sun.base.FileNameType;
+
+import static com.galaxy.sun.base.ConstantChar.UNDERLINE;
+
 /**
  * @author : 蔡月峰
  * @version : 1.0
@@ -13,7 +17,7 @@ public class DoubleRelationPartitioner implements DataPartitioner {
     @Override
     public String encode(Object o) {
         String[] values = o.toString().split("\t", -1);
-        return values[1].substring(0, 6) + "_" + values[1].substring(6, 10);
+        return values[1].substring(0, 6) + UNDERLINE + values[1].substring(6, 10) + UNDERLINE + FileNameType.IMPORT.getValue();
     }
 
     @Override

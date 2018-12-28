@@ -35,6 +35,7 @@ public class PartitionMergeOutputFile implements OutputFile {
         PathUtils.getAllFile(fs, srcPath, allFiles);
         // 初始化分区记录根路径
         Path record = new Path(destPath, RECORD);
+        fs.delete(record, true);
         PathUtils.makeDir(fs, record);
         // 将输出文件移入对应分区
         for (Path path : allFiles) {
@@ -47,10 +48,11 @@ public class PartitionMergeOutputFile implements OutputFile {
             part = StringUtils.replace(part, ConstantChar.UNDERLINE, ConstantChar.SLASH);
             // 生成更新分区记录信息
             fs.createNewFile(new Path(record, part));
-            Path partPath = new Path(destPath, StringUtils.substringBeforeLast(part, ConstantChar.SLASH));
+            Path partPath = new Path(destPath, part);
             // 检查该分区本次是否已经更新过，如果没有则先删除该分区
             if (!alreadyUpdatePart.contains(partPath)) {
                 fs.delete(partPath, true);
+                PathUtils.makeDir(fs,partPath);
                 alreadyUpdatePart.add(partPath);
             }
             PathUtils.makeDir(fs, partPath);

@@ -26,7 +26,8 @@ public class TimePartitioner<Type> implements DataPartitioner<Type> {
     public String[] decode(Type o) {
         String temp = o.toString();
         int index = temp.lastIndexOf("\t");
-        values[0] = temp.substring(index, temp.length());
+        // 去除制表符
+        values[0] = temp.substring(index+1, temp.length());
         values[1] = temp.substring(0, index);
         return values;
     }

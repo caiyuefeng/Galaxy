@@ -23,6 +23,11 @@ public class DemoReduceTwo extends BaseSecondarySortReduce {
     private final StringBuilder builder = new StringBuilder();
 
     @Override
+    public void setup(WrappedContext wrappedContext) {
+
+    }
+
+    @Override
     public void reduce(String key, Iterable<Text> values, WrappedContext context) throws IOException, InterruptedException {
 
         valueList.clear();

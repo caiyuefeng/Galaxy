@@ -1,7 +1,9 @@
 package com.galaxy.sun.hadoop.context;
 
 import com.galaxy.sun.hadoop.writable.DataTypeKey;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.io.IOException;
  * @Description: 二次排序 Map上下文包装器
  * @date : 2018/12/11 13:59
  **/
-public class WrappedMapSecondarySortContext<K, V> extends WrappedMapPartitionContext<K, V> {
+public class WrappedMapSecondarySortContext<K, V> implements WrappedContext {
 
     private Mapper<K, V, DataTypeKey, Text>.Context context;
 
@@ -22,8 +24,40 @@ public class WrappedMapSecondarySortContext<K, V> extends WrappedMapPartitionCon
 
     private Text defaultSortSeed;
 
+    private String defaultPart;
+
+    private boolean partMark = false;
+
+
+    @Override
+    public Counter getCounter(String group, String item) {
+        return context.getCounter(group, item);
+    }
+
+    @Override
+    public void setDefaultPart(String part) {
+        this.defaultPart = part;
+    }
+
+    @Override
+    public String getDefaultPart() {
+        return this.defaultPart;
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return context.getConfiguration();
+    }
+
+    public boolean isPartMark() {
+        return partMark;
+    }
+
+    public void setPartMark(boolean partMark) {
+        this.partMark = partMark;
+    }
+
     public WrappedMapSecondarySortContext(Mapper<K, V, DataTypeKey, Text>.Context context) {
-        super(null);
         this.context = context;
     }
 

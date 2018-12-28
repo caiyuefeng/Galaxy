@@ -38,9 +38,9 @@ public class BuildPartitionOutputFile implements OutputFile {
                 continue;
             }
             String part = fileName.substring(fileName.indexOf("PS") + 2, fileName.indexOf("PE"));
-            part = StringUtils.replace(part, ConstantChar.UNDERLINE, ConstantChar.SLASH);
             // 生成更新分区记录文件
             fs.createNewFile(new Path(recordPath, part));
+            part = StringUtils.replace(part, ConstantChar.UNDERLINE, ConstantChar.SLASH);
             // 将文件移入分区
             Path partPath = new Path(destPath, part);
             PathUtils.makeDir(fs, partPath);

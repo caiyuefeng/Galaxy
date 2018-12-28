@@ -22,6 +22,11 @@ public class DemoMapTwo extends BaseSecondarySortMap<LongWritable, Text> {
     private final StringBuilder builder = new StringBuilder();
 
     @Override
+    public void setup(WrappedContext context) {
+
+    }
+
+    @Override
     public void map(String value, WrappedContext context) throws IOException, InterruptedException {
         if (StringUtils.isEmpty(value)) {
             context.getCounter(GROUP_200, CODE_201).increment(1);

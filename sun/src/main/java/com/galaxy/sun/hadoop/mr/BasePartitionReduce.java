@@ -26,35 +26,35 @@ public abstract class BasePartitionReduce<KI, VI> extends BaseReduce<KI, VI, Tex
 
     private WrappedReducePartitionContext<KI, VI> context;
 
+    /**
+     * 分区器
+     */
     public DataPartitioner<KI> partitioner;
 
     @Override
-    protected void setup(Context context) {
+    protected  final void setup(Context context) {
         this.context = new WrappedReducePartitionContext<>(context);
-        setup(this.context);
-    }
-
-    @Override
-    public void setup(WrappedContext context) {
         Configuration conf = context.getConfiguration();
         // 获取当前任务类型
         int taskType = GalaxyUtils.getTaskType(conf);
         // 获取Map阶段分区器
         String className = conf.get(MAP_PARTITION_CLASS_ITEM);
-        partitioner = StringUtils.isEmpty(className) || taskType == 0 ? new DefaultPartitioner<KI>()
+        partitioner = (StringUtils.isEmpty(className) || (taskType == 0)) ? new DefaultPartitioner<KI>()
                 : ClassUtils.getClassInstance(className, DataPartitioner.class);
         // 设置包装器内的Map分区标志
         if (!StringUtils.isEmpty(className) && taskType == 1) {
-            ((WrappedReducePartitionContext) context).setMapAlreadyPartition(true);
+            this.context.setMapAlreadyPartition(true);
         }
         // 初始化包装器
-        ((WrappedReducePartitionContext) context).init(GalaxyUtils.getReducePartitioner(conf, Text.class),
+        ((WrappedReducePartitionContext) this.context).init(GalaxyUtils.getReducePartitioner(conf, Text.class),
                 GalaxyUtils.getCompressInstance(conf));
+        setup(this.context);
     }
 
 
+
     @Override
-    public void reduce(KI key, Iterable<VI> values, Context context) throws IOException, InterruptedException {
+    public final void reduce(KI key, Iterable<VI> values, Context context) throws IOException, InterruptedException {
         if (take(key, values, this.context)) {
             String[] keys = partitioner.decode(key);
             reduce(keys[1], values, this.context);
@@ -62,7 +62,7 @@ public abstract class BasePartitionReduce<KI, VI> extends BaseReduce<KI, VI, Tex
     }
 
     @Override
-    public boolean take(KI key, Iterable<VI> values, WrappedContext context) {
+    public final boolean take(KI key, Iterable<VI> values, WrappedContext context) {
         if (partitioner == null) {
             context.getCounter(GROUP_300, CODE_302).increment(1);
             return false;

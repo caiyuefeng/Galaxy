@@ -6,13 +6,13 @@
     </property>
 
     <property>
-        <name>mapreduce.inputDir</name>
+        <name>mapreduce.inputdir</name>
         <value>/base/galaxy_common_workpath/relation</value>
         <description>任务输入路径配置</description>
     </property>
 
     <property>
-        <name>mapreduce.outputDir</name>
+        <name>mapreduce.outputdir</name>
         <value>/base/galaxy_common_workpath/relation</value>
         <description>任务输出路径配置</description>
     </property>
