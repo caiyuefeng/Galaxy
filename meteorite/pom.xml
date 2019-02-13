@@ -8,7 +8,7 @@
     <artifactId>meteorolite</artifactId>
     <version>1.0</version>
     <build>
-        <finalName>GalaxyMeteorolite</finalName>
+        <finalName>GalaxyMeteorite</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
