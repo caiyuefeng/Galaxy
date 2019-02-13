@@ -20,7 +20,7 @@ import static com.galaxy.sun.base.ConstantCounter.*;
  * @Description:
  * @date : 2018/12/11 15:46
  **/
-public class DemoMapThree extends BasePartitionMap<LongWritable, Text, Text> {
+public class DemoMapThree extends BasePartitionMap<LongWritable, Text> {
 
     private String dataType = DataType.OLD.getValue();
 
