@@ -12,7 +12,8 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
+ * @Description: 监控线程
+ * 该线程固定时间间隔轮询访问打印当前处理的输入量、输出量和数据池缓存量
  * @date : 2018/12/24 9:54
  **/
 public class GalaxyMonitorThread implements Runnable {
@@ -29,6 +30,9 @@ public class GalaxyMonitorThread implements Runnable {
      */
     private DataPool dataPool;
 
+    /**
+     * 消费者缓存队列
+     */
     private List<Writer> writers;
 
     public GalaxyMonitorThread() {

@@ -33,7 +33,6 @@ public class ZkNodeLock {
 
     private ZkNode lockNode;
 
-
     private LockWatcher watcher = new LockWatcher();
 
     /**
