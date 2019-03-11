@@ -7,6 +7,6 @@
   <li>新旧数据快速分拣功能</li>
 </list>
 
-### 模块:Meteorolite  通用工具类
+### 模块:Asteroid  通用工具类
 
 ### 模块:Saturn       分布式数据传输处理工具
