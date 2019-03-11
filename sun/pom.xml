@@ -65,7 +65,7 @@
     <dependencies>
         <dependency>
             <groupId>com.galaxy</groupId>
-            <artifactId>meteorolite</artifactId>
+            <artifactId>asteroid</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

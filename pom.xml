@@ -21,7 +21,7 @@
     </build>
     <packaging>pom</packaging>
     <modules>
-        <module>meteorite</module>
+        <module>asteroid</module>
         <module>sun</module>
         <module>saturn</module>
     </modules>

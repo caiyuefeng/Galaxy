@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.galaxy</groupId>
-    <artifactId>meteorolite</artifactId>
+    <artifactId>asteroid</artifactId>
     <version>1.0</version>
     <build>
-        <finalName>GalaxyMeteorite</finalName>
+        <finalName>GalaxyAsteroid</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

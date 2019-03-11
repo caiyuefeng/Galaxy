@@ -24,7 +24,7 @@ public class DefaultInput implements Input {
         private static final DefaultInput TOOL = new DefaultInput();
     }
 
-    public static DefaultInput getInstance() {
+    static DefaultInput getInstance() {
         return Inner.TOOL;
     }
 
