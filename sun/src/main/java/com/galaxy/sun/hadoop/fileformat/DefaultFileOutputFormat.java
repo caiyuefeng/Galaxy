@@ -1,6 +1,6 @@
 package com.galaxy.sun.hadoop.fileformat;
 
-import com.galaxy.meteorolite.date.DateUtils;
+import com.galaxy.asteroid.date.DateUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**

@@ -1,4 +1,4 @@
-package com.galaxy.meteorolite.string;
+package com.galaxy.asteroid.string;
 
 /**
  * @author : 蔡月峰

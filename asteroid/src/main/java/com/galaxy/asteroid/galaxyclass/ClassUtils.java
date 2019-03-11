@@ -1,6 +1,6 @@
-package com.galaxy.meteorolite.galaxyclass;
+package com.galaxy.asteroid.galaxyclass;
 
-import com.galaxy.meteorolite.string.GalaxyStringUtils;
+import com.galaxy.asteroid.string.GalaxyStringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

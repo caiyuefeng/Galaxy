@@ -1,6 +1,6 @@
 package com.galaxy.sun.hadoop.mr;
 
-import com.galaxy.meteorolite.galaxyclass.ClassUtils;
+import com.galaxy.asteroid.galaxyclass.ClassUtils;
 import com.galaxy.sun.hadoop.context.WrappedContext;
 import com.galaxy.sun.hadoop.context.WrappedReducePartitionContext;
 import com.galaxy.sun.partitioner.DataPartitioner;

@@ -1,6 +1,6 @@
 package com.galaxy.sun.utils;
 
-import com.galaxy.meteorolite.galaxyclass.ClassUtils;
+import com.galaxy.asteroid.galaxyclass.ClassUtils;
 import com.galaxy.sun.compress.DataCompress;
 import com.galaxy.sun.compress.DefaultDataCompress;
 import com.galaxy.sun.partitioner.DataPartitioner;
