@@ -7,6 +7,12 @@ package com.galaxy.asteroid.string;
  * @date : 2018/12/10 14:08
  **/
 public class GalaxyStringUtils {
+
+    private GalaxyStringUtils() {
+        throw new RuntimeException("can not create instance");
+    }
+
+
     public static String max(String first, String second) {
         if (isEmpty(first)) {
             return second;

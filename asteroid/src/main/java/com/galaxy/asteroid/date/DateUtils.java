@@ -20,7 +20,10 @@ public class DateUtils {
      */
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat();
 
-    private static String CURRENT_TIME = "";
+    /**
+     * 当前时间
+     */
+    private static volatile String CURRENT_TIME = "";
 
     /**
      * 从绝对秒中获取 yyyyMMddHHmmss日期
@@ -37,14 +40,17 @@ public class DateUtils {
     /**
      * 获取当前日期
      *
-     * @return 当前期
+     * @return 当前日期 格式 yyyyMMdd
      */
-    public static synchronized String getDate() {
+    public static String getDate() {
+        // TODO 待测试多线程环境
         if ("".equals(CURRENT_TIME)) {
             synchronized (DateUtils.class) {
-                DATE.setTime(System.currentTimeMillis());
-                TIME_FORMAT.applyPattern("yyyyMMdd");
-                CURRENT_TIME = TIME_FORMAT.format(DATE);
+                if ("".equals(CURRENT_TIME)) {
+                    DATE.setTime(System.currentTimeMillis());
+                    TIME_FORMAT.applyPattern("yyyyMMdd");
+                    CURRENT_TIME = TIME_FORMAT.format(DATE);
+                }
             }
         }
         return CURRENT_TIME;
