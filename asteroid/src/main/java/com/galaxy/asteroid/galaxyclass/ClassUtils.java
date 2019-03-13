@@ -17,12 +17,11 @@ public class ClassUtils {
         if (className != null && !"".equals(className)) {
             try {
                 Class<?> classType = Class.forName(className);
-                if (classType.isInstance(destObj)) {
+                if (classType.equals(destObj)) {
                     Constructor<?> constructor = classType.getConstructor();
                     constructor.setAccessible(true);
                     return (T) constructor.newInstance();
                 }
-
             } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -31,7 +30,8 @@ public class ClassUtils {
     }
 
     public static void main(String[] args) {
-        GalaxyStringUtils utils = getClassInstance("com.galaxy.meteorolite.string.GalaxyStringUtils",GalaxyStringUtils.class);
+        GalaxyStringUtils utils = getClassInstance("com.galaxy.asteroid.string.GalaxyStringUtils", GalaxyStringUtils.class);
+        System.out.println(utils==null);
     }
 
 }
