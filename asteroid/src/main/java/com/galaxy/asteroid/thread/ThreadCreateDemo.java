@@ -68,7 +68,7 @@ public class ThreadCreateDemo {
     public static void main(String[] args) {
         // 直接调用start()方法运行
         new ThreadDemo().start();
-        ExecutorService service = Executors.newSingleThreadExecutor();
+        ExecutorService service = GalaxyThreadPool.getInstance();
 
         //传入Thread对象运行
         new Thread(new RunnableDemo()).start();
