@@ -2,11 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>GalaxyDataTools</artifactId>
+        <groupId>com.galaxy</groupId>
+        <version>1.0</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.galaxy</groupId>
-    <artifactId>GalaxyDataTools</artifactId>
-    <version>1.0</version>
+    <artifactId>jupiter</artifactId>
     <build>
         <plugins>
             <plugin>
@@ -19,15 +22,9 @@
             </plugin>
         </plugins>
     </build>
-    <packaging>pom</packaging>
-    <modules>
-        <module>asteroid</module>
-        <module>sun</module>
-        <module>saturn</module>
-        <module>jupiter</module>
-    </modules>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <dependencies>
+
+    </dependencies>
+
 </project>
