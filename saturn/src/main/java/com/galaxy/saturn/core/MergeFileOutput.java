@@ -25,7 +25,7 @@ public class MergeFileOutput implements Output {
      */
     private List<String> lines = new ArrayList<>();
 
-    private MergeFileOutput() {
+    MergeFileOutput() {
         if (!file.exists()) {
             try {
                 if (!file.createNewFile()) {
