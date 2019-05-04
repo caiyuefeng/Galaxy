@@ -1,4 +1,4 @@
-package com.galaxy.asteroid.thread;
+package com.galaxy.asteroid.test.thread;
 
 /**
  * @Author: 蔡月峰

@@ -40,6 +40,10 @@ public class RedBlackTree {
          */
         private TreeNode rightChild = null;
 
+        public TreeNode(int value) {
+            this.value = value;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -74,16 +78,17 @@ public class RedBlackTree {
     /**
      * 增加节点
      */
-    private void addNode(int value) {
-        TreeNode node = new TreeNode();
-        node.value = value;
+    public void add(int value) {
+        addNode(new TreeNode(value));
+    }
+
+    private void addNode(TreeNode node) {
         if (root == null) {
             node.color = true;
             root = node;
         } else if (insertNode(node, root)) {
             balanceTree(node);
         }
-
     }
 
     private boolean insertNode(TreeNode insert, TreeNode treeNode) {
@@ -194,6 +199,88 @@ public class RedBlackTree {
                 leftRound(grantParent);
             }
         }
+    }
+
+    private void deleteNode(TreeNode node) {
+        // 从当前树中寻找相等的节点
+        TreeNode deleteNode = findTreeNode(node);
+        if (deleteNode != null) {
+            delete(deleteNode);
+        }
+    }
+
+    private TreeNode findTreeNode(TreeNode deleteNode) {
+        return root == null ? null : findTreeNode(deleteNode, root);
+    }
+
+    private TreeNode findTreeNode(TreeNode deleteNode, TreeNode treeNode) {
+        if (deleteNode.value > treeNode.value) {
+            return treeNode.rightChild != null ?
+                    findTreeNode(deleteNode, treeNode.rightChild) : null;
+        }
+        if (deleteNode.value < treeNode.value) {
+            return treeNode.leftChild != null ?
+                    findTreeNode(deleteNode, treeNode.leftChild) : null;
+        }
+        return treeNode;
+    }
+
+    private void delete(TreeNode deleteNode) {
+        // 如果删除节点是根节点，则直接将根节点置空
+        if (deleteNode.equals(root)) {
+            root = null;
+            return;
+        }
+        if (deleteNode.leftChild != null && deleteNode.rightChild != null) {
+            TreeNode node = findNextNode(deleteNode);
+            deleteNode.value = node.value;
+            deleteNode = node;
+        }
+        if (deleteNode.rightChild != null) {
+            TreeNode parent = deleteNode.parent;
+            deleteNode.rightChild.parent = parent;
+            if (deleteNode.equals(parent.leftChild)) {
+                parent.leftChild = deleteNode.rightChild;
+            }
+            if (deleteNode.equals(parent.rightChild)) {
+                parent.rightChild = deleteNode.rightChild;
+            }
+            if(deleteNode.color){
+                balanceTree(deleteNode.rightChild);
+            }
+        } else if (deleteNode.leftChild == null) {
+            TreeNode parent = deleteNode.parent;
+            if (deleteNode.equals(parent.leftChild)) {
+                parent.leftChild = null;
+                deleteNode = null;
+            } else if (deleteNode.equals(parent.rightChild)) {
+                parent.rightChild = null;
+                deleteNode = null;
+            }
+        }
+
+
+    }
+
+    private TreeNode findNextNode(TreeNode node) {
+        if (node.rightChild != null) {
+            TreeNode nextNode = node.rightChild;
+            while (nextNode.leftChild != null) {
+                nextNode = nextNode.leftChild;
+            }
+            return nextNode;
+        }
+        TreeNode nextNode = node.parent;
+        TreeNode compareNode = node;
+        while (nextNode != null && compareNode.equals(node.rightChild)) {
+            compareNode = nextNode;
+            nextNode = nextNode.parent;
+        }
+        return nextNode;
+    }
+
+    private void balanceDeleteTreee(TreeNode node){
+
     }
 
     /**
@@ -325,7 +412,7 @@ public class RedBlackTree {
         Random random = new Random();
         long s = System.currentTimeMillis();
         for (int i = 0; i < 100000; i++) {
-            tree.addNode(Math.abs(random.nextInt()));
+            tree.add(Math.abs(random.nextInt()));
         }
         System.out.println("耗时:" + (System.currentTimeMillis() - s));
         s = System.currentTimeMillis();

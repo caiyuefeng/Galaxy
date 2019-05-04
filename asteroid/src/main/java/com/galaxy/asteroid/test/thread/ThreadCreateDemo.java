@@ -1,8 +1,9 @@
-package com.galaxy.asteroid.thread;
+package com.galaxy.asteroid.test.thread;
+
+import com.galaxy.asteroid.thread.GalaxyThreadPool;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 /**

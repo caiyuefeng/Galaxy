@@ -1,4 +1,4 @@
-package com.galaxy.asteroid.thread;
+package com.galaxy.asteroid.test.thread;
 
 import java.util.Random;
 

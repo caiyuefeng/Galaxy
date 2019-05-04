@@ -1,8 +1,6 @@
 package com.galaxy.asteroid.calculate;
 
-
-
-import org.apache.commons.io.FileUtils;
+import com.galaxy.asteroid.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,7 +133,7 @@ public class PageRank {
     public static void main(String[] args) throws IOException {
         Graph graph = new Graph();
 
-        List<String> lines = FileUtils.readLines(new File("D:\\WorkSpace\\Galaxy\\Galaxy\\asteroid\\input\\Cit-HepTh.txt"));
+        List<String> lines = FileUtils.listLines(new File("D:\\WorkSpace\\Galaxy\\Galaxy\\asteroid\\input\\Cit-HepTh.txt"));
 
         for (String line : lines) {
             String[] values = line.split("\t");
