@@ -91,11 +91,11 @@ public class EncryptClassloader extends ClassLoader {
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
         EncryptClassloader classloader = new EncryptClassloader("D:\\workspace\\Galaxy\\Galaxy\\asteroid\\input\\", null);
-        Class<?> cla1 = classloader.loadClass("com.galaxy.asteroid.date.DateUtils");
+        Class<?> cla1 = classloader.loadClass("com.galaxy.earth.date.DateUtils");
         Method method = cla1.getMethod("getDate");
         Object o = cla1.newInstance();
         System.out.println(method.invoke(o));
-        Class<?> cla2 = classloader.loadClass("com.galaxy.asteroid.date.DateUtils");
+        Class<?> cla2 = classloader.loadClass("com.galaxy.earth.date.DateUtils");
         method = cla2.getMethod("getDate");
         o = cla2.newInstance();
         System.out.println(method.invoke(o));

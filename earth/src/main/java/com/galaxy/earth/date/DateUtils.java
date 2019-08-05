@@ -1,4 +1,4 @@
-package com.galaxy.asteroid.date;
+package com.galaxy.earth.date;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

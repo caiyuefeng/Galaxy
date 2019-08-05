@@ -1,4 +1,4 @@
-package com.galaxy.asteroid.thread;
+package com.galaxy.earth.thread;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadFactory;
