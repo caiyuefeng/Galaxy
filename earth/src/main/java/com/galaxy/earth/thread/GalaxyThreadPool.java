@@ -1,9 +1,6 @@
 package com.galaxy.earth.thread;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author : 蔡月峰
@@ -28,8 +25,8 @@ public class GalaxyThreadPool {
             throw new RuntimeException("不能创建更多的实例!");
         }
         INSTANCE_FLAG = true;
-        executor = new ThreadPoolExecutor(3, 5, 2000,
-                TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(5), new GalaxyThreadFactory());
+        executor = new ThreadPoolExecutor(3, 3, 10,
+                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(5), new GalaxyThreadFactory());
     }
 
     private static class InnerTool {
@@ -42,7 +39,8 @@ public class GalaxyThreadPool {
      * @return 线程池
      */
     public static ThreadPoolExecutor getInstance() {
-        return InnerTool.TOOL.executor;
+        return new ThreadPoolExecutor(3, 3, 10,
+                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(5), new GalaxyThreadFactory());
     }
 
     private static class GalaxyThreadFactory implements ThreadFactory {
