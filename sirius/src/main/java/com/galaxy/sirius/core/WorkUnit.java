@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,34 +62,38 @@ public class WorkUnit {
             throw new RuntimeException(e);
         }
         try {
-            localUserObject.set(this.clazz.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
+            Constructor constructor = this.clazz.getConstructor();
+            constructor.setAccessible(true);
+            localUserObject.set(constructor.newInstance());
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
         this.methodMap = methodMap;
     }
 
-   public void start(ExecutorService service) {
+    public void start(ExecutorService service) {
         try {
             for (int i = 0; i < num; i++) {
-                service.submit(newWorkPart());
+                WorkPart workPart = newWorkPart();
+                service.execute(workPart);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     void register(long id, boolean status) {
         statusMap.put(id, status);
     }
 
-    boolean isRunning() {
-        return statusMap.reduce(1, (id, status) -> status, (a, b) -> a & b);
+    public boolean isRunning() {
+        return statusMap.isEmpty() ? true : statusMap.reduce(1, (id, status) -> status, (a, b) -> a | b);
     }
 
     private WorkPart newWorkPart() throws IOException {
         long id = ID_GENERATOR.incrementAndGet();
-        LOG.debug("生成执行单元[{}]", id);
+        LOG.info(String.format("生成执行单元[%d]", id));
         WorkPart workPart = new WorkPart(id, deepCopyObject(localUserObject.get()), this.methodMap);
         workPart.setWorkUnit(this);
         return workPart;
@@ -117,5 +123,9 @@ public class WorkUnit {
 
     public void close() {
         localUserObject.remove();
+    }
+
+    int getStage() {
+        return stage;
     }
 }

@@ -59,32 +59,38 @@ public class WorkPart implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("执行单元[{}]开始执行...", id);
+        LOG.info(String.format("执行单元[%d]开始执行...", id));
+        workUnit.register(id, true);
         execute();
-        LOG.info("执行单元[{}]开始结束!", id);
+        workUnit.register(id, false);
+        LOG.info(String.format("执行单元[%d]开始结束!", id));
     }
 
     private void execute() {
         try {
             Method method = clazz.getDeclaredMethod(methodMap.get(Sign.RUN));
+            method.setAccessible(true);
             Role role = method.getAnnotation(Sync.class).role();
-            int delay = 15;
+            int delay = 10;
             switch (role) {
                 case COMMON:
                     method.invoke(object);
                     break;
                 case CONSUMER:
-                    while (workUnit.isRunning()) {
+                    // 至少执行一次
+                    do {
+                        MonitorUnit.TRIGGER.compareAndSet(true, false);
                         method.invoke(object);
-                        LOG.debug("执行单元阻塞[{}]毫秒.", id);
+                        LOG.info(String.format("执行单元[%d]阻塞[%d]毫秒.", id, delay));
                         Thread.sleep(delay);
                         delay += 15;
-                    }
+                    } while (MonitorUnit.producerIsRunning(workUnit.getStage()));
                     break;
                 case PRODUCER:
-                    workUnit.register(id, false);
+                    // 设置生产者线程标志
+                    MonitorUnit.setProducerStatus(workUnit.getStage(), id, true);
                     method.invoke(object);
-                    workUnit.register(id, true);
+                    MonitorUnit.setProducerStatus(workUnit.getStage(), id, false);
                     break;
                 default:
                     throw new RuntimeException(MessageFormat.format("{0}未知角色", role));
@@ -96,5 +102,9 @@ public class WorkPart implements Runnable {
 
     void setWorkUnit(WorkUnit workUnit) {
         this.workUnit = workUnit;
+    }
+
+    long getId() {
+        return id;
     }
 }

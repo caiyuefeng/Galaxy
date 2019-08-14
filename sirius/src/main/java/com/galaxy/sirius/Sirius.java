@@ -1,12 +1,17 @@
 package com.galaxy.sirius;
 
 import com.galaxy.earth.ClassUtils;
+import com.galaxy.earth.enums.Digit;
+import com.galaxy.earth.enums.Symbol;
 import com.galaxy.earth.thread.GalaxyThreadPool;
 import com.galaxy.sirius.annotation.Stage;
 import com.galaxy.sirius.annotation.Sync;
 import com.galaxy.sirius.core.WorkUnit;
 import com.galaxy.sirius.enums.Sign;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -20,21 +25,56 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public class Sirius {
 
-    private static SortedMap<Integer, List<WorkUnit>> workUnits = new TreeMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(Sirius.class);
 
-    private static ThreadPoolExecutor threadPool = GalaxyThreadPool.getInstance();
+    /**
+     * 工作单元缓存
+     */
+    private SortedMap<Integer, List<WorkUnit>> workUnitPool;
+
+    /**
+     * 运行线程池
+     */
+    private ThreadPoolExecutor threadPool;
+
+    /**
+     * 用户类路径
+     */
+    private File dir = null;
 
     static {
-        executor();
+//        getInstance().executor();
     }
 
-    public static void executor() {
-        Set<Class<?>> classSet = ClassUtils.findUserClass("");
+    private Sirius(File dir) {
+        this.dir = dir;
+        threadPool = GalaxyThreadPool.getInstance();
+        workUnitPool = new TreeMap<>();
+    }
+
+    static Sirius getInstance(File dir) {
+        return new Sirius(dir);
+    }
+
+    static Sirius getInstance() {
+        return new Sirius(null);
+    }
+
+    void executor() {
+        Set<Class<?>> classSet = dir == null ?
+                ClassUtils.findUserClass(Symbol.EMPTY_STR.getValue()) :
+                ClassUtils.findUserClass(dir);
+        findUserClassAndSubmit(classSet);
+        executeWorkUnit();
+        threadPool.shutdown();
+    }
+
+    private void findUserClassAndSubmit(Set<Class<?>> classSet) {
         for (Class<?> clazz : classSet) {
             Stage stage = clazz.getAnnotation(Stage.class);
             if (stage != null) {
                 Method[] methods = clazz.getMethods();
-                Map<Sign, String> methodMap = new HashMap<>();
+                Map<Sign, String> methodMap = new HashMap<>(Digit.ONE.toInt());
                 for (Method method : methods) {
                     Sync sync = method.getAnnotation(Sync.class);
                     if (sync != null) {
@@ -46,19 +86,37 @@ public class Sirius {
                 }
             }
         }
-        workUnits.values().forEach(workUnits1 ->
-                workUnits1.forEach(workUnit ->
-                        workUnit.start(threadPool)));
-
     }
 
-    private static void submitWorkUnit(int stage, WorkUnit workUnit) {
-        if (workUnits.containsKey(stage)) {
-            workUnits.get(stage).add(workUnit);
+    private void submitWorkUnit(int stage, WorkUnit workUnit) {
+        if (workUnitPool.containsKey(stage)) {
+            workUnitPool.get(stage).add(workUnit);
         } else {
             List<WorkUnit> workUnitList = new ArrayList<>();
             workUnitList.add(workUnit);
-            workUnits.put(stage, workUnitList);
+            workUnitPool.put(stage, workUnitList);
+        }
+    }
+
+    private void executeWorkUnit() {
+        for (Map.Entry<Integer, List<WorkUnit>> entry : workUnitPool.entrySet()) {
+            entry.getValue().forEach(workUnit -> workUnit.start(threadPool));
+            int delay = 1000;
+            boolean over = entry.getValue().stream()
+                    .map(WorkUnit::isRunning)
+                    .reduce((a, b) -> a | b).orElse(false);
+            while (over) {
+                LOG.info(String.format("当前阶段%d正在运行中...", entry.getKey()));
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                over = entry.getValue().stream()
+                        .map(WorkUnit::isRunning)
+                        .reduce((a, b) -> a | b).orElse(false);
+                delay = +1000;
+            }
         }
     }
 }
