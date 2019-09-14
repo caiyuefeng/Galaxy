@@ -8,5 +8,8 @@ package com.galaxy.sirius.enums;
  * @Modified By:
  */
 public enum Sign {
+    /**
+     * 运行方法标志
+     */
     RUN
 }

@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date : Create in 21:35 2019/8/5
  * @Modified By:
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Sirius {
 
     private static final Logger LOG = LoggerFactory.getLogger(Sirius.class);
@@ -47,6 +48,7 @@ public class Sirius {
     }
 
     private Sirius(File dir) {
+        LOG.info("开始启动线程同步框架...");
         this.dir = dir;
         threadPool = GalaxyThreadPool.getInstance();
         workUnitPool = new TreeMap<>();
@@ -61,11 +63,17 @@ public class Sirius {
     }
 
     void executor() {
+        LOG.info("开始加载用户同步类...");
         Set<Class<?>> classSet = dir == null ?
                 ClassUtils.findUserClass(Symbol.EMPTY_STR.getValue()) :
                 ClassUtils.findUserClass(dir);
+        LOG.info("用户同步类加载完毕!");
+        LOG.info("开始注册同步方法...");
         findUserClassAndSubmit(classSet);
+        LOG.info("同步方法完成!");
+        LOG.info("开始运行同步方法...");
         executeWorkUnit();
+        LOG.info("所有同步方法运行结束!同步框架推出!");
         threadPool.shutdown();
     }
 
@@ -82,9 +90,14 @@ public class Sirius {
                     }
                 }
                 if (!methodMap.isEmpty()) {
+                    LOG.info("开始注册同步类:{},同步方法:{}", clazz, methodMap.get(Sign.RUN));
                     submitWorkUnit(stage.num(), new WorkUnit(clazz, methodMap));
                 }
             }
+        }
+        if (workUnitPool.isEmpty()) {
+            LOG.warn("未找到用户同步类!");
+            System.exit(1);
         }
     }
 
