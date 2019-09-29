@@ -1,6 +1,6 @@
 package com.galaxy.sun.utils;
 
-import com.galaxy.asteroid.galaxyclass.ClassUtils;
+import com.galaxy.earth.ClassUtils;
 import com.galaxy.sun.compress.DataCompress;
 import com.galaxy.sun.compress.DefaultDataCompress;
 import com.galaxy.sun.partitioner.DataPartitioner;
@@ -63,13 +63,13 @@ public class GalaxyUtils {
     public static <T> DataPartitioner<T> getMapPartitioner(Configuration conf, Class<T> obj) {
         String className = conf.get(MAP_PARTITION_CLASS_ITEM);
         return StringUtils.isEmpty(className) || getTaskType(conf) == 0 ? new DefaultPartitioner<T>() :
-                (DataPartitioner<T>) ClassUtils.getClassInstance(className, obj);
+                (DataPartitioner<T>) ClassUtils.getInstance(className, obj);
     }
 
     public static <T> DataPartitioner<T> getReducePartitioner(Configuration conf, Class<T> obj) {
         String className = conf.get(REDUCE_PARTITION_CLASS_ITEM);
         return StringUtils.isEmpty(className) || getTaskType(conf) == 0 ? new DefaultPartitioner<T>() :
-                (DataPartitioner<T>) ClassUtils.getClassInstance(className, obj);
+                (DataPartitioner<T>) ClassUtils.getInstance(className, obj);
     }
 
     /**
@@ -81,7 +81,7 @@ public class GalaxyUtils {
     public static DataCompress getCompressInstance(Configuration conf) {
         String className = conf.get(DATA_COMPRESS_ITEM);
         return StringUtils.isEmpty(className) ? DefaultDataCompress.getInstance() :
-                ClassUtils.getClassInstance(className, DataCompress.class);
+                ClassUtils.getInstance(className, DataCompress.class);
     }
 
     public static Map<String, String> loadProperties(Configuration conf) throws IOException {

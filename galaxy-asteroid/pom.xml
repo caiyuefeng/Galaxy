@@ -29,7 +29,10 @@
         <dependency>
             <groupId>com.galaxy</groupId>
             <artifactId>galaxy-saturn</artifactId>
-            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-earth</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

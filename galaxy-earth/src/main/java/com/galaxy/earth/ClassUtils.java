@@ -28,6 +28,17 @@ public class ClassUtils {
 
     private static final String CLASS_TAIL = "class";
 
+    @SuppressWarnings("unchecked")
+    public static <T> T getInstance(String className, Class<T> clazz){
+        try {
+            Object o = clazz.newInstance();
+            return (T) o;
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Set<Class<?>> findUserClass(String packageName) {
         File file = new File(ClassUtils.class.getProtectionDomain().getCodeSource().getLocation().getFile());
         Set<Class<?>> classSet = new HashSet<>();

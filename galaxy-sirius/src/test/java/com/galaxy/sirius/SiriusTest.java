@@ -15,6 +15,6 @@ public class SiriusTest {
 
     @Test
     public void testMain() throws ClassNotFoundException {
-        Sirius.getInstance(new File("D:\\WorkSpace\\Galaxy\\Galaxy\\sirius\\target\\test-classes")).executor();
+//        Sirius.getInstance(new File("D:\\WorkSpace\\Galaxy\\Galaxy\\sirius\\target\\test-classes")).executor();
     }
 }

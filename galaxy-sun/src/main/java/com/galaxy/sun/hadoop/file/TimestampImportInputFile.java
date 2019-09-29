@@ -1,6 +1,6 @@
 package com.galaxy.sun.hadoop.file;
 
-import com.galaxy.asteroid.string.GalaxyStringUtils;
+import com.galaxy.earth.GalaxyStringUtils;
 import com.galaxy.sun.base.ConstantConfItem;
 import com.galaxy.sun.utils.PathUtils;
 import org.apache.hadoop.conf.Configuration;

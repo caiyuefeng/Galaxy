@@ -1,6 +1,6 @@
 package com.galaxy.sun.hadoop.mr;
 
-import com.galaxy.asteroid.galaxyclass.ClassUtils;
+import com.galaxy.earth.ClassUtils;
 import com.galaxy.sun.base.DataType;
 import com.galaxy.sun.hadoop.context.WrappedContext;
 import com.galaxy.sun.hadoop.context.WrappedReducePartitionContext;
@@ -52,7 +52,7 @@ public abstract class BaseSecondarySortReduce extends BaseReduce<DataTypeKey, Te
         // 获取Map阶段分区器
         String className = conf.get(MAP_PARTITION_CLASS_ITEM);
         partitioner = (StringUtils.isEmpty(className) || (taskType == 0)) ? new DefaultPartitioner<DataTypeKey>()
-                : ClassUtils.getClassInstance(className, DataPartitioner.class);
+                : ClassUtils.getInstance(className, DataPartitioner.class);
         // 设置包装器内的Map分区标志
         if (!StringUtils.isEmpty(className) && taskType == 1) {
             this.context.setMapAlreadyPartition(true);

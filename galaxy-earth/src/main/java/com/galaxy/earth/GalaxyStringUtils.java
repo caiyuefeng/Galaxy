@@ -1,4 +1,4 @@
-package com.galaxy.asteroid.string;
+package com.galaxy.earth;
 
 /**
  * @author : 蔡月峰

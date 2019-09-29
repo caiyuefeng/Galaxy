@@ -1,6 +1,6 @@
 package com.galaxy.asteroid.galaxyclass;
 
-import com.galaxy.asteroid.string.GalaxyStringUtils;
+import com.galaxy.earth.GalaxyStringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +30,7 @@ public class ClassUtils {
     }
 
     public static void main(String[] args) {
-        GalaxyStringUtils utils = getClassInstance("com.galaxy.asteroid.string.GalaxyStringUtils", GalaxyStringUtils.class);
+        GalaxyStringUtils utils = getClassInstance("com.galaxy.earth.GalaxyStringUtils", GalaxyStringUtils.class);
         System.out.println(utils==null);
     }
 
