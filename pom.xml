@@ -5,11 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.galaxy</groupId>
-    <artifactId>GalaxyDataTools</artifactId>
+    <artifactId>GalaxyFrameWork</artifactId>
     <version>1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <hadoop.version>2.7.4</hadoop.version>
     </properties>
 
     <build>
@@ -18,32 +20,51 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>package.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
     <packaging>pom</packaging>
-    <modules>
-        <module>asteroid</module>
-        <module>sun</module>
-        <module>saturn</module>
-        <module>jupiter</module>
-        <module>earth</module>
-        <module>sirius</module>
-    </modules>
+
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.galaxy</groupId>
-                <artifactId>sirius</artifactId>
+                <artifactId>galaxy-sirius</artifactId>
                 <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>com.galaxy</groupId>
-                <artifactId>earth</artifactId>
+                <artifactId>galaxy-earth</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.galaxy</groupId>
+                <artifactId>galaxy-asteroid</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.galaxy</groupId>
+                <artifactId>galaxy-saturn</artifactId>
                 <version>1.0</version>
             </dependency>
             <dependency>
@@ -66,8 +87,30 @@
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-hdfs</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-mapreduce-client-core</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-
+    <modules>
+        <module>galaxy-asteroid</module>
+        <module>galaxy-sun</module>
+        <module>galaxy-saturn</module>
+        <module>galaxy-jupiter</module>
+        <module>galaxy-earth</module>
+        <module>galaxy-sirius</module>
+    </modules>
 </project>

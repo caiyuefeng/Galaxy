@@ -1,0 +1,33 @@
+package com.galaxy.jupiter.db;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @Author: 蔡月峰
+ * @Version： 1.0
+ * @Description:
+ * @Date : Create in 21:35 2019/5/14
+ * @Modified By:
+ */
+public class EdgePartition {
+
+    private Long[] srcId;
+
+    private Long[] dstId;
+
+    private Property[] properties;
+
+    private Map<Long, Integer> vidIndex;
+
+    public EdgePartition(int capacity) {
+        this.srcId = new Long[capacity];
+        this.dstId = new Long[capacity];
+        this.properties = new Property[capacity];
+        vidIndex = new HashMap<>(capacity);
+    }
+
+
+
+
+}
