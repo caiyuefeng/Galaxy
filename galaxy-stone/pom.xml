@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.galaxy</groupId>
         <artifactId>GalaxyFrameWork</artifactId>
+        <groupId>com.galaxy</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>galaxy-earth</artifactId>
-    <version>1.0</version>
+
+    <artifactId>galaxy-stone</artifactId>
     <build>
-        <finalName>galaxy-earth-${project.version}</finalName>
+        <finalName>galaxy-stone-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -24,22 +24,4 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.galaxy</groupId>
-            <artifactId>galaxy-stone</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-    </dependencies>
 </project>

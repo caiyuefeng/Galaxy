@@ -1,10 +1,13 @@
 package com.galaxy.earth;
 
-import com.galaxy.earth.enums.Digit;
+import com.galaxy.stone.Digit;
+import com.galaxy.stone.Symbol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +21,7 @@ import java.util.jar.JarFile;
  * @Date : Create in 21:41 2019/8/5
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public class ClassUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClassUtils.class);
@@ -29,7 +33,7 @@ public class ClassUtils {
     private static final String CLASS_TAIL = "class";
 
     @SuppressWarnings("unchecked")
-    public static <T> T getInstance(String className, Class<T> clazz){
+    public static <T> T getInstance(String className, Class<T> clazz) {
         try {
             Object o = clazz.newInstance();
             return (T) o;
@@ -97,7 +101,7 @@ public class ClassUtils {
             JarEntry jarEntry = entries.nextElement();
             String name = jarEntry.getName();
             name = name.startsWith("/") ? name.substring(1) : name;
-            if (jarEntry.isDirectory() || !name.endsWith("class")) {
+            if (jarEntry.isDirectory() || !name.endsWith(CLASS_TAIL)) {
                 continue;
             }
             name = name.substring(0, name.lastIndexOf("."));
@@ -107,7 +111,7 @@ public class ClassUtils {
         }
     }
 
-    private static void findUserClassByCompilePath(File dir, String packageName, Set<Class<?>> classSet) throws ClassNotFoundException {
+    private static void findUserClassByCompilePath(File dir, String packageName, Set<Class<?>> classSet) {
         File[] children = dir.listFiles();
         if (children == null) {
             return;
@@ -115,7 +119,7 @@ public class ClassUtils {
         for (File file : children) {
             if (file.isDirectory()) {
                 String childPackageName = EMPTY_STR.equals(packageName) ? file.getName() :
-                        packageName + "." + file.getName();
+                        packageName + Symbol.DOT.getValue() + file.getName();
                 findUserClassByCompilePath(file, childPackageName, classSet);
                 continue;
             }
@@ -129,8 +133,7 @@ public class ClassUtils {
             String name = file.getName();
             String className = packageName + "." + name.substring(0, name.lastIndexOf("."));
             try {
-                classSet.add(Thread.currentThread()
-                        .getContextClassLoader()
+                classSet.add(Thread.currentThread().getContextClassLoader()
                         .loadClass(className));
             } catch (ClassNotFoundException e) {
                 LOG.debug("[{}]Class文件加载失败!\n{}", file.getAbsoluteFile(), e.toString());
@@ -145,8 +148,20 @@ public class ClassUtils {
      * @return 字节数组
      */
     public static byte[] getBytes(Class<?> clazz) {
-        String clazzPath = clazz.getCanonicalName().replace(".", "/") + ".class";
-        try (InputStream in = ClassUtils.class.getClassLoader().getResourceAsStream(clazzPath);
+        String classPath = "";
+        if (clazz.getClassLoader().getClass().getTypeName().equals("com.galaxy.boot.LauncherClassLoader")) {
+            Class<?> loaderClazz = clazz.getClassLoader().getClass();
+            try {
+                Method method = loaderClazz.getDeclaredMethod("getClassPath", String.class);
+                classPath = (String) method.invoke(clazz.getClassLoader(), clazz.getName());
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else {
+            classPath = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+        }
+        File file = new File(classPath);
+        try (InputStream in = new FileInputStream(file);
              BufferedInputStream buffer = new BufferedInputStream(in)) {
             int len = buffer.available();
             byte[] bytes = new byte[len];
@@ -156,6 +171,7 @@ public class ClassUtils {
             }
             return bytes;
         } catch (IOException e) {
+            LOG.error(String.format("读取文件[%s]异常", clazz.getName()), e);
             throw new RuntimeException(e);
         }
     }

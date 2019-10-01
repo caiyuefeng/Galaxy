@@ -1,8 +1,8 @@
 package com.galaxy.sirius;
 
 import com.galaxy.earth.ClassUtils;
-import com.galaxy.earth.enums.Digit;
-import com.galaxy.earth.enums.Symbol;
+import com.galaxy.stone.Digit;
+import com.galaxy.stone.Symbol;
 import com.galaxy.earth.thread.GalaxyThreadPool;
 import com.galaxy.sirius.annotation.Stage;
 import com.galaxy.sirius.annotation.Sync;

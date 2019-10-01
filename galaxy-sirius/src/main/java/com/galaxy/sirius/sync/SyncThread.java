@@ -1,4 +1,4 @@
-package com.galaxy.sirius.asm;
+package com.galaxy.sirius.sync;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

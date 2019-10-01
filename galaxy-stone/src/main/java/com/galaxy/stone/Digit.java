@@ -1,4 +1,4 @@
-package com.galaxy.earth.enums;
+package com.galaxy.stone;
 
 /**
  * @Author: 蔡月峰

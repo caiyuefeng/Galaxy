@@ -5,15 +5,16 @@
 	<id>all</id>
 	<formats>
 		<format>jar</format>
+		<format>dir</format>
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
-<!--		<fileSet>-->
-<!--			<directory>galaxy-earth/target/galaxy-earth-${project.version}</directory>-->
-<!--			<includes>-->
-<!--				<include>**/*.*</include>-->
-<!--			</includes>-->
-<!--			<outputDirectory>.</outputDirectory>-->
-<!--		</fileSet>-->
+		<fileSet>
+			<directory>${project.build.directory}/target</directory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+			<outputDirectory>.</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>

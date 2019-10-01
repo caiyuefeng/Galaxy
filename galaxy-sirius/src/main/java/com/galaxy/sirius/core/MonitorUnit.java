@@ -1,6 +1,6 @@
 package com.galaxy.sirius.core;
 
-import com.galaxy.earth.enums.Digit;
+import com.galaxy.stone.Digit;
 
 import java.util.HashMap;
 import java.util.Map;

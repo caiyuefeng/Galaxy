@@ -50,6 +50,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.galaxy</groupId>
+                <artifactId>galaxy-stone</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.galaxy</groupId>
                 <artifactId>galaxy-sirius</artifactId>
                 <version>1.0</version>
             </dependency>
@@ -113,5 +118,7 @@
         <module>galaxy-jupiter</module>
         <module>galaxy-earth</module>
         <module>galaxy-sirius</module>
+        <module>galaxy-boot</module>
+        <module>galaxy-stone</module>
     </modules>
 </project>

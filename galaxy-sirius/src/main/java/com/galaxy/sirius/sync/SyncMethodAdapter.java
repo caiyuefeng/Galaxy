@@ -1,4 +1,4 @@
-package com.galaxy.sirius.asm;
+package com.galaxy.sirius.sync;
 
 import jdk.internal.org.objectweb.asm.ClassVisitor;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
@@ -31,7 +31,7 @@ public class SyncMethodAdapter extends ClassVisitor {
     /**
      * 同步容器类名
      */
-    private static final String SYNC_THREAD_CLASS_NAME = "com/galaxy/sirius/asm/SyncThread";
+    private static final String SYNC_THREAD_CLASS_NAME = "com/galaxy/sirius/sync/SyncThread";
 
     /**
      * 同步方法实例

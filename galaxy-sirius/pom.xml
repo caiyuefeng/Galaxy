@@ -33,6 +33,10 @@
     <dependencies>
         <dependency>
             <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-stone</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.galaxy</groupId>
             <artifactId>galaxy-earth</artifactId>
         </dependency>
         <dependency>

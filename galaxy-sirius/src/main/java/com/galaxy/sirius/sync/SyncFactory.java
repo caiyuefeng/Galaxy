@@ -1,9 +1,9 @@
-package com.galaxy.sirius.asm;
+package com.galaxy.sirius.sync;
 
 import com.galaxy.earth.ClassUtils;
 import com.galaxy.earth.FileUtils;
-import com.galaxy.earth.enums.Digit;
 import com.galaxy.sirius.annotation.Sync;
+import com.galaxy.stone.Digit;
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.ClassWriter;
 import org.slf4j.Logger;
@@ -72,9 +72,9 @@ public class SyncFactory {
         return cw.toByteArray();
     }
 
-    public static Class<?> sync(Class<?> clazz) {
+    public static Class<?> sync(Class<?> clazz, SyncClassLoader loader) {
         byte[] bytes = transform(clazz);
-        return bytes != null ? ClassUtils.getClass(clazz.getName(), bytes) : null;
+        return bytes != null ? loader.define(clazz.getName(), bytes) : null;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.galaxy.earth.enums;
+package com.galaxy.stone;
 
 /**
  * @Author: 蔡月峰
@@ -11,7 +11,8 @@ public enum Symbol {
     /**
      * 字符串标志
      */
-    EMPTY_STR("");
+    EMPTY_STR(""),
+    DOT(".");
 
     String value;
 
