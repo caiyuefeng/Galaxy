@@ -94,13 +94,12 @@ public class ZkClient implements Watcher {
 
     public boolean create(ZkNode zkNode, CreateMode mode) {
         try {
-            zkNode.setNodePath(zk.create(zkNode.getNodePath(),zkNode.getContent(),defaultAcl,mode));
+            if (zk.exists(zkNode.getNodePath(), false) == null) {
+                zkNode.setNodePath(zk.create(zkNode.getNodePath(), zkNode.getContent(), defaultAcl, mode));
+            }
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
-            if(e.getMessage().contains("NodeExists")){
-                return true;
-            }
-            return false;
+            return e.getMessage().contains("NodeExists");
         }
         return true;
     }
@@ -121,12 +120,12 @@ public class ZkClient implements Watcher {
     }
 
     public List<ZkNode> list(String path) throws KeeperException, InterruptedException {
-        List<String> nodeNames = zk.getChildren(path,null);
+        List<String> nodeNames = zk.getChildren(path, null);
         List<ZkNode> zkNodes = new ArrayList<>();
-        for(String nodeName : nodeNames){
+        for (String nodeName : nodeNames) {
             ZkNode node = new ZkNode();
-            node.setNodePath(path+"/"+nodeName);
-            if(nodeName.contains("_")){
+            node.setNodePath(path + "/" + nodeName);
+            if (nodeName.contains("_")) {
                 node.setNodeSerialNo(Long.parseLong(nodeName));
             }
             zkNodes.add(node);
@@ -134,21 +133,25 @@ public class ZkClient implements Watcher {
         return zkNodes;
     }
 
-    public int getSize(String path){
+    public int getSize(String path) {
         try {
-            return zk.getChildren(path,false).size();
+            if (zk.exists(path, false) != null) {
+                List<String> list = zk.getChildren(path, false);
+                return list == null ? 0 : list.size();
+            }
         } catch (KeeperException | InterruptedException e) {
+            LOG.error("路径:[{}]获取异常!", path);
             e.printStackTrace();
         }
         return 0;
     }
 
-    public String getContent(ZkNode node){
-        if(!exist(node)){
+    public String getContent(ZkNode node) {
+        if (!exist(node)) {
             return null;
         }
         try {
-            return new String(zk.getData(node.getNodePath(),false,null),"UTF-8");
+            return new String(zk.getData(node.getNodePath(), false, null), "UTF-8");
         } catch (UnsupportedEncodingException | KeeperException | InterruptedException e) {
             e.printStackTrace();
         }

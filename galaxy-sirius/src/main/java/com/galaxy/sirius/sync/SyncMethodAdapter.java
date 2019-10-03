@@ -24,14 +24,9 @@ public class SyncMethodAdapter extends ClassVisitor {
     private static final String SYNC_METHOD_NAME = "runSync";
 
     /**
-     * Java 线程类名
-     */
-    private static final String THREAD_CLASS_NAME = "java/lang/Thread";
-
-    /**
      * 同步容器类名
      */
-    private static final String SYNC_THREAD_CLASS_NAME = "com/galaxy/sirius/sync/SyncThread";
+    private static final String SYNC_THREAD_CLASS_NAME = "com/galaxy/sirius/sync/SyncExecutor";
 
     /**
      * 同步方法实例
@@ -83,56 +78,61 @@ public class SyncMethodAdapter extends ClassVisitor {
     public void visitEnd() {
         // 需要增减同步方法
         if (sync) {
-            MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, this.method.getName(), this.type, this.generics, this.exceptions);
+            // 获取方法参数所占SLOT长度
             Class<?>[] parameterTypes = this.method.getParameterTypes();
-            int parameterSize = parameterTypes.length;
-            // Class<?> classes = new Class<?>[${parameterSize}];
+            int parameterSize = getParameterLength(parameterTypes);
+            // 声明方法
+            MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, this.method.getName(), this.type, this.generics, this.exceptions);
+            // SyncExecutor executor=SyncExecutor.getInstance()
+            mv.visitMethodInsn(INVOKESTATIC, "com/galaxy/sirius/sync/SyncExecutor", "getInstance", "()Lcom/galaxy/sirius/sync/SyncExecutor;", false);
+            mv.visitVarInsn(ASTORE, parameterSize + 1);
+            // Class<?>[] classes = AsmUtils.getParameterTypes(this.getClass());
             mv.visitVarInsn(ALOAD, 0);
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Class", "getDeclaredMethods", "()[Ljava/lang/reflect/Method;", false);
-            mv.visitMethodInsn(INVOKESTATIC, "com/galaxy/sirius/AsmUtils", "getParameterTypes", "([Ljava/lang/reflect/Method;)[Ljava/lang/Class;", false);
-            mv.visitVarInsn(ASTORE, parameterSize + 1);
-            // Object[] object = new Object[${parameterSize}];
-            mv.visitLdcInsn(parameterSize);
-            mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+            mv.visitMethodInsn(INVOKESTATIC, "com/galaxy/sirius/AsmUtils", "getParameterTypes", "(Ljava/lang/Class;)[Ljava/lang/Class;", false);
             mv.visitVarInsn(ASTORE, parameterSize + 2);
-            // 初始化Class<?>[] Object[]
-            for (int i = 0; i < parameterSize; i++) {
+            // Object[] object = new Object[${parameterSize}];
+            mv.visitLdcInsn(parameterTypes.length);
+            mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+            mv.visitVarInsn(ASTORE, parameterSize + 3);
+            int index = 1;
+            for (int i = 0; i < parameterTypes.length; i++) {
                 String className = parameterTypes[i].getName();
-                mv.visitVarInsn(ALOAD, parameterSize + 2);
+                mv.visitVarInsn(ALOAD, parameterSize + 3);
                 mv.visitLdcInsn(i);
-                mv.visitVarInsn(getOpcode(className), i + 1);
-                // 将基本类型转为包装类型
+                int opCode = getOpcode(className);
+                mv.visitVarInsn(opCode, index);
+                index += opCode == 22 || opCode == 24 ? 2 : 1;
                 if (AutoPackage.isBaseType(className)) {
                     mv.visitMethodInsn(INVOKESTATIC, AutoPackage.getPackageType(className),
                             "valueOf", AutoPackage.map.get(className), false);
                 }
                 mv.visitInsn(AASTORE);
             }
-
-            // 新建 new SyncThread(${ParameterTypes})
-            mv.visitTypeInsn(NEW, SYNC_THREAD_CLASS_NAME);
-            mv.visitInsn(DUP);
+            // executor.executor(this, "runSync", classes, objects)
+            mv.visitVarInsn(ALOAD, parameterSize + 1);
             mv.visitVarInsn(ALOAD, 0);
             mv.visitLdcInsn(SYNC_METHOD_NAME);
-            mv.visitVarInsn(ALOAD, parameterSize + 1);
             mv.visitVarInsn(ALOAD, parameterSize + 2);
-            mv.visitMethodInsn(INVOKESPECIAL, SYNC_THREAD_CLASS_NAME, "<init>", "(Ljava/lang/Object;Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;)V", false);
-            mv.visitVarInsn(ASTORE, 1);
-            // 新建 new Thread(Runnable).start()
-            mv.visitTypeInsn(NEW, THREAD_CLASS_NAME);
-            mv.visitInsn(DUP);
-            mv.visitVarInsn(ALOAD, 1);
-            mv.visitMethodInsn(INVOKESPECIAL, THREAD_CLASS_NAME, "<init>", "(Ljava/lang/Runnable;)V", false);
-            mv.visitVarInsn(ASTORE, 2);
-            mv.visitVarInsn(ALOAD, 2);
-            mv.visitMethodInsn(INVOKEVIRTUAL, THREAD_CLASS_NAME, "start", "()V", false);
+            mv.visitVarInsn(ALOAD, parameterSize + 3);
+            mv.visitMethodInsn(INVOKEVIRTUAL, SYNC_THREAD_CLASS_NAME, "executor", "(Ljava/lang/Object;Ljava/lang/String;[Ljava/lang/Class;[Ljava/lang/Object;)V", false);
             mv.visitInsn(RETURN);
-            mv.visitMaxs(16, parameterSize + 3);
+            mv.visitMaxs(5, parameterSize + 4);
             mv.visitEnd();
         }
-
         cv.visitEnd();
+    }
+
+    private int getParameterLength(Class<?>[] parameterTypes) {
+        int len = 0;
+        for (Class<?> clazz : parameterTypes) {
+            if (clazz.getName().equals("long") || clazz.getName().equals("double")) {
+                len += 2;
+            } else {
+                len += 1;
+            }
+        }
+        return len;
     }
 
     /**
@@ -144,14 +144,10 @@ public class SyncMethodAdapter extends ClassVisitor {
     private int getOpcode(String className) {
         switch (className) {
             case "int":
-                return ILOAD;
             case "byte":
-                return ILOAD;
             case "short":
-                return ILOAD;
             case "boolean":
-                return ILOAD;
-            case "character":
+            case "char":
                 return ILOAD;
             case "long":
                 return LLOAD;
@@ -174,7 +170,7 @@ public class SyncMethodAdapter extends ClassVisitor {
             map.put("short", "(S)Ljava/lang/Short;");
             map.put("boolean", "(Z)Ljava/lang/Boolean;");
             map.put("char", "(C)Ljava/lang/Character;");
-            map.put("long", "(L)Ljava/lang/Long;");
+            map.put("long", "(J)Ljava/lang/Long;");
             map.put("float", "(F)Ljava/lang/Float;");
             map.put("double", "(D)Ljava/lang/Double;");
         }

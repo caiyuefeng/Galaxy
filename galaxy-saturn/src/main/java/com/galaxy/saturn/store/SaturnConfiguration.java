@@ -11,12 +11,12 @@ public class SaturnConfiguration {
     /**
      * 本地机器IP
      */
-    public static String LOCAL_IP = "";
+    public static String LOCAL_IP = "127.0.0.1";
 
     /**
      * Zookeeper机器节点IP
      */
-    public static String ZK_MACHINE_IP = "";
+    public static String ZK_MACHINE_IP = "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183";
 
     /**
      * 数据缓存池最大缓存量

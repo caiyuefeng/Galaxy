@@ -27,6 +27,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-sirius</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-boot</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.4.10</version>

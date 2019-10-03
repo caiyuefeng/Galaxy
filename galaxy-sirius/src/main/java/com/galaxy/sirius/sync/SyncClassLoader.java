@@ -1,5 +1,6 @@
 package com.galaxy.sirius.sync;
 
+import com.galaxy.earth.ClassUtils;
 import com.galaxy.sirius.annotation.Sync;
 
 import java.lang.annotation.Annotation;
@@ -21,8 +22,11 @@ public class SyncClassLoader extends ClassLoader {
      */
     private Map<String, Class<?>> classBuffer;
 
-    public SyncClassLoader() {
+    private Map<String, Class<?>> classMap;
+
+    public SyncClassLoader(Map<String, Class<?>> classMap) {
         classBuffer = new HashMap<>();
+        this.classMap = classMap;
     }
 
     @Override
@@ -30,7 +34,11 @@ public class SyncClassLoader extends ClassLoader {
         // 不能写成 classBuffer.getOrDefault 否则会出现类找不到异常
         Class<?> clazz = classBuffer.get(name);
         if (clazz == null) {
-            clazz = super.findClass(name);
+            if(classMap.containsKey(name)){
+                clazz =  define(name,ClassUtils.getBytes(classMap.get(name)));
+            }else {
+                clazz = super.findClass(name);
+            }
         }
         return clazz;
     }
@@ -39,7 +47,7 @@ public class SyncClassLoader extends ClassLoader {
         return defineClass(name, bytes, 0, bytes.length);
     }
 
-    public void sync(Map<String, Class<?>> classMap) {
+    public void sync() {
         classMap.forEach((name, clazz) -> {
             boolean isSync = false;
             for (Method method : clazz.getDeclaredMethods()) {
@@ -54,7 +62,11 @@ public class SyncClassLoader extends ClassLoader {
                 }
             }
             if (!isSync) {
-                classBuffer.put(name, clazz);
+                try {
+                    classBuffer.put(name, define(clazz.getTypeName(), ClassUtils.getBytes(clazz)));
+                }catch (LinkageError e){
+                    classBuffer.put(name,clazz);
+                }
             }
         });
     }

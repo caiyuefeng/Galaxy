@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * @Author: 蔡月峰
@@ -36,7 +37,6 @@ public class SyncFactory {
             return;
         }
         String parentName = clazz.getName().substring(0, clazz.getName().lastIndexOf("."));
-        System.out.println(parentName);
         File parentDir = new File(savePath, parentName.replace(".", "/"));
         FileUtils.mkdir(parentDir);
         File classFile = new File(parentDir, clazz.getSimpleName() + ".class");
@@ -50,7 +50,7 @@ public class SyncFactory {
         }
     }
 
-    private static byte[] transform(Class<?> clazz) {
+    public static byte[] transform(Class<?> clazz) {
         Method syncMethod = null;
         for (Method method : clazz.getDeclaredMethods()) {
             Annotation[] annotations = method.getDeclaredAnnotations();
@@ -77,4 +77,8 @@ public class SyncFactory {
         return bytes != null ? loader.define(clazz.getName(), bytes) : null;
     }
 
+    public static Class<?> sync(Class<?> clazz){
+        byte[] bytes = transform(clazz);
+        return bytes != null ?new SyncClassLoader(new HashMap<>()).define(clazz.getName(), bytes) : null;
+    }
 }

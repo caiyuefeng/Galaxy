@@ -26,10 +26,10 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>com.galaxy</groupId>
-            <artifactId>galaxy-saturn</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.galaxy</groupId>-->
+<!--            <artifactId>galaxy-saturn</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.galaxy</groupId>
             <artifactId>galaxy-earth</artifactId>

@@ -1,7 +1,7 @@
 package com.galaxy.saturn.store;
 
 import com.galaxy.saturn.core.Writer;
-import com.galaxy.saturn.thread.GalaxyMonitorThread;
+import com.galaxy.saturn.thread.GalaxyMonitor;
 import com.galaxy.saturn.thread.GalaxyThreadPool;
 import com.galaxy.saturn.zookeeper.ZkClient;
 import com.galaxy.saturn.zookeeper.ZkNode;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author : 蔡月峰
@@ -41,7 +41,7 @@ public class DataPool {
     /**
      * 本地数据队列
      */
-    private LinkedBlockingDeque<String> blockingDeque;
+    private LinkedBlockingQueue<String> blockingDeque;
 
     /**
      * 本地数据集完成节点
@@ -105,11 +105,11 @@ public class DataPool {
     /**
      * 监控线程实例
      */
-    private GalaxyMonitorThread monitorThread = null;
+    private GalaxyMonitor monitorThread = null;
 
     private void init(int maxSize) {
         this.maxSize = maxSize;
-        this.blockingDeque = new LinkedBlockingDeque<>(maxSize);
+        this.blockingDeque = new LinkedBlockingQueue<>();
         this.client = ZkClient.getInstance();
         this.distributeDataQueue = new ZkQueue(maxSize);
         this.registerNode = new ZkNode();
@@ -149,8 +149,8 @@ public class DataPool {
                 dataPool.init(SaturnConfiguration.MAX_SIZE);
                 // 初始化线程池
                 dataPool.threadPool = GalaxyThreadPool.getInstance(SaturnConfiguration.READER_NUM + SaturnConfiguration.WRITER_NUM);
-                dataPool.monitorThread = new GalaxyMonitorThread();
-                dataPool.threadPool.submit(dataPool.monitorThread);
+                dataPool.monitorThread = new GalaxyMonitor();
+//                dataPool.monitorThread.monitor();
             }
         }
         return dataPool;
@@ -283,7 +283,9 @@ public class DataPool {
     public long[] getAllSize() {
         long[] buffer = new long[2];
         buffer[0] = blockingDeque.size();
-        buffer[1] = distributeDataQueue.size();
+        // TODO 修改分布式队列大小获取方式
+//        buffer[1] = distributeDataQueue.size();
+        buffer[1] = 0;
         return buffer;
     }
 

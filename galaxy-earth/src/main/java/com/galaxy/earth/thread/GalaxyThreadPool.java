@@ -39,6 +39,10 @@ public class GalaxyThreadPool {
      * @return 线程池
      */
     public static ThreadPoolExecutor getInstance() {
+       return InnerTool.TOOL.executor;
+    }
+
+    public  static ThreadPoolExecutor newInstance(){
         return new ThreadPoolExecutor(3, 3, 10,
                 TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(5), new GalaxyThreadFactory());
     }

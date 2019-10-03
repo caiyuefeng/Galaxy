@@ -49,10 +49,14 @@ public class LauncherClassLoader extends ClassLoader {
             InputStream in = null;
             try {
                 File classFile = new File(this.classPath, childClassPath);
-                in = new FileInputStream(classFile);
-                clazz = define(name, loadClass(in));
-                classBuffer.put(name, clazz);
-                classPathBuffer.put(name, classFile.getAbsolutePath());
+                if (classFile.isFile()&&classFile.exists()) {
+                    in = new FileInputStream(classFile);
+                    clazz = define(name, loadClass(in));
+                    classBuffer.put(name, clazz);
+                    classPathBuffer.put(name, classFile.getAbsolutePath());
+                }else {
+                    LOG.error("文件[{}]不存在!",classFile.getAbsolutePath());
+                }
             } catch (IOException e) {
                 LOG.error(String.format("读取文件[%s]出现异常", name), e);
                 e.fillInStackTrace();
@@ -98,12 +102,21 @@ public class LauncherClassLoader extends ClassLoader {
         }
         if (classFile.isFile() && classFile.getName().endsWith("class")) {
             String currQualifiedName = isEmpty(qualifiedName) ? classFile.getName() : qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
+            if (classBuffer.containsKey(currQualifiedName)) {
+                return;
+            }
             try (InputStream in = new FileInputStream(classFile)) {
                 classBuffer.put(currQualifiedName, define(currQualifiedName, loadClass(in)));
                 classPathBuffer.put(currQualifiedName, classFile.getAbsolutePath());
             } catch (IOException e) {
                 LOG.error(String.format("读取文件[%s]出现异常", classFile.getAbsolutePath()), e);
                 e.fillInStackTrace();
+            } catch (LinkageError error) {
+                try {
+                    classBuffer.put(currQualifiedName, super.loadClass(currQualifiedName));
+                } catch (ClassNotFoundException e) {
+                    // 不抛出异常
+                }
             }
         }
     }

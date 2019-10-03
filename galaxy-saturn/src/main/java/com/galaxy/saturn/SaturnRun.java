@@ -1,10 +1,13 @@
 package com.galaxy.saturn;
 
-import com.galaxy.saturn.execute.DistributeExecute;
+import com.galaxy.boot.annotation.Run;
+import com.galaxy.saturn.thread.GalaxyMonitor;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author : 蔡月峰
@@ -19,21 +22,35 @@ public class SaturnRun implements Watcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger(SaturnRun.class);
 
-    public static void main(String[] args) {
-        if (args.length == 0) {
-            usage();
-            return;
+    @Run
+    public void executor() {
+        GalaxyMonitor monitor = new GalaxyMonitor();
+        monitor.monitor();
+        while (true) {
+            System.out.println("主线程!");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        switch (args[0]) {
-            case "0":
-                DistributeExecute execute = new DistributeExecute();
-                execute.execute();
-                break;
-            case "1":
-                break;
-            default:
-                break;
-        }
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+//        if (args.length == 0) {
+//            usage();
+//            return;
+//        }
+//        switch (args[0]) {
+//            case "0":
+//                DistributeExecute execute = new DistributeExecute();
+//                execute.execute();
+//                break;
+//            case "1":
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     private static void usage() {

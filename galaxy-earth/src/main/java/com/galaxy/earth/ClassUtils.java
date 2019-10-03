@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -161,6 +159,9 @@ public class ClassUtils {
             classPath = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
         }
         File file = new File(classPath);
+        if (file.isDirectory()) {
+            file = new File(file, clazz.getTypeName().replace(Symbol.DOT.getValue(), Symbol.SLASH.getValue()) + Symbol.DOT.getValue() + CLASS_TAIL);
+        }
         try (InputStream in = new FileInputStream(file);
              BufferedInputStream buffer = new BufferedInputStream(in)) {
             int len = buffer.available();
@@ -200,8 +201,20 @@ public class ClassUtils {
     }
 
     private static class DefineClassLoader extends ClassLoader {
+        private Map<String, Class<?>> classBuffer = new HashMap<>();
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            if (classBuffer.containsKey(name)) {
+                return classBuffer.get(name);
+            }
+            return super.findClass(name);
+        }
+
         Class<?> defineClass(String className, byte[] bytes) {
-            return defineClass(className, bytes, Digit.ZERO.toInt(), bytes.length);
+            Class<?> clazz = defineClass(className, bytes, Digit.ZERO.toInt(), bytes.length);
+            classBuffer.put(className, clazz);
+            return clazz;
         }
     }
 }

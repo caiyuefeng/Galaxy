@@ -1,8 +1,7 @@
 package com.galaxy.sirius;
 
+import com.galaxy.sirius.sync.SyncExecutor;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * @Author: 蔡月峰
@@ -13,8 +12,18 @@ import java.io.File;
  */
 public class SiriusTest {
 
-    @Test
-    public void testMain() throws ClassNotFoundException {
-//        Sirius.getInstance(new File("D:\\WorkSpace\\Galaxy\\Galaxy\\sirius\\target\\test-classes")).executor();
+    public void testMain(int a, int b) throws ClassNotFoundException {
+        SyncExecutor executor = SyncExecutor.getInstance();
+        Class<?>[] classes = new Class[2];
+        classes[0] = int.class;
+        classes[1] = int.class;
+        Object[] objects = new Object[2];
+        objects[0] = a;
+        objects[1] = b;
+        executor.executor(this, "runSync", classes, objects);
+    }
+
+    public static void main(String[] args) {
+        AsmUtils.printClassStruct(SiriusTest.class);
     }
 }

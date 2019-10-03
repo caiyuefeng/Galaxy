@@ -12,7 +12,8 @@ public enum Symbol {
      * 字符串标志
      */
     EMPTY_STR(""),
-    DOT(".");
+    DOT("."),
+    SLASH("/");
 
     String value;
 

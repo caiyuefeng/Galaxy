@@ -41,7 +41,7 @@ public class Sirius {
     /**
      * 用户类路径
      */
-    private File dir = null;
+    private File dir;
 
     static {
 //        getInstance().executor();

@@ -34,8 +34,18 @@ public class AsmUtils {
                 .accept(new TraceClassVisitor(new ClassWriter(0), new Textifier(), new PrintWriter(System.out)), 0);
     }
 
-    public static Class<?>[] getParameterTypes(Method[] methods) {
-        for (Method method : methods) {
+    /**
+     * 打印类结构体
+     *
+     * @param clazz 待打印类
+     */
+    public static void printClassStruct(byte[] clazz) {
+        new ClassReader(clazz)
+                .accept(new TraceClassVisitor(new ClassWriter(0), new Textifier(), new PrintWriter(System.out)), 0);
+    }
+
+    public static Class<?>[] getParameterTypes(Class<?> clazz) {
+        for (Method method : clazz.getDeclaredMethods()) {
             if (SYNC_METHOD_NAME.equals(method.getName())) {
                 return method.getParameterTypes();
             }

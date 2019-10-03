@@ -2,7 +2,7 @@ package com.galaxy.saturn.thread;
 
 import com.galaxy.saturn.core.Writer;
 import com.galaxy.saturn.store.DataPool;
-import org.apache.commons.lang.StringUtils;
+import com.galaxy.sirius.annotation.Sync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +16,9 @@ import java.util.List;
  * 该线程固定时间间隔轮询访问打印当前处理的输入量、输出量和数据池缓存量
  * @date : 2018/12/24 9:54
  **/
-public class GalaxyMonitorThread implements Runnable {
+public class GalaxyMonitor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GalaxyMonitorThread.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GalaxyMonitor.class);
 
     /**
      * 上次打印时间
@@ -35,17 +35,16 @@ public class GalaxyMonitorThread implements Runnable {
      */
     private List<Writer> writers;
 
-    public GalaxyMonitorThread() {
+    public GalaxyMonitor() {
         dataPool = DataPool.getInstance();
         writers = new ArrayList<>();
     }
 
-    @Override
-    public void run() {
-        Thread.currentThread().setName(StringUtils.substringBeforeLast(Thread.currentThread().getName(), "_") + "_监控");
+    @Sync
+    public void monitor() {
         while (true) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - lastPrintTime >= 10000) {
+            if (currentTime - lastPrintTime >= 100) {
                 // 打印当前数据量统计
                 long[] buffer = dataPool.getAllSize();
                 LOG.info("数据池统计\t输入数据量:{}\t输出数据量:{}\t当前数据池数据量:{}\t内存数据量:{}\tZookeeper数据量:{}",
@@ -80,10 +79,10 @@ public class GalaxyMonitorThread implements Runnable {
                             }
                         }
                         LOG.info("监控线程停止运行!");
-                        dataPool.close();
-                        break;
+//                        dataPool.close();
+//                        break;
                     }
-                    Thread.sleep(10000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
