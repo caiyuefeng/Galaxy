@@ -39,17 +39,10 @@ public class DistributeExecute {
         Map<String, List<String>> map = DistributeFile.take(paths, 0, 1,
                 SaturnConfiguration.READER_NUM);
         for (int i = 0; i < SaturnConfiguration.READER_NUM; i++) {
-            dataPool.submit(new Reader(map.get(String.valueOf(i)), "生产_" + i));
+            new Reader(map.get(String.valueOf(i)), "生产_" + i).run();
         }
         for (int i = 0; i < SaturnConfiguration.WRITER_NUM; i++) {
-            dataPool.submit(new Writer("消费_" + i));
-        }
-        dataPool.getThreadPool().shutdown();
-        while (true) {
-            if (dataPool.getThreadPool().isTerminated()) {
-                LOG.info("执行完毕!");
-                break;
-            }
+            new Writer("消费_" + i).run();
         }
     }
 

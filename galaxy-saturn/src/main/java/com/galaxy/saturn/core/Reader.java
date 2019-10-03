@@ -2,6 +2,7 @@ package com.galaxy.saturn.core;
 
 import com.galaxy.saturn.store.DataPool;
 import com.galaxy.saturn.utils.FileUtils;
+import com.galaxy.sirius.annotation.Sync;
 import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import java.util.List;
  * @Description: 读取线程
  * @date : 2018/12/24 9:52
  **/
-public class Reader implements Runnable {
+public class Reader {
 
     /**
      * 日志句柄
@@ -51,7 +52,7 @@ public class Reader implements Runnable {
         LOG.info("线程:" + threadName + "正在处理文件集:" + new Gson().toJson(files));
     }
 
-    @Override
+    @Sync
     public void run() {
         // 设置当前线程名
         Thread.currentThread().setName(StringUtils.substringBeforeLast(Thread.currentThread().getName(), "_")

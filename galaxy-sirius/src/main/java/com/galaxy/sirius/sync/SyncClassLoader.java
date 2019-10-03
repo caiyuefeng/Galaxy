@@ -48,7 +48,7 @@ public class SyncClassLoader extends ClassLoader {
     }
 
     public void sync() {
-        classMap.forEach((name, clazz) -> {
+        this.classMap.forEach((name, clazz) -> {
             boolean isSync = false;
             for (Method method : clazz.getDeclaredMethods()) {
                 for (Annotation annotation : method.getDeclaredAnnotations()) {
@@ -69,5 +69,6 @@ public class SyncClassLoader extends ClassLoader {
                 }
             }
         });
+        this.classMap.clear();
     }
 }

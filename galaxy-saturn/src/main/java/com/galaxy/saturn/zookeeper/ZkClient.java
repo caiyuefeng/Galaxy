@@ -1,12 +1,13 @@
 package com.galaxy.saturn.zookeeper;
 
+import com.galaxy.stone.Symbol;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.ACL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @Description:
  * @date : 2018/12/24 9:51
  **/
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class ZkClient implements Watcher {
 
     /**
@@ -23,6 +25,9 @@ public class ZkClient implements Watcher {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ZkClient.class);
 
+    /**
+     * 权限列表
+     */
     private List<ACL> defaultAcl = ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
     /**
@@ -66,8 +71,8 @@ public class ZkClient implements Watcher {
         return delete(zkNode.getNodePath());
     }
 
-    public boolean delete(String path) {
-        path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
+    private boolean delete(String path) {
+        path = path.endsWith(Symbol.SLASH.getValue()) ? path.substring(0, path.length() - 1) : path;
         try {
             if (zk.exists(path, false) == null) {
                 return true;
@@ -108,7 +113,7 @@ public class ZkClient implements Watcher {
         return exist(zkNode, null);
     }
 
-    public boolean exist(ZkNode zkNode, Watcher watcher) {
+    boolean exist(ZkNode zkNode, Watcher watcher) {
         try {
             if (zk.exists(zkNode.getNodePath(), watcher) == null) {
                 return false;
@@ -133,29 +138,27 @@ public class ZkClient implements Watcher {
         return zkNodes;
     }
 
-    public int getSize(String path) {
+    int getSize(String path) {
         try {
             if (zk.exists(path, false) != null) {
                 List<String> list = zk.getChildren(path, false);
                 return list == null ? 0 : list.size();
             }
         } catch (KeeperException | InterruptedException e) {
-            LOG.error("路径:[{}]获取异常!", path);
-            e.printStackTrace();
+            LOG.error(String.format("路径:[%s]获取异常!", path), e);
         }
         return 0;
     }
 
-    public String getContent(ZkNode node) {
+    String getContent(ZkNode node) {
         if (!exist(node)) {
             return null;
         }
         try {
-            return new String(zk.getData(node.getNodePath(), false, null), "UTF-8");
-        } catch (UnsupportedEncodingException | KeeperException | InterruptedException e) {
-            e.printStackTrace();
+            return new String(zk.getData(node.getNodePath(), false, null), StandardCharsets.UTF_8);
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(String.format("获取[%s]节点内容时发生异常!\n", node.getNodePath()), e);
         }
         return null;
     }
-
 }

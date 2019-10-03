@@ -1,6 +1,7 @@
 package com.galaxy.saturn.core;
 
 import com.galaxy.saturn.store.DataPool;
+import com.galaxy.sirius.annotation.Sync;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @Description: 消费者线程
  * @date : 2018/12/24 9:52
  **/
-public class Writer implements Runnable {
+public class Writer {
 
     /**
      * 日志句柄
@@ -56,7 +57,7 @@ public class Writer implements Runnable {
         this.stop = stop;
     }
 
-    @Override
+    @Sync
     public void run() {
         // 设置当前线程名
         Thread.currentThread().setName(StringUtils.substringBeforeLast(Thread.currentThread().getName(), "_")

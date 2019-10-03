@@ -1,8 +1,6 @@
 package com.galaxy.saturn.store;
 
-import com.galaxy.saturn.core.Writer;
 import com.galaxy.saturn.thread.GalaxyMonitor;
-import com.galaxy.saturn.thread.GalaxyThreadPool;
 import com.galaxy.saturn.zookeeper.ZkClient;
 import com.galaxy.saturn.zookeeper.ZkNode;
 import com.galaxy.saturn.zookeeper.ZkQueue;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -98,11 +95,6 @@ public class DataPool {
     private volatile static DataPool dataPool = null;
 
     /**
-     * 文件处理线程池
-     */
-    private ExecutorService threadPool = null;
-
-    /**
      * 监控线程实例
      */
     private GalaxyMonitor monitorThread = null;
@@ -147,10 +139,9 @@ public class DataPool {
                 // 初始化数据池
                 dataPool = new DataPool();
                 dataPool.init(SaturnConfiguration.MAX_SIZE);
-                // 初始化线程池
-                dataPool.threadPool = GalaxyThreadPool.getInstance(SaturnConfiguration.READER_NUM + SaturnConfiguration.WRITER_NUM);
+                // 初始化监控器
                 dataPool.monitorThread = new GalaxyMonitor();
-//                dataPool.monitorThread.monitor();
+                dataPool.monitorThread.monitor();
             }
         }
         return dataPool;
@@ -283,9 +274,7 @@ public class DataPool {
     public long[] getAllSize() {
         long[] buffer = new long[2];
         buffer[0] = blockingDeque.size();
-        // TODO 修改分布式队列大小获取方式
-//        buffer[1] = distributeDataQueue.size();
-        buffer[1] = 0;
+        buffer[1] = distributeDataQueue.size();
         return buffer;
     }
 
@@ -303,16 +292,5 @@ public class DataPool {
         outputCnt = 0L;
         upload = false;
         download = false;
-    }
-
-    public void submit(Runnable runnable) {
-        if (runnable instanceof Writer) {
-            monitorThread.getWriters().add((Writer) runnable);
-        }
-        threadPool.submit(runnable);
-    }
-
-    public ExecutorService getThreadPool() {
-        return threadPool;
     }
 }

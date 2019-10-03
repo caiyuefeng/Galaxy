@@ -3,6 +3,7 @@ package com.galaxy.saturn.zookeeper;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,14 +34,14 @@ public class ZkQueue {
     /**
      * 队列最大的存储数
      */
-    private long maxSize = -1L;
+    private long maxSize;
 
     /**
      * 节点缓存
      */
     private ZkNode node;
 
-    public ZkQueue(String rootPath, ZkClient client, long maxSize) {
+    private ZkQueue(String rootPath, ZkClient client, long maxSize) {
         this.rootPath = rootPath;
         this.client = client;
         this.maxSize = maxSize;
@@ -48,10 +49,6 @@ public class ZkQueue {
         node.setNodePath(rootPath);
         client.delete(node);
         client.create(node);
-    }
-
-    public ZkQueue() {
-        this(-1L);
     }
 
     public ZkQueue(long maxSize) {
@@ -71,7 +68,7 @@ public class ZkQueue {
             while (maxSize > 0 && size() >= maxSize) {
                 Thread.sleep(1);
             }
-            node.setContent(content.getBytes("UTF-8"));
+            node.setContent(content.getBytes(StandardCharsets.UTF_8));
             node.setNodePath(rootPath + "/" + defaultName);
             if (!client.create(node, CreateMode.PERSISTENT_SEQUENTIAL)) {
                 throw new Exception("插入数据失败!插入路径:[" + rootPath + "/" + defaultName + "];插入内容:" + content);
