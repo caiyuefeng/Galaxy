@@ -1,6 +1,7 @@
 package com.galaxy.boot;
 
 
+import com.galaxy.stone.Symbol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,8 +9,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @Author: 蔡月峰
@@ -36,6 +40,8 @@ public class LauncherClassLoader extends ClassLoader {
      */
     private Map<String, String> classPathBuffer = new HashMap<>();
 
+    private Map<String, byte[]> classByteBuffer = new HashMap<>();
+
     /**
      * 当前类加载路径
      */
@@ -45,38 +51,16 @@ public class LauncherClassLoader extends ClassLoader {
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         Class<?> clazz = classBuffer.get(name);
         if (clazz == null) {
-            String childClassPath = name.replace(".", "/") + ".class";
-            InputStream in = null;
-            try {
-                File classFile = new File(this.classPath, childClassPath);
-                if (classFile.isFile()&&classFile.exists()) {
-                    in = new FileInputStream(classFile);
-                    clazz = define(name, loadClass(in));
-                    classBuffer.put(name, clazz);
-                    classPathBuffer.put(name, classFile.getAbsolutePath());
-                }else {
-                    LOG.error("文件[{}]不存在!",classFile.getAbsolutePath());
-                }
-            } catch (IOException e) {
-                LOG.error(String.format("读取文件[%s]出现异常", name), e);
-                e.fillInStackTrace();
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            if (classByteBuffer.containsKey(name)) {
+                clazz = define(name, classByteBuffer.get(name));
+                classBuffer.put(name, clazz);
             }
         }
         return clazz == null ? super.findClass(name) : clazz;
     }
 
-    static LauncherClassLoader getInstance(String classPath) {
-        LauncherClassLoader loader = new LauncherClassLoader();
-        loader.load(classPath);
-        return loader;
+    static LauncherClassLoader getInstance() {
+        return new LauncherClassLoader();
     }
 
     private Class<?> define(String name, byte[] bytes) {
@@ -86,6 +70,20 @@ public class LauncherClassLoader extends ClassLoader {
     void load(String classPath) {
         this.classPath = classPath;
         load(new File(classPath), "");
+        classByteBuffer.forEach((name, bytes) -> {
+            if (!classBuffer.containsKey(name)) {
+                try {
+                    classBuffer.put(name, define(name, bytes));
+                } catch (LinkageError e) {
+                    try {
+                        classBuffer.put(name, super.loadClass(name));
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
     private void load(File classFile, String qualifiedName) {
@@ -100,28 +98,43 @@ public class LauncherClassLoader extends ClassLoader {
             }
             LOG.debug("路径[{}]没有子路径或文件", classFile.getAbsolutePath());
         }
+
+        // 加载jar包中的文件
+        if (classFile.isFile() && classFile.getName().endsWith("jar")) {
+            try {
+                JarFile jarFile = new JarFile(classFile);
+                Enumeration<JarEntry> enumeration = jarFile.entries();
+                while (enumeration.hasMoreElements()) {
+                    JarEntry entry = enumeration.nextElement();
+                    String name = entry.getName();
+                    if (name.endsWith("class")) {
+                        name = name.substring(0, name.lastIndexOf(Symbol.DOT.getValue())).replace(Symbol.SLASH.getValue(), Symbol.DOT.getValue());
+                        String classPath = "jar:file:" + classFile.getAbsolutePath() + "!/" + entry.getName();
+                        classByteBuffer.put(name, loadBytes(jarFile.getInputStream(entry)));
+                        classPathBuffer.put(name, classPath);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 加载Class文件
         if (classFile.isFile() && classFile.getName().endsWith("class")) {
             String currQualifiedName = isEmpty(qualifiedName) ? classFile.getName() : qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
             if (classBuffer.containsKey(currQualifiedName)) {
                 return;
             }
             try (InputStream in = new FileInputStream(classFile)) {
-                classBuffer.put(currQualifiedName, define(currQualifiedName, loadClass(in)));
+                classByteBuffer.put(currQualifiedName, loadBytes(in));
                 classPathBuffer.put(currQualifiedName, classFile.getAbsolutePath());
             } catch (IOException e) {
                 LOG.error(String.format("读取文件[%s]出现异常", classFile.getAbsolutePath()), e);
-                e.fillInStackTrace();
-            } catch (LinkageError error) {
-                try {
-                    classBuffer.put(currQualifiedName, super.loadClass(currQualifiedName));
-                } catch (ClassNotFoundException e) {
-                    // 不抛出异常
-                }
             }
         }
     }
 
-    private byte[] loadClass(InputStream in) throws IOException {
+    private byte[] loadBytes(InputStream in) throws IOException {
         int len = in.available();
         byte[] bytes = new byte[len];
         int realLen = in.read(bytes);

@@ -10,7 +10,17 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>galaxy-earth</artifactId>
     <version>1.0</version>
+
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>log4j.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <finalName>galaxy-earth-${project.version}</finalName>
         <plugins>
             <plugin>

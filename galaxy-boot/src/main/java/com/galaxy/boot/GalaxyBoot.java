@@ -18,11 +18,13 @@ import java.util.Map;
 public class GalaxyBoot {
 
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        run("com.galaxy.saturn.SaturnRun");
+        String[] parameters = new String[args.length - 1];
+        System.arraycopy(args, 1, parameters, 0, args.length - 1);
+        run(args[0], parameters);
     }
 
-    public static void run(String clazzName) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        LauncherClassLoader loader = LauncherClassLoader.getInstance("");
+    private static void run(String clazzName, String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        LauncherClassLoader loader = LauncherClassLoader.getInstance();
         String classPath = System.getProperty("galaxy.class.path");
         for (String childPath : classPath.split(";", -1)) {
             loader.load(childPath);
@@ -33,7 +35,7 @@ public class GalaxyBoot {
         for (Method method : cla.getDeclaredMethods()) {
             for (Annotation annotation : method.getDeclaredAnnotations()) {
                 if (annotation instanceof Run) {
-                    method.invoke(cla.newInstance());
+                    method.invoke(cla.newInstance(), new Object[]{args});
                 }
             }
         }
