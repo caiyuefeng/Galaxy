@@ -1,10 +1,9 @@
 package com.galaxy.saturn.core;
 
+import com.galaxy.earth.FileUtils;
+import com.galaxy.saturn.IsCloseable;
 import com.galaxy.saturn.store.DataPool;
-import com.galaxy.saturn.utils.FileUtils;
 import com.galaxy.sirius.annotation.Sync;
-import com.google.gson.Gson;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +14,10 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 读取线程
+ * @Description: 文件读取器
  * @date : 2018/12/24 9:52
  **/
-public class Reader {
+public class Reader implements IsCloseable {
 
     /**
      * 日志句柄
@@ -26,55 +25,50 @@ public class Reader {
     private static final Logger LOG = LoggerFactory.getLogger(Reader.class);
 
     /**
-     * 线程名称
-     */
-    private String threadName;
-
-    /**
      * 数据池
      */
-    private DataPool dataPool = DataPool.getInstance();
+    private DataPool dataPool;
 
     /**
      * 输入操作
      */
     private Input input;
 
+    private boolean close = false;
+
     /**
      * 待处理文件集
      */
-    private List<String> files;
+    private List<String> localFiles;
 
-    public Reader(List<String> files, String threadName) {
-        this.threadName = threadName;
-        this.files = files;
+    public Reader(DataPool dataPool, List<String> files) {
+        this.dataPool = dataPool;
+        this.localFiles = files;
         this.input = DefaultInput.getInstance();
-        LOG.info("线程:" + threadName + "正在处理文件集:" + new Gson().toJson(files));
     }
 
     @Sync
-    public void run() {
-        // 设置当前线程名
-        Thread.currentThread().setName(StringUtils.substringBeforeLast(Thread.currentThread().getName(), "_")
-                + "_" + threadName);
+    public void executor() {
         try {
-            for (String file : files) {
+            for (String file : localFiles) {
+                LOG.info("文件:[{}]开始读取...", file);
                 long sTime = System.currentTimeMillis();
-                File temp = new File(file);
-                String name = temp.getName();
-                this.dataPool.setStatus(name, false);
-                LOG.info("文件:" + name + "开始读取...");
-                List<String> lines = FileUtils.listLines(temp);
+                List<String> lines = FileUtils.listLines(new File(file));
                 long cnt = 0L;
                 for (String line : lines) {
                     dataPool.put(input.take(line));
                     cnt++;
                 }
-                LOG.info("文件:[{}] 已经处理完毕!文件条数:{},耗时:{} ms", name, cnt, System.currentTimeMillis() - sTime);
-                dataPool.setStatus(name, true);
+                LOG.info("文件:[{}] 已经处理完毕!文件条数:{},耗时:{} ms", file, cnt, System.currentTimeMillis() - sTime);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("读取文件发生异常!", e);
         }
+        close = true;
+    }
+
+    @Override
+    public boolean isClose() {
+        return this.close;
     }
 }

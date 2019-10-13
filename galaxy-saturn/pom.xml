@@ -12,6 +12,7 @@
     <artifactId>galaxy-saturn</artifactId>
     <version>1.0</version>
     <build>
+        <finalName>galaxy-saturn-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -21,7 +22,6 @@
                 </excludes>
             </resource>
         </resources>
-        <finalName>galaxy-saturn-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -35,6 +35,10 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-earth</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.galaxy</groupId>
             <artifactId>galaxy-sirius</artifactId>

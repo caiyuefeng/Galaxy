@@ -1,4 +1,4 @@
-package com.galaxy.saturn.store;
+package com.galaxy.saturn;
 
 /**
  * @author : 蔡月峰
@@ -21,17 +21,17 @@ public class SaturnConfiguration {
     /**
      * 数据缓存池最大缓存量
      */
-    public static int MAX_SIZE = 0;
+    public static int MAX_SIZE = 50;
 
     /**
      * 读取线程数
      */
-    public static int READER_NUM = 0;
+    public static int READER_NUM = 2;
 
     /**
      * 写线程数
      */
-    public static int WRITER_NUM = 0;
+    public static int WRITER_NUM = 1;
 
     /**
      * 载入配置

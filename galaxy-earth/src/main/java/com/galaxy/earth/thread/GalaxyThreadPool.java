@@ -43,7 +43,7 @@ public class GalaxyThreadPool {
     }
 
     public  static ThreadPoolExecutor newInstance(){
-        return new ThreadPoolExecutor(3, 3, 10,
+        return new ThreadPoolExecutor(5, 5, 10,
                 TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(5), new GalaxyThreadFactory());
     }
 

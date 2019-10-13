@@ -16,7 +16,7 @@ import java.util.TreeSet;
  * @Description: 分布式文件锁
  * @date : 2018/12/24 9:52
  **/
-public class ZkNodeLock {
+class ZkNodeLock {
 
     private final static Logger LOG = LoggerFactory.getLogger(ZkNodeLock.class);
 
@@ -24,7 +24,7 @@ public class ZkNodeLock {
 
     private ZkClient client;
 
-    private String lockName = "";
+    private String lockName;
 
     /**
      * 锁询问计算器
@@ -41,18 +41,11 @@ public class ZkNodeLock {
      */
     private static final long MAX_COUNT = 100000L;
 
-    public ZkNodeLock(String lockPath, ZkClient client) {
-        this(lockPath, client, "lock_");
-    }
-
-    public ZkNodeLock(String lockPath, ZkClient client, String lockName) {
+    ZkNodeLock(String lockPath, ZkClient client, String lockName) {
         this.lockPath = lockPath;
         this.client = client;
         this.lockName = lockName;
-        this.lockNode = new ZkNode();
-        this.lockNode.setNodePath(this.lockPath);
-        client.create(this.lockNode);
-        this.lockNode = null;
+        client.create(client.prepareNode().addNodePath(lockPath).build());
     }
 
     /**
@@ -61,14 +54,13 @@ public class ZkNodeLock {
      * @throws InterruptedException 1
      * @throws KeeperException      2
      */
-    public void lock() throws InterruptedException, KeeperException {
+    void lock() throws InterruptedException, KeeperException {
         while (true) {
             if (MAX_COUNT < inquiry) {
                 throw new IllegalStateException("");
             }
             if (lockNode == null) {
-                lockNode = new ZkNode();
-                lockNode.setNodePath(lockPath + "/" + lockName);
+                lockNode = client.prepareNode().addNodePath(lockPath + "/" + lockName).build();
                 if (!client.create(lockNode, CreateMode.EPHEMERAL_SEQUENTIAL)) {
                     lockNode = null;
                     Thread.sleep(inquiry);
@@ -94,7 +86,7 @@ public class ZkNodeLock {
     /**
      * 解锁
      */
-    public void unlock() {
+    void unlock() {
         if (client.delete(lockNode)) {
             LOG.debug("分布式锁节点:[" + lockNode.getNodePath() + "] 已经释放");
             lockNode = null;
@@ -146,7 +138,7 @@ public class ZkNodeLock {
             try {
                 lock();
             } catch (InterruptedException | KeeperException e) {
-                e.printStackTrace();
+                LOG.error("ZK连接异常!", e);
             }
         }
     }

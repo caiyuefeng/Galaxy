@@ -44,7 +44,6 @@ public class SyncExecutor {
 
     public void executor(Object object, String methodName, Class<?>[] parameterTypes, Object[] parameterValues) {
         threadPool.execute(new Executor(object, methodName, parameterTypes, parameterValues));
-        threadPool.shutdown();
     }
 
     private static class Executor implements Runnable {

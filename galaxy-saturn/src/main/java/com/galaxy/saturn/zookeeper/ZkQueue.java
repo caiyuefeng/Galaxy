@@ -3,11 +3,9 @@ package com.galaxy.saturn.zookeeper;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 
 /**
  * @author : 蔡月峰
@@ -16,6 +14,9 @@ import java.util.TreeSet;
  * @date : 2018/12/24 9:52
  **/
 public class ZkQueue {
+
+    private static final String ROOT_PATH = "/galaxy/saturn/queue";
+
     /**
      * ZK客户端实例
      */
@@ -36,23 +37,17 @@ public class ZkQueue {
      */
     private long maxSize;
 
-    /**
-     * 节点缓存
-     */
-    private ZkNode node;
-
     private ZkQueue(String rootPath, ZkClient client, long maxSize) {
         this.rootPath = rootPath;
         this.client = client;
         this.maxSize = maxSize;
-        node = new ZkNode();
-        node.setNodePath(rootPath);
-        client.delete(node);
-        client.create(node);
+        ZkNode rootNode = client.prepareNode().addNodePath(rootPath).build();
+        client.delete(rootNode);
+        client.create(rootNode);
     }
 
-    public ZkQueue(long maxSize) {
-        this("/galaxy/saturn/queue_" + System.currentTimeMillis(), ZkClient.getInstance(), maxSize);
+    public ZkQueue(ZkClient client, long maxSize) {
+        this(ROOT_PATH + "/queue_tmp_" + System.currentTimeMillis(), client, maxSize);
     }
 
     /**
@@ -68,8 +63,9 @@ public class ZkQueue {
             while (maxSize > 0 && size() >= maxSize) {
                 Thread.sleep(1);
             }
-            node.setContent(content.getBytes(StandardCharsets.UTF_8));
-            node.setNodePath(rootPath + "/" + defaultName);
+            ZkNode node = client.prepareNode().addContent(content)
+                    .addNodePath(rootPath + "/" + defaultName)
+                    .build();
             if (!client.create(node, CreateMode.PERSISTENT_SEQUENTIAL)) {
                 throw new Exception("插入数据失败!插入路径:[" + rootPath + "/" + defaultName + "];插入内容:" + content);
             }
@@ -140,13 +136,9 @@ public class ZkQueue {
      * 关闭队列
      */
     public void close() {
-        node.setNodePath(rootPath);
-        client.delete(node);
-        node.setNodePath("/galaxy/saturn/lock_put");
-        client.delete(node);
-        node.setNodePath("/galaxy/saturn/lock_poll");
-        client.delete(node);
-        node = null;
+        client.delete(client.prepareNode().addNodePath(rootPath).build());
+        client.delete(client.prepareNode().addNodePath("/galaxy/saturn/lock_put").build());
+        client.delete(client.prepareNode().addNodePath("/galaxy/saturn/lock_poll").build());
         client = null;
         rootPath = null;
     }

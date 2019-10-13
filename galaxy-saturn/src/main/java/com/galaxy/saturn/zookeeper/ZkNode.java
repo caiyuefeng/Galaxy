@@ -1,5 +1,7 @@
 package com.galaxy.saturn.zookeeper;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -19,19 +21,41 @@ public class ZkNode implements Comparable<ZkNode> {
     /**
      * 节点序列号
      */
-    private long nodeSerialNo = 0L;
+    private long nodeSerialNo;
 
     /**
      * 节点存储内容
      */
-    private byte[] content = null;
+    private byte[] content;
 
+    ZkNode(String nodePath, long nodeSerialNo, byte[] content) {
+        this.nodePath = nodePath;
+        this.nodeSerialNo = nodeSerialNo;
+        this.content = content;
+    }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(nodePath);
         result = 31 * result + Arrays.hashCode(content);
         return result;
+    }
+
+    public String getNodePath() {
+        return nodePath;
+    }
+
+    void setNodeSerialNo(long nodeSerialNo) {
+        this.nodeSerialNo = nodeSerialNo;
+    }
+
+    byte[] getContent() {
+        return content;
+    }
+
+    ZkNode getParent() {
+        String parentPath = StringUtils.isEmpty(nodePath) ? "" : nodePath.substring(0, nodePath.lastIndexOf("/"));
+        return StringUtils.isEmpty(parentPath) ? null : new ZkNode(parentPath, -1, null);
     }
 
     @Override
@@ -70,29 +94,5 @@ public class ZkNode implements Comparable<ZkNode> {
             return 1;
         }
         return (int) (this.nodeSerialNo - that.nodeSerialNo);
-    }
-
-    public String getNodePath() {
-        return nodePath;
-    }
-
-    public void setNodePath(String nodePath) {
-        this.nodePath = nodePath;
-    }
-
-    public long getNodeSerialNo() {
-        return nodeSerialNo;
-    }
-
-    public void setNodeSerialNo(long nodeSerialNo) {
-        this.nodeSerialNo = nodeSerialNo;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
     }
 }

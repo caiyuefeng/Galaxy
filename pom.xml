@@ -117,10 +117,10 @@
     </dependencyManagement>
 
     <modules>
-        <module>galaxy-asteroid</module>
+<!--        <module>galaxy-asteroid</module>-->
 <!--        <module>galaxy-sun</module>-->
-        <module>galaxy-saturn</module>
 <!--        <module>galaxy-jupiter</module>-->
+        <module>galaxy-saturn</module>
         <module>galaxy-earth</module>
         <module>galaxy-sirius</module>
         <module>galaxy-boot</module>

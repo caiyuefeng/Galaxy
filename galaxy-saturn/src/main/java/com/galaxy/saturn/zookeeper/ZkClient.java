@@ -17,7 +17,6 @@ import java.util.List;
  * @Description:
  * @date : 2018/12/24 9:51
  **/
-@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class ZkClient implements Watcher {
 
     /**
@@ -33,7 +32,7 @@ public class ZkClient implements Watcher {
     /**
      * 客户端实例
      */
-    private static ZkClient client = null;
+    private volatile static ZkClient CLIENT = null;
 
     /**
      * 客户端实例
@@ -43,24 +42,29 @@ public class ZkClient implements Watcher {
     private ZkClient() {
     }
 
-    public static void init(String connectInfo) throws IOException {
-        client = new ZkClient();
-        client.zk = new ZooKeeper(connectInfo, 2000, client);
-
-        ZkNode node = new ZkNode();
-        node.setNodePath("/galaxy");
-        if (!client.exist(node) && !client.create(node)) {
-            client = null;
-            return;
-        }
-        node.setNodePath("/galaxy/saturn");
-        if (!client.exist(node) && !client.create(node)) {
-            client = null;
-        }
+    private void init(String connectInfo) throws IOException {
+        zk = new ZooKeeper(connectInfo, 2000, CLIENT);
     }
 
-    public static ZkClient getInstance() {
-        return client;
+    public static ZkClient getInstance(String connectionInfo) {
+        if (CLIENT == null) {
+            synchronized (ZkClient.class) {
+                if (CLIENT == null) {
+                    CLIENT = new ZkClient();
+                    try {
+                        CLIENT.init(connectionInfo);
+                    } catch (IOException e) {
+                        LOG.error("Zookeeper客户端初始化失败!", e);
+                        e.fillInStackTrace();
+                    }
+                }
+            }
+        }
+        return CLIENT;
+    }
+
+    public ZkNodeBuilder prepareNode() {
+        return new ZkNodeBuilder();
     }
 
     @Override
@@ -68,10 +72,7 @@ public class ZkClient implements Watcher {
     }
 
     public boolean delete(ZkNode zkNode) {
-        return delete(zkNode.getNodePath());
-    }
-
-    private boolean delete(String path) {
+        String path = zkNode.getNodePath();
         path = path.endsWith(Symbol.SLASH.getValue()) ? path.substring(0, path.length() - 1) : path;
         try {
             if (zk.exists(path, false) == null) {
@@ -83,7 +84,7 @@ public class ZkClient implements Watcher {
                 return true;
             }
             for (String child : children) {
-                delete(path + "/" + child);
+                delete(prepareNode().addNodePath(path + "/" + child).build());
             }
             zk.delete(path, -1);
         } catch (KeeperException | InterruptedException e) {
@@ -99,17 +100,21 @@ public class ZkClient implements Watcher {
 
     public boolean create(ZkNode zkNode, CreateMode mode) {
         try {
-            if (zk.exists(zkNode.getNodePath(), false) == null) {
-                zkNode.setNodePath(zk.create(zkNode.getNodePath(), zkNode.getContent(), defaultAcl, mode));
+            ZkNode parent = zkNode.getParent();
+            if (parent != null && !exist(parent)) {
+                create(parent, mode);
+            }
+            if (!exist(zkNode)) {
+                zk.create(zkNode.getNodePath(), zkNode.getContent(), defaultAcl, mode);
             }
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
-            return e.getMessage().contains("NodeExists");
+            LOG.error(String.format("节点[%s]创建失败!", zkNode.getNodePath()), e);
+            return false;
         }
         return true;
     }
 
-    public boolean exist(ZkNode zkNode) {
+    boolean exist(ZkNode zkNode) {
         return exist(zkNode, null);
     }
 
@@ -119,7 +124,8 @@ public class ZkClient implements Watcher {
                 return false;
             }
         } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("连接失败!", e);
+            e.fillInStackTrace();
         }
         return true;
     }
@@ -128,8 +134,7 @@ public class ZkClient implements Watcher {
         List<String> nodeNames = zk.getChildren(path, null);
         List<ZkNode> zkNodes = new ArrayList<>();
         for (String nodeName : nodeNames) {
-            ZkNode node = new ZkNode();
-            node.setNodePath(path + "/" + nodeName);
+            ZkNode node = prepareNode().addNodePath(path + "/" + nodeName).build();
             if (nodeName.contains("_")) {
                 node.setNodeSerialNo(Long.parseLong(nodeName));
             }
@@ -160,5 +165,33 @@ public class ZkClient implements Watcher {
             LOG.error(String.format("获取[%s]节点内容时发生异常!\n", node.getNodePath()), e);
         }
         return null;
+    }
+
+    public static class ZkNodeBuilder {
+
+        private String nodePath;
+
+        private String nodeSerialNo = "0";
+
+        private byte[] content;
+
+        public ZkNodeBuilder addNodePath(String nodePath) {
+            this.nodePath = nodePath;
+            return this;
+        }
+
+        public ZkNodeBuilder addSerialNo(String nodeSerialNo) {
+            this.nodeSerialNo = nodeSerialNo;
+            return this;
+        }
+
+        public ZkNodeBuilder addContent(String content) {
+            this.content = content.getBytes();
+            return this;
+        }
+
+        public ZkNode build() {
+            return new ZkNode(this.nodePath, Long.parseLong(this.nodeSerialNo), this.content);
+        }
     }
 }
