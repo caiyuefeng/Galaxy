@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  * 4、输入器输出器维护
  * @date : 2018/12/24 9:54
  **/
-public class GalaxyMonitor {
+public class SaturnMonitor {
 
     /**
      * 日志句柄
      */
-    private static final Logger LOG = LoggerFactory.getLogger(GalaxyMonitor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SaturnMonitor.class);
 
     /**
      * 上次打印时间
@@ -39,7 +39,7 @@ public class GalaxyMonitor {
 
     private ZkClient zkClient;
 
-    public GalaxyMonitor(SaturnClient client, ZkClient zKclient) {
+    SaturnMonitor(SaturnClient client, ZkClient zKclient) {
         this.dataPool = ZKDataPool.getInstance(zKclient);
         this.client = client;
         this.zkClient = zKclient;
@@ -47,8 +47,11 @@ public class GalaxyMonitor {
 
     private boolean heartBeatDetection() {
         ZkNode node = zkClient.prepareNode()
-                .addNodePath("/galaxy/saturn/machine/192.168.1.129").addContent("").build();
-        zkClient.create(node, CreateMode.PERSISTENT);
+                .addNodePath("/galaxy/saturn/machine/192.168.1.129")
+                .addContent("")
+                .addCreateMode(CreateMode.PERSISTENT)
+                .build();
+        zkClient.create(node);
         return true;
     }
 
@@ -83,7 +86,7 @@ public class GalaxyMonitor {
     }
 
     @Sync
-    public void monitor() {
+    void monitor() {
         while (true) {
             if (heartBeatDetection()) {
                 break;

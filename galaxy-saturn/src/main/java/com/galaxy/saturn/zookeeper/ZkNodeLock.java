@@ -60,8 +60,10 @@ class ZkNodeLock {
                 throw new IllegalStateException("");
             }
             if (lockNode == null) {
-                lockNode = client.prepareNode().addNodePath(lockPath + "/" + lockName).build();
-                if (!client.create(lockNode, CreateMode.EPHEMERAL_SEQUENTIAL)) {
+                lockNode = client.prepareNode().addNodePath(lockPath + "/" + lockName)
+                        .addCreateMode(CreateMode.EPHEMERAL_SEQUENTIAL)
+                        .build();
+                if (!client.create(lockNode)) {
                     lockNode = null;
                     Thread.sleep(inquiry);
                     inquiry++;
@@ -87,13 +89,14 @@ class ZkNodeLock {
      * 解锁
      */
     void unlock() {
-        if (client.delete(lockNode)) {
-            LOG.debug("分布式锁节点:[" + lockNode.getNodePath() + "] 已经释放");
+        try {
+            client.delete(lockNode);
+            LOG.debug("分布式锁节点:[{}}] 已经释放", lockNode.getNodePath());
             lockNode = null;
             inquiry = 1L;
-            return;
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(String.format("分布式锁节点:[%s] 释放时发生异常!", lockNode.getNodePath()), e);
         }
-        LOG.error("分布式锁节点:[" + lockNode.getNodePath() + "] 删除失败");
     }
 
     /**

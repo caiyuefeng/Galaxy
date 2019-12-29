@@ -1,10 +1,15 @@
 package com.galaxy.saturn;
 
 import com.galaxy.earth.FileUtils;
-import com.galaxy.saturn.core.Reader;
-import com.galaxy.saturn.core.Writer;
+import com.galaxy.saturn.application.Reader;
+import com.galaxy.saturn.application.Writer;
 import com.galaxy.saturn.store.ZKDataPool;
 import com.galaxy.saturn.zookeeper.ZkClient;
+import com.galaxy.saturn.zookeeper.ZkNode;
+import com.galaxy.stone.Symbol;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +23,10 @@ import java.util.Optional;
  * @Author: 蔡月峰
  * @Version： 1.0
  * @Description: Saturn 客户端
+ * 初始化过程:
+ * 1、初始话ZK客户端
+ * 2、注册自己到ZK上
+ * 3、执行任务
  * @Date : Create in 22:59 2019/10/6
  * @Modified By:
  */
@@ -40,9 +49,47 @@ public class SaturnClient implements IsCloseable {
 
     private ZKDataPool dataPool;
 
+    private ZkClient zkClient;
+
+    /**
+     * 客户端可用标志
+     */
+    private boolean available = true;
+
     @SuppressWarnings("WeakerAccess")
-    public SaturnClient() {
-        dataPool = ZKDataPool.getInstance(ZkClient.getInstance(SaturnConfiguration.ZK_MACHINE_IP));
+    public SaturnClient(ZkClient zkClient) {
+        this.zkClient = zkClient;
+//        this.dataPool = ZKDataPool.getInstance(this.zkClient);
+        this.register();
+    }
+
+    /**
+     * 本地数据集完成节点
+     */
+    private ZkNode completeNode;
+
+    /***
+     * 注册机器IP节点
+     */
+    private ZkNode registerNode;
+    private static final String MACHINE_PATH = "/galaxy/saturn/machine";
+    private static final String COMPLETE_PATH = "/galaxy/saturn/complete";
+
+    private void register() {
+        zkClient.create(zkClient.prepareNode().addNodePath(MACHINE_PATH).build(),new NodeWatcher());
+        this.registerNode = zkClient.prepareNode()
+                .addNodePath(MACHINE_PATH + Symbol.SLASH.getValue() + SaturnConfiguration.LOCAL_IP)
+                .addCreateMode(CreateMode.EPHEMERAL)
+                .build();
+        zkClient.create(registerNode);
+    }
+    private static class NodeWatcher implements Watcher {
+
+        @Override
+        public void process(WatchedEvent watchedEvent) {
+            System.out.println(watchedEvent.toString());
+            System.out.println("监听时间" + System.currentTimeMillis());
+        }
     }
 
     private void submit(Reader reader) {

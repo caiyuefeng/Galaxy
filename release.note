@@ -1,0 +1,12 @@
+version=1.2.0
+
+GalaxyFrameWork-1.2.0--------2019/12
+  1) uranus 参数解析器
+
+GalaxyFrameWork-1.1.0--------2019/05
+  1) Sirius 同步注解
+
+GalaxyFrameWork-1.0.0--------2018
+  初始版本:
+  1)Saturn 分布式传输工具(基于Zookeeper)
+  2)Sun Hadoop MapReduce工作流开发套件

@@ -1,6 +1,7 @@
 package com.galaxy.saturn;
 
 import com.galaxy.boot.annotation.Run;
+import com.galaxy.saturn.zookeeper.ZkClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,10 @@ public class SaturnRun {
 
         switch (args[0]) {
             case "0":
-                SaturnClient client = new SaturnClient();
+                ZkClient zkClient = ZkClient.getInstance(SaturnConfiguration.ZK_MACHINE_IP);
+                SaturnClient client = new SaturnClient(zkClient);
+                SaturnMonitor monitor = new SaturnMonitor(client, zkClient);
+                monitor.monitor();
                 client.run();
                 break;
             case "1":

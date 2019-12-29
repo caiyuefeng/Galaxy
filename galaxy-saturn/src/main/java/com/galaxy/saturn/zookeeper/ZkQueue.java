@@ -2,6 +2,8 @@ package com.galaxy.saturn.zookeeper;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -14,6 +16,11 @@ import java.util.TreeSet;
  * @date : 2018/12/24 9:52
  **/
 public class ZkQueue {
+
+    /**
+     * 日志句柄
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ZkQueue.class);
 
     private static final String ROOT_PATH = "/galaxy/saturn/queue";
 
@@ -42,7 +49,12 @@ public class ZkQueue {
         this.client = client;
         this.maxSize = maxSize;
         ZkNode rootNode = client.prepareNode().addNodePath(rootPath).build();
-        client.delete(rootNode);
+        try {
+            client.delete(rootNode);
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(String.format("删除节点[%s]异常!",rootPath), e);
+            throw new RuntimeException(e);
+        }
         client.create(rootNode);
     }
 
@@ -65,8 +77,9 @@ public class ZkQueue {
             }
             ZkNode node = client.prepareNode().addContent(content)
                     .addNodePath(rootPath + "/" + defaultName)
+                    .addCreateMode(CreateMode.PERSISTENT_SEQUENTIAL)
                     .build();
-            if (!client.create(node, CreateMode.PERSISTENT_SEQUENTIAL)) {
+            if (!client.create(node)) {
                 throw new Exception("插入数据失败!插入路径:[" + rootPath + "/" + defaultName + "];插入内容:" + content);
             }
         } finally {
@@ -80,20 +93,21 @@ public class ZkQueue {
      * @return 值
      * @throws Exception 1
      */
-    public String poll() throws Exception {
+    public String poll() {
         ZkNodeLock pollLock = new ZkNodeLock("/galaxy/saturn/lock_poll", client, "queue_lock_");
-        pollLock.lock();
         try {
+            pollLock.lock();
             SortedSet<ZkNode> zkNodeSortedSet = getAllDataNode();
             if (zkNodeSortedSet.isEmpty()) {
                 return null;
             }
             ZkNode zkNode = zkNodeSortedSet.first();
             String content = client.getContent(zkNode);
-            if (client.delete(zkNode)) {
-                return content;
-            }
-            throw new Exception("数据节点删除失败!节点路径:[" + zkNode.getNodePath() + "]");
+            client.delete(zkNode);
+            return content;
+        } catch (InterruptedException | KeeperException e) {
+            LOG.error("Zookeeper异常!", e);
+            return "";
         } finally {
             pollLock.unlock();
         }
@@ -135,7 +149,7 @@ public class ZkQueue {
     /**
      * 关闭队列
      */
-    public void close() {
+    public void close() throws KeeperException, InterruptedException {
         client.delete(client.prepareNode().addNodePath(rootPath).build());
         client.delete(client.prepareNode().addNodePath("/galaxy/saturn/lock_put").build());
         client.delete(client.prepareNode().addNodePath("/galaxy/saturn/lock_poll").build());

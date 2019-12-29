@@ -29,9 +29,6 @@ public class ZKDataPool implements DataPool {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ZKDataPool.class);
 
-    private static final String MACHINE_PATH = "/galaxy/saturn/machine";
-    private static final String COMPLETE_PATH = "/galaxy/saturn/complete";
-
     /**
      * 分布式数据队列
      */
@@ -41,16 +38,6 @@ public class ZKDataPool implements DataPool {
      * 本地数据队列
      */
     private LinkedBlockingQueue<String> blockingDeque;
-
-    /**
-     * 本地数据集完成节点
-     */
-    private ZkNode completeNode;
-
-    /***
-     * 注册机器IP节点
-     */
-    private ZkNode registerNode;
 
     /**
      * 数据池最大缓存量
@@ -97,16 +84,6 @@ public class ZKDataPool implements DataPool {
         this.maxSize = maxSize;
         this.blockingDeque = new LinkedBlockingQueue<>();
         this.distributeDataQueue = new ZkQueue(client, maxSize);
-        client.create(client.prepareNode().addNodePath(MACHINE_PATH).build());
-        client.create(client.prepareNode().addNodePath(COMPLETE_PATH).build());
-        this.registerNode = client.prepareNode()
-                .addNodePath(MACHINE_PATH + "/" + SaturnConfiguration.LOCAL_IP)
-                .build();
-        this.completeNode = client.prepareNode()
-                .addNodePath(COMPLETE_PATH + "/" + SaturnConfiguration.LOCAL_IP)
-                .build();
-        client.create(registerNode, CreateMode.EPHEMERAL);
-        client.create(completeNode);
     }
 
     private ZKDataPool() {
@@ -230,7 +207,6 @@ public class ZKDataPool implements DataPool {
     }
 
     public void requestDistribute() {
-        client.create(completeNode);
         this.download = true;
     }
 
@@ -252,10 +228,14 @@ public class ZKDataPool implements DataPool {
     @Override
     public void close() {
         blockingDeque.clear();
-        distributeDataQueue.close();
-        client.delete(client.prepareNode().addNodePath("/galaxy/saturn/complete").build());
-        client.delete(client.prepareNode().addNodePath("/galaxy/saturn/machine").build());
-        completeNode = null;
+        try {
+            distributeDataQueue.close();
+            client.delete(client.prepareNode().addNodePath("/galaxy/saturn/complete").build());
+            client.delete(client.prepareNode().addNodePath("/galaxy/saturn/machine").build());
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error("Zookeeper异常!", e);
+            throw new RuntimeException(e);
+        }
         status.clear();
         maxSize = -1L;
         inputCnt = 0L;

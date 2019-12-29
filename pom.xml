@@ -113,17 +113,33 @@
                 <artifactId>hadoop-mapreduce-client-core</artifactId>
                 <version>${hadoop.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>2.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>9.2-1004-jdbc4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-<!--        <module>galaxy-asteroid</module>-->
-<!--        <module>galaxy-sun</module>-->
-<!--        <module>galaxy-jupiter</module>-->
+        <module>galaxy-asteroid</module>
+        <module>galaxy-sun</module>
+        <!--        <module>galaxy-jupiter</module>-->
         <module>galaxy-saturn</module>
         <module>galaxy-earth</module>
         <module>galaxy-sirius</module>
         <module>galaxy-boot</module>
         <module>galaxy-stone</module>
+        <module>galaxy-uranus</module>
     </modules>
 </project>

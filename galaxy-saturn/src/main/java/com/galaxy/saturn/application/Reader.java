@@ -1,4 +1,4 @@
-package com.galaxy.saturn.core;
+package com.galaxy.saturn.application;
 
 import com.galaxy.earth.FileUtils;
 import com.galaxy.saturn.IsCloseable;

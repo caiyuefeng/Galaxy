@@ -50,7 +50,7 @@ public class SyncFactory {
         }
     }
 
-    public static byte[] transform(Class<?> clazz) {
+    private static byte[] transform(Class<?> clazz) {
         Method syncMethod = null;
         for (Method method : clazz.getDeclaredMethods()) {
             Annotation[] annotations = method.getDeclaredAnnotations();

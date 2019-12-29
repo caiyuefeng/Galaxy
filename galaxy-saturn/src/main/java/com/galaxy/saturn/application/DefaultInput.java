@@ -1,4 +1,4 @@
-package com.galaxy.saturn.core;
+package com.galaxy.saturn.application;
 
 /**
  * @author : 蔡月峰

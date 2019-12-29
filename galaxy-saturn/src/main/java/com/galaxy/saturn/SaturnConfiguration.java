@@ -26,12 +26,12 @@ public class SaturnConfiguration {
     /**
      * 读取线程数
      */
-    public static int READER_NUM = 2;
+    static int READER_NUM = 2;
 
     /**
      * 写线程数
      */
-    public static int WRITER_NUM = 1;
+    static int WRITER_NUM = 1;
 
     /**
      * 载入配置

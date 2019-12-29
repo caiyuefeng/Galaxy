@@ -55,7 +55,7 @@ public class ZkClient implements Watcher {
                         CLIENT.init(connectionInfo);
                     } catch (IOException e) {
                         LOG.error("Zookeeper客户端初始化失败!", e);
-                        e.fillInStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -71,41 +71,33 @@ public class ZkClient implements Watcher {
     public void process(WatchedEvent watchedEvent) {
     }
 
-    public boolean delete(ZkNode zkNode) {
+    public void delete(ZkNode zkNode) throws KeeperException, InterruptedException {
         String path = zkNode.getNodePath();
         path = path.endsWith(Symbol.SLASH.getValue()) ? path.substring(0, path.length() - 1) : path;
-        try {
-            if (zk.exists(path, false) == null) {
-                return true;
-            }
-            List<String> children = zk.getChildren(path, false);
-            if (children == null || children.isEmpty()) {
-                zk.delete(path, -1);
-                return true;
-            }
-            for (String child : children) {
-                delete(prepareNode().addNodePath(path + "/" + child).build());
-            }
-            zk.delete(path, -1);
-        } catch (KeeperException | InterruptedException e) {
-            e.printStackTrace();
-            return false;
+        if (zk.exists(path, false) == null) {
+            return;
         }
-        return false;
+        List<String> children = zk.getChildren(path, false);
+        for (String child : children) {
+            delete(prepareNode().addNodePath(path + "/" + child).build());
+        }
+        zk.delete(path, -1);
     }
 
     public boolean create(ZkNode zkNode) {
-        return create(zkNode, CreateMode.PERSISTENT);
+        return create(zkNode, null);
     }
 
-    public boolean create(ZkNode zkNode, CreateMode mode) {
+    public boolean create(ZkNode zkNode, Watcher watcher) {
         try {
+            System.out.println(zkNode.toString());
+            System.out.println(zkNode.getNodePath() + "创建时间:" + System.currentTimeMillis());
             ZkNode parent = zkNode.getParent();
-            if (parent != null && !exist(parent)) {
-                create(parent, mode);
+            if (parent != null && !exist(parent, watcher)) {
+                create(parent);
             }
-            if (!exist(zkNode)) {
-                zk.create(zkNode.getNodePath(), zkNode.getContent(), defaultAcl, mode);
+            if (!exist(zkNode, watcher)) {
+                zk.create(zkNode.getNodePath(), zkNode.getContent(), defaultAcl, zkNode.getCreateMode());
             }
         } catch (KeeperException | InterruptedException e) {
             LOG.error(String.format("节点[%s]创建失败!", zkNode.getNodePath()), e);
@@ -175,6 +167,8 @@ public class ZkClient implements Watcher {
 
         private byte[] content;
 
+        private CreateMode createMode = CreateMode.PERSISTENT;
+
         public ZkNodeBuilder addNodePath(String nodePath) {
             this.nodePath = nodePath;
             return this;
@@ -190,8 +184,13 @@ public class ZkClient implements Watcher {
             return this;
         }
 
+        public ZkNodeBuilder addCreateMode(CreateMode mode) {
+            this.createMode = mode;
+            return this;
+        }
+
         public ZkNode build() {
-            return new ZkNode(this.nodePath, Long.parseLong(this.nodeSerialNo), this.content);
+            return new ZkNode(this.nodePath, Long.parseLong(this.nodeSerialNo), this.content, this.createMode);
         }
     }
 }

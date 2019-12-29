@@ -1,6 +1,7 @@
 package com.galaxy.saturn.zookeeper;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.zookeeper.CreateMode;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,10 +29,13 @@ public class ZkNode implements Comparable<ZkNode> {
      */
     private byte[] content;
 
-    ZkNode(String nodePath, long nodeSerialNo, byte[] content) {
+    private CreateMode createMode;
+
+    ZkNode(String nodePath, long nodeSerialNo, byte[] content, CreateMode createMode) {
         this.nodePath = nodePath;
         this.nodeSerialNo = nodeSerialNo;
         this.content = content;
+        this.createMode = createMode;
     }
 
     @Override
@@ -53,9 +57,13 @@ public class ZkNode implements Comparable<ZkNode> {
         return content;
     }
 
+    CreateMode getCreateMode() {
+        return createMode;
+    }
+
     ZkNode getParent() {
         String parentPath = StringUtils.isEmpty(nodePath) ? "" : nodePath.substring(0, nodePath.lastIndexOf("/"));
-        return StringUtils.isEmpty(parentPath) ? null : new ZkNode(parentPath, -1, null);
+        return StringUtils.isEmpty(parentPath) ? null : new ZkNode(parentPath, -1, null, CreateMode.PERSISTENT);
     }
 
     @Override
@@ -79,10 +87,12 @@ public class ZkNode implements Comparable<ZkNode> {
 
     @Override
     public String toString() {
-        if (content == null) {
-            return "";
-        }
-        return new String(content);
+        return "ZkNode{" +
+                "nodePath='" + nodePath + '\'' +
+                ", nodeSerialNo=" + nodeSerialNo +
+                ", content=" + Arrays.toString(content) +
+                ", createMode=" + createMode +
+                '}';
     }
 
     @Override
