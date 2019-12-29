@@ -1,7 +1,6 @@
 package com.galaxy.uranus.option;
 
 import com.galaxy.uranus.exception.MultiOptionGroupException;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +25,6 @@ public class OptionGroup {
 	private Map<String, Option> opts;
 
 	/**
-	 * 长参名映射
-	 */
-	private Map<String, Option> longOpts;
-
-	/**
 	 * 参数组名称
 	 */
 	private String groupName;
@@ -51,7 +45,6 @@ public class OptionGroup {
 		this.groupName = groupName;
 		this.isRequired = isRequired;
 		this.opts = new HashMap<>();
-		this.longOpts = new HashMap<>();
 	}
 
 	/**
@@ -66,9 +59,6 @@ public class OptionGroup {
 			throw new MultiOptionGroupException(option);
 		}
 		opts.put(option.getOpt(), option);
-		if (StringUtils.isNotEmpty(option.getLongOpt())) {
-			longOpts.put(option.getLongOpt(), option);
-		}
 		// 设置参数组
 		option.setOptionGroup(this);
 	}
@@ -110,19 +100,11 @@ public class OptionGroup {
 		return opts.values().size();
 	}
 
-	public void setRequired(boolean required) {
-		isRequired = required;
-	}
-
 	public void clearUnInputOption() {
 		List<Option> shortInput = opts.values().stream()
 				.filter(Option::hasIpt).collect(Collectors.toList());
 		opts.clear();
-		longOpts.clear();
 		// 保存命令行输入的参数项
-		shortInput.forEach(opt -> {
-			opts.put(opt.getOpt(), opt);
-			longOpts.put(opt.getLongOpt(), opt);
-		});
+		shortInput.forEach(opt -> opts.put(opt.getOpt(), opt));
 	}
 }

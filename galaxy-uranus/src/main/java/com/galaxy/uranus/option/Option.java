@@ -15,6 +15,7 @@ import java.util.Objects;
  * @Date : Create in 22:09 2019/12/18
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public class Option {
 
 	/**
@@ -87,14 +88,6 @@ public class Option {
 		return values;
 	}
 
-	public char getValueSep() {
-		return valueSep;
-	}
-
-	public boolean isHasArgs() {
-		return hasArgs;
-	}
-
 	public int getNumOfArgs() {
 		return numOfArgs;
 	}
@@ -142,7 +135,7 @@ public class Option {
 		}
 	}
 
-	public void setOptionGroup(OptionGroup optionGroup) {
+	void setOptionGroup(OptionGroup optionGroup) {
 		this.optionGroup = optionGroup;
 	}
 
@@ -203,11 +196,6 @@ public class Option {
 		private int numOfArgs = -1;
 
 		/**
-		 * 命令行是否已经输入
-		 */
-		private boolean hasIpt;
-
-		/**
 		 * 所属参数组
 		 */
 		private OptionGroup optionGroup;
@@ -217,7 +205,7 @@ public class Option {
 		 */
 		private String desc;
 
-		public OptionBuilder(String opt) {
+		OptionBuilder(String opt) {
 			this.opt = opt;
 			this.values = new ArrayList<>();
 		}
@@ -266,7 +254,6 @@ public class Option {
 			Option option = new Option();
 			option.opt = this.opt;
 			option.longOpt = this.longOpt;
-			option.hasIpt = this.hasIpt;
 			option.isRequired = this.isRequired;
 			option.numOfArgs = this.numOfArgs;
 			option.hasArgs = this.hasArgs;

@@ -9,6 +9,7 @@ import com.galaxy.uranus.option.Option;
  * @Date : Create in 20:39 2019/12/23
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public final class MultiOptionGroupException extends UranusException {
 
 	public MultiOptionGroupException(String message,Throwable e){

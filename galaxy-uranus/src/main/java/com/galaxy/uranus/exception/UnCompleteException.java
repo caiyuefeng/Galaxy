@@ -9,6 +9,7 @@ import com.galaxy.uranus.option.Option;
  * @Date : Create in 22:00 2019/12/23
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public class UnCompleteException extends UranusException {
 
 	public UnCompleteException(String message, Throwable e) {

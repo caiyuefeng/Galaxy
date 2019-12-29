@@ -375,8 +375,7 @@ public class UranusParserTest {
 	public void test21() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		OptionGroup group1 = new OptionGroup("path");
-		group1.setRequired(true);
+		OptionGroup group1 = new OptionGroup("path", true);
 		group1.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
 		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true).addNumOfArgs(1).build());
 		options.addOptionGroup(group1);
@@ -397,8 +396,7 @@ public class UranusParserTest {
 	public void test22() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		OptionGroup group1 = new OptionGroup("path");
-		group1.setRequired(true);
+		OptionGroup group1 = new OptionGroup("path",true);
 		group1.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
 		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true).addNumOfArgs(1).build());
 		options.addOptionGroup(group1);
@@ -422,14 +420,13 @@ public class UranusParserTest {
 		group1.addOption(Option.builder("u").addLongOpt("upload").build());
 		group1.addOption(Option.builder("i").addLongOpt("id").build());
 		options.addOptionGroup(group1);
-		OptionGroup group2 = new OptionGroup("data");
-		group2.setRequired(true);
+		OptionGroup group2 = new OptionGroup("data",true);
 		group2.addOption(Option.builder("tp").addLongOpt("testPath")
 				.hasArgs(true).addNumOfArgs(1).build());
 		group2.addOption(Option.builder("ep").addLongOpt("expectPath").hasArgs(true).addNumOfArgs(1).build());
 		group2.addOption(Option.builder("m").addLongOpt("mode").build());
 		options.addOptionGroup(group2);
-		CommandLine commandLine = parser.parse(options, new String[]{"-p", "input", "-ju","--testPath","input1","--expectPath","input2"});
+		CommandLine commandLine = parser.parse(options, new String[]{"-p", "input", "-ju", "--testPath", "input1", "--expectPath", "input2"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(2, optionGroups.size());
 		Assert.assertEquals(3, commandLine.get("path").getGroupSize());

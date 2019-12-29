@@ -7,6 +7,7 @@ package com.galaxy.uranus.exception;
  * @Date : Create in 20:38 2019/12/23
  * @Modified By:
  */
+@SuppressWarnings("WeakerAccess")
 public class UranusException extends Exception {
 
 	public  UranusException(String message,Throwable e){

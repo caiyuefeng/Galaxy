@@ -7,6 +7,7 @@ package com.galaxy.uranus.exception;
  * @Date : Create in 23:00 2019/12/23
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public class ForbidArgumentException extends UranusException {
 
 	public ForbidArgumentException(String message, Throwable e) {

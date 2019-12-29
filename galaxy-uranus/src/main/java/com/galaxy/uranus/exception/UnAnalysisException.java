@@ -7,6 +7,7 @@ package com.galaxy.uranus.exception;
  * @Date : Create in 22:55 2019/12/23
  * @Modified By:
  */
+@SuppressWarnings("unused")
 public class UnAnalysisException extends UranusException {
 
 	public UnAnalysisException(String message,Throwable e){

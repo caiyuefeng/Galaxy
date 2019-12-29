@@ -46,6 +46,7 @@ public class CommandLine {
 	 * @param option 参数项
 	 * @return 参数组对象
 	 */
+	@SuppressWarnings("unused")
 	public OptionGroup get(Option option) {
 		return new OptionGroup("");
 	}
