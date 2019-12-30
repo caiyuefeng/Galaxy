@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<galaxy>
+    <!--配置项-->
+    <property>
+        <!--配置项名-->
+        <name></name>
+        <!--配置项值-->
+        <value></value>
+    </property>
+</galaxy>

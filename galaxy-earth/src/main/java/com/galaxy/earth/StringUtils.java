@@ -6,9 +6,9 @@ package com.galaxy.earth;
  * @Description: 字符串工具类
  * @date : 2018/12/10 14:08
  **/
-public class GalaxyStringUtils {
+public class StringUtils {
 
-    private GalaxyStringUtils() {
+    private StringUtils() {
         throw new RuntimeException("can not create instance");
     }
 

@@ -17,7 +17,19 @@ import java.util.function.Function;
 /**
  * @Author: 蔡月峰
  * @Version： 1.0
- * @Description:
+ * @Description: 参数解析器
+ * 1、解析以下风格的参数:
+ * -K
+ * -K V
+ * -Key
+ * -Key V
+ * -K1K2K3
+ * -DKey=V
+ * --K
+ * --K V
+ * --Key
+ * --Key V
+ * --DKey=V
  * @Date : Create in 22:10 2019/12/18
  * @Modified By:
  */
@@ -81,7 +93,7 @@ public class UranusParser {
 
 		// 检查参数缓存器是否已经输入完成
 		if (!options.isComplete()) {
-			throw new UnCompleteException(options.getOptionGroup(group -> !group.isComplete())
+			throw new UnCompleteException(options.getOptionGroup(group -> !group.isComplete(), "")
 					.getOption(option -> (option.isRequired() && !option.hasIpt()) || (option.acceptArgs())));
 		}
 		// 设置未处理或为解析的参数项

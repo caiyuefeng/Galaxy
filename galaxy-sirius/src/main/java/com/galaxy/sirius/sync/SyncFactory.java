@@ -2,6 +2,7 @@ package com.galaxy.sirius.sync;
 
 import com.galaxy.earth.ClassUtils;
 import com.galaxy.earth.FileUtils;
+import com.galaxy.earth.exception.GalaxyIOException;
 import com.galaxy.sirius.annotation.Sync;
 import com.galaxy.stone.Digit;
 import jdk.internal.org.objectweb.asm.ClassReader;
@@ -31,7 +32,7 @@ public class SyncFactory {
      */
     private static final Logger LOG = LoggerFactory.getLogger(SyncFactory.class);
 
-    public static void syncAndSave(Class<?> clazz, String savePath) {
+    public static void syncAndSave(Class<?> clazz, String savePath) throws GalaxyIOException {
         byte[] bytes = transform(clazz);
         if (bytes == null) {
             return;

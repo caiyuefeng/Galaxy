@@ -2,9 +2,9 @@ package com.galaxy.uranus.option;
 
 import com.galaxy.uranus.utils.OptionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * @Author: 蔡月峰
@@ -68,6 +68,11 @@ public class Option {
 	 */
 	private String desc;
 
+	/**
+	 * 绑定的功能类
+	 */
+	private Map<String, Class<?>> bindClazz;
+
 	private Option() {
 		this.values = new ArrayList<>();
 	}
@@ -118,6 +123,24 @@ public class Option {
 		return desc;
 	}
 
+	public Object getBindFunc() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+		Class<?> clazz = bindClazz.get(opt);
+		if (clazz == null && !values.isEmpty()) {
+			for (String value : values) {
+				clazz = bindClazz.get(value);
+				if (clazz != null) {
+					break;
+				}
+			}
+		}
+		if (clazz != null) {
+			Constructor constructor = clazz.getConstructor();
+			constructor.setAccessible(true);
+			return constructor.newInstance();
+		}
+		return null;
+	}
+
 	/**
 	 * 向参数项中加入参数值
 	 *
@@ -144,9 +167,10 @@ public class Option {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Option option = (Option) o;
+		boolean check = values.containsAll(option.values) && option.values.containsAll(values);
 		return Objects.equals(opt, option.opt) &&
 				Objects.equals(longOpt, option.longOpt) &&
-				Objects.equals(values, ((Option) o).values);
+				check;
 	}
 
 	@Override
@@ -158,6 +182,7 @@ public class Option {
 		return new OptionBuilder(opt);
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public static class OptionBuilder {
 
 		/**
@@ -205,9 +230,15 @@ public class Option {
 		 */
 		private String desc;
 
+		/**
+		 * 绑定的类
+		 */
+		private Map<String, Class<?>> bindClazz;
+
 		OptionBuilder(String opt) {
 			this.opt = opt;
 			this.values = new ArrayList<>();
+			this.bindClazz = new HashMap<>();
 		}
 
 		public OptionBuilder addLongOpt(String longOpt) {
@@ -220,6 +251,7 @@ public class Option {
 			return this;
 		}
 
+		@SuppressWarnings("WeakerAccess")
 		public OptionBuilder addValueSep(char valueSep) {
 			this.valueSep = valueSep;
 			return this;
@@ -245,8 +277,15 @@ public class Option {
 			return this;
 		}
 
+		@SuppressWarnings("WeakerAccess")
 		public OptionBuilder addDesc(String desc) {
 			this.desc = desc;
+			return this;
+		}
+
+		@SuppressWarnings("WeakerAccess")
+		public OptionBuilder addBindClass(String key, Class<?> clazz) {
+			this.bindClazz.put(key, clazz);
 			return this;
 		}
 
@@ -261,6 +300,7 @@ public class Option {
 			option.valueSep = this.valueSep;
 			option.desc = this.desc;
 			option.optionGroup = this.optionGroup;
+			option.bindClazz = this.bindClazz;
 			return option;
 		}
 	}

@@ -1,6 +1,6 @@
 package com.galaxy.sun.hadoop.file;
 
-import com.galaxy.earth.GalaxyStringUtils;
+import com.galaxy.earth.StringUtils;
 import com.galaxy.sun.base.ConstantConfItem;
 import com.galaxy.sun.utils.PathUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -73,7 +73,7 @@ public class TimestampImportInputFile implements InputFile {
                 String currentTimestamp = matcher.group(0);
                 if (currentTimestamp.compareTo(lastTimestamp) > 0) {
                     realInputs.add(path);
-                    newestTimestamp = GalaxyStringUtils.max(newestTimestamp, currentTimestamp);
+                    newestTimestamp = StringUtils.max(newestTimestamp, currentTimestamp);
                 }
             }
         }
