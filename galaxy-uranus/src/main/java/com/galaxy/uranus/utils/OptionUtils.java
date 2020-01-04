@@ -1,5 +1,7 @@
 package com.galaxy.uranus.utils;
 
+import com.galaxy.stone.Symbol;
+
 /**
  * @Author: 蔡月峰
  * @Version： 1.0
@@ -22,9 +24,9 @@ public final class OptionUtils {
 	 * @return 格式化后参数值
 	 */
 	public static String formatOptionVal(String val) {
-		if (val.startsWith("--")) {
+		if (val.startsWith(Symbol.DOUBLE_SHORT_RUNG.getValue())) {
 			return val.substring(2);
-		} else if (val.startsWith("-")) {
+		} else if (val.startsWith(Symbol.SHORT_RUNG.getValue())) {
 			return val.substring(1);
 		}
 		return val;

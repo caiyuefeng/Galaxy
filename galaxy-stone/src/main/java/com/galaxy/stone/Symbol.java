@@ -8,20 +8,23 @@ package com.galaxy.stone;
  * @Modified By:
  */
 public enum Symbol {
-    /**
-     * 字符串标志
-     */
-    EMPTY_STR(""),
-    DOT("."),
-    SLASH("/");
+	/**
+	 * 空值，短横杠，双短横杠，点号，斜杠，等于号
+	 */
+	EMPTY_STR(""),
+	SHORT_RUNG("-"),
+	DOUBLE_SHORT_RUNG("--"),
+	DOT("."),
+	SLASH("/"),
+	EQUAL_SIGN("=");
 
-    String value;
+	String value;
 
-    Symbol(String value) {
-        this.value = value;
-    }
+	Symbol(String value) {
+		this.value = value;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
 }

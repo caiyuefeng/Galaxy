@@ -9,7 +9,7 @@ package com.galaxy.uranus.annotation;
  */
 public enum OptionBindTypeEnum {
 	/**
-	 * 绑定类行
+	 * 值绑定，类型绑定
 	 */
 	VALUE_BIND, TYPE_BIND
 }

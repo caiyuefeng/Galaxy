@@ -3,6 +3,8 @@ package com.galaxy.uranus.annotation;
 import com.galaxy.earth.FileUtils;
 import com.galaxy.earth.GalaxyLog;
 import com.galaxy.stone.ConfigurationHelp;
+import com.galaxy.stone.SpecialConstantStr;
+import com.galaxy.stone.Symbol;
 import com.galaxy.uranus.option.Option;
 
 import java.io.File;
@@ -49,8 +51,6 @@ public class AnnotationRegistration {
 				instance.load();
 			} catch (IOException e) {
 				GalaxyLog.FILE_ERROR("加载依赖包异常!", e);
-			} catch (ClassNotFoundException e) {
-				GalaxyLog.CONSOLE_FILE_ERROR("类型加载失败!", e);
 			}
 		}
 		return instance;
@@ -59,7 +59,7 @@ public class AnnotationRegistration {
 	/**
 	 * 加载注解
 	 */
-	private void load() throws IOException, ClassNotFoundException {
+	private void load() throws IOException {
 		List<URL> urls = FileUtils.getAllJarFile(ConfigurationHelp.getGalaxyHome() + "/lib");
 		for (URL url : urls) {
 			switch (Protocol.valueOf(url.getProtocol())) {
@@ -80,8 +80,8 @@ public class AnnotationRegistration {
 	 *
 	 * @param file Class文件路径
 	 */
-	private void loadAnnotationByFile(File file) throws ClassNotFoundException {
-		if (file.getName().endsWith(".jar")) {
+	private void loadAnnotationByFile(File file) {
+		if (file.getName().endsWith(Symbol.DOT.getValue() + SpecialConstantStr.JAR_TAIL)) {
 			try {
 				loadAnnotationByJar(new JarFile(file));
 			} catch (IOException e) {
@@ -95,7 +95,7 @@ public class AnnotationRegistration {
 	 *
 	 * @param jarFile Jar包路径
 	 */
-	private void loadAnnotationByJar(JarFile jarFile) throws ClassNotFoundException {
+	private void loadAnnotationByJar(JarFile jarFile) {
 		Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
 		while (jarEntryEnumeration.hasMoreElements()) {
 			JarEntry entry = jarEntryEnumeration.nextElement();
@@ -182,6 +182,9 @@ public class AnnotationRegistration {
 	}
 
 	private enum Protocol {
+		/**
+		 * 普通文件协议，jar文件URL协议
+		 */
 		file, jar
 	}
 }

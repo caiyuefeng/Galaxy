@@ -1,5 +1,6 @@
 package com.galaxy.uranus.parser;
 
+import com.galaxy.stone.Symbol;
 import com.galaxy.uranus.CommandLine;
 import com.galaxy.uranus.exception.ForbidArgumentException;
 import com.galaxy.uranus.exception.UnAnalysisException;
@@ -35,21 +36,6 @@ import java.util.function.Function;
  */
 @SuppressWarnings("WeakerAccess")
 public class UranusParser {
-
-	/**
-	 * --
-	 */
-	private static final String DOUBLE_SHORT_RUNG = "--";
-
-	/**
-	 * -
-	 */
-	private static final String SHORT_RUNG = "-";
-
-	/**
-	 * =
-	 */
-	private static final String EQUALS_SIGN = "=";
 
 	/**
 	 *
@@ -116,11 +102,11 @@ public class UranusParser {
 			currentOption.addValue(token);
 		}
 		// 2 处理长参项
-		else if (token.startsWith(DOUBLE_SHORT_RUNG)) {
+		else if (token.startsWith(Symbol.DOUBLE_SHORT_RUNG.getValue())) {
 			handleLongToken(token);
 		}
 		// 3 处理短参项
-		else if (token.startsWith(SHORT_RUNG)) {
+		else if (token.startsWith(Symbol.SHORT_RUNG.getValue())) {
 			handleShortToken(token);
 		}
 		// 4 处理未知参数项
@@ -144,7 +130,7 @@ public class UranusParser {
 	private void handleShortToken(String token) throws UnAnalysisException, ForbidArgumentException {
 		// 去除 -
 		token = token.substring(1);
-		int pos = token.indexOf(EQUALS_SIGN);
+		int pos = token.indexOf(Symbol.EQUAL_SIGN.getValue());
 		// -K=V
 		if (pos > 0) {
 			handleTokenWithEquals(token, pos, Option::getOpt);
@@ -197,7 +183,7 @@ public class UranusParser {
 	 */
 	private void handleLongToken(String token) throws ForbidArgumentException, UnAnalysisException {
 		token = token.substring(2);
-		int pos = token.indexOf(EQUALS_SIGN);
+		int pos = token.indexOf(Symbol.EQUAL_SIGN.getValue());
 		if (pos > 0) {
 			handleTokenWithEquals(token, pos, Option::getLongOpt);
 		} else if (pos == -1) {
