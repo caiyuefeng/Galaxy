@@ -15,15 +15,4 @@ import java.util.List;
  */
 public class AnnotationRegistrationTest {
 
-
-	@Test
-	public void testOne() {
-		AnnotationRegistration registration = AnnotationRegistration.getInstance();
-		List<Class<?>> classes = new ArrayList<>(registration.getAnnotationClass().values());
-		Assert.assertEquals(3, classes.size());
-		Assert.assertEquals("com.galaxy.uranus.examples.ValueBindFunc",classes.get(0).getTypeName());
-		Assert.assertEquals("com.galaxy.uranus.examples.ValueBindFunc",classes.get(1).getTypeName());
-		Assert.assertEquals("com.galaxy.uranus.examples.TypeBindFunc",classes.get(2).getTypeName());
-
-	}
 }

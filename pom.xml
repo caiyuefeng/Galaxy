@@ -79,6 +79,11 @@
                 <version>1.0</version>
             </dependency>
             <dependency>
+                <groupId>com.galaxy</groupId>
+                <artifactId>galaxy-uranus</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.25</version>
@@ -151,5 +156,6 @@
         <module>galaxy-boot</module>
         <module>galaxy-stone</module>
         <module>galaxy-uranus</module>
+        <module>galaxy-examples</module>
     </modules>
 </project>
