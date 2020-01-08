@@ -1,6 +1,13 @@
 package com.galaxy.uranus.utils;
 
 import com.galaxy.stone.Symbol;
+import com.galaxy.uranus.annotation.AnnotationRegistration;
+import com.galaxy.uranus.annotation.OptionAnnotation;
+import com.galaxy.uranus.annotation.OptionalArgument;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * @Author: 蔡月峰
@@ -34,5 +41,20 @@ public final class OptionUtils {
 
 	public static boolean isJavaProperty(String token) {
 		return token.startsWith("D");
+	}
+
+	public static Map<String, List<String>> getPropertiesFromOptionAnnotation() throws IOException, ClassNotFoundException {
+		Map<String, List<String>> properties = new HashMap<>();
+		AnnotationRegistration registration = AnnotationRegistration.getInstance();
+		Iterator<Map.Entry<Annotation, Class<?>>> iterator = registration.iterator(annotation -> annotation instanceof OptionalArgument);
+		while (iterator.hasNext()) {
+			Map.Entry<Annotation, Class<?>> entry = iterator.next();
+			OptionalArgument argument = (OptionalArgument) entry.getKey();
+			OptionAnnotation annotation = entry.getValue().getAnnotation(OptionAnnotation.class);
+			if (annotation != null) {
+				properties.put(annotation.opt(), Arrays.asList(argument.value()));
+			}
+		}
+		return properties;
 	}
 }

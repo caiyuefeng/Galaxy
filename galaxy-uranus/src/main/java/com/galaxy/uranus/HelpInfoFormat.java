@@ -1,4 +1,6 @@
-package com.galaxy.uranus.option;
+package com.galaxy.uranus;
+
+import com.galaxy.uranus.option.Options;
 
 /**
  * @Author: 蔡月峰

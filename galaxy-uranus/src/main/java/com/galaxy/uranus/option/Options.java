@@ -1,11 +1,9 @@
 package com.galaxy.uranus.option;
 
-import com.galaxy.uranus.annotation.AnnotationRegistration;
-import com.galaxy.uranus.annotation.OptionAnnotation;
-import com.galaxy.uranus.annotation.OptionBindType;
-import com.galaxy.uranus.annotation.OptionBindTypeEnum;
+import com.galaxy.uranus.annotation.*;
 import com.galaxy.uranus.exception.MultiOptionGroupException;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Predicate;
@@ -122,7 +120,7 @@ public class Options {
 			optionGroups.add(optionGroup);
 		}
 
-		public Options build() {
+		public Options build() throws IOException, ClassNotFoundException {
 			Options instance = new Options();
 			options.forEach(opt -> {
 				try {
@@ -139,10 +137,13 @@ public class Options {
 				OptionAnnotation annotation = (OptionAnnotation) entry.getKey();
 				try {
 					boolean isValueBind = false;
+					boolean isOptionalArg = false;
 					for (Annotation obtain : entry.getValue().getAnnotations()) {
 						if (obtain instanceof OptionBindType && ((OptionBindType) obtain).value().equals(OptionBindTypeEnum.VALUE_BIND)) {
 							isValueBind = true;
-							break;
+						}
+						if (obtain instanceof OptionalArgument) {
+							isOptionalArg = true;
 						}
 					}
 					// 获取参数项所在的参数组
@@ -152,7 +153,7 @@ public class Options {
 					optionGroup.addOption(Option.builder(annotation.opt()).addLongOpt(annotation.longOpt())
 							.hasArgs(annotation.hasArgs()).isRequired(annotation.isRequired()).addNumOfArgs(annotation.numOfArgs())
 							.addDesc(annotation.desc()).addBindClass(isValueBind ? annotation.value() : annotation.opt(), entry.getValue())
-							.addValueSep(annotation.valueSeq()).build());
+							.addValueSep(annotation.valueSeq()).addOptionalArg(isOptionalArg).build());
 					instance.addOptionGroup(optionGroup);
 				} catch (MultiOptionGroupException e) {
 					throw new IllegalStateException(e);

@@ -16,12 +16,13 @@ public class UnCompleteException extends UranusException {
 		super(message, e);
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public UnCompleteException(String message) {
 		super(message);
 	}
 
 	public UnCompleteException(Option option) {
-		this(option == null ? "命令行未输入必须的参数" : !option.hasIpt() ? String.format("参数项%s是必填的", option.getOpt()) :
+		this(option == null ? "命令行未输入必须的参数" : !option.hasIpt() ? String.format("命令行未输入必须的参数项 %s", option.getOpt()) :
 				String.format("参数项输入参数不足%d个参数", option.getNumOfArgs()));
 	}
 }

@@ -69,6 +69,11 @@ public class Option {
 	private String desc;
 
 	/**
+	 * 参数值时可选填
+	 */
+	private boolean optionalArg;
+
+	/**
 	 * 绑定的功能类
 	 */
 	private Map<String, Class<?>> bindClazz;
@@ -115,12 +120,28 @@ public class Option {
 		return hasIpt && hasArgs && values.size() < numOfArgs;
 	}
 
+	/**
+	 * 检查该参数项是否可以结束，即停止参数处理
+	 * 满足以下两种条件
+	 * 1、参数项不再接受参数
+	 * 2、参数项的已经输入且参数项值未可选参数值
+	 *
+	 * @return 检查结果
+	 */
+	public boolean isComplete() {
+		return !acceptArgs() || (hasIpt && optionalArg);
+	}
+
 	public OptionGroup getOptionGroup() {
 		return optionGroup;
 	}
 
 	public String getDesc() {
 		return desc;
+	}
+
+	public boolean isOptionalArg() {
+		return optionalArg;
 	}
 
 	public Object getBindFunc() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -235,6 +256,11 @@ public class Option {
 		private String desc;
 
 		/**
+		 * 可选参数值标志
+		 */
+		private boolean optionalArg;
+
+		/**
 		 * 绑定的类
 		 */
 		private Map<String, Class<?>> bindClazz;
@@ -287,6 +313,11 @@ public class Option {
 			return this;
 		}
 
+		public OptionBuilder addOptionalArg(boolean optionalArg) {
+			this.optionalArg = optionalArg;
+			return this;
+		}
+
 		@SuppressWarnings("WeakerAccess")
 		public OptionBuilder addBindClass(String key, Class<?> clazz) {
 			this.bindClazz.put(key, clazz);
@@ -305,6 +336,7 @@ public class Option {
 			option.desc = this.desc;
 			option.optionGroup = this.optionGroup;
 			option.bindClazz = this.bindClazz;
+			option.optionalArg = this.optionalArg;
 			return option;
 		}
 	}

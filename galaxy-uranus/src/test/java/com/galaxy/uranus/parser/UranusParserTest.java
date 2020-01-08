@@ -1,8 +1,6 @@
 package com.galaxy.uranus.parser;
 
 import com.galaxy.uranus.CommandLine;
-import com.galaxy.uranus.exception.ForbidArgumentException;
-import com.galaxy.uranus.exception.UnAnalysisException;
 import com.galaxy.uranus.exception.UnCompleteException;
 import com.galaxy.uranus.exception.UranusException;
 import com.galaxy.uranus.option.Option;
@@ -12,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -281,7 +280,7 @@ public class UranusParserTest {
 	 * -DKey=V
 	 * 单参数项非必须输入 有一个参数值 且命令行输入错误
 	 */
-	@Test(expected = UnAnalysisException.class)
+	@Test(expected = IllegalStateException.class)
 	public void test16() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
@@ -318,7 +317,7 @@ public class UranusParserTest {
 	 * -K1K2K3
 	 * 单参数项非必须输入 多个参数接受参数值
 	 */
-	@Test(expected = ForbidArgumentException.class)
+	@Test(expected = IllegalStateException.class)
 	public void test18() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
@@ -396,7 +395,7 @@ public class UranusParserTest {
 	public void test22() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		OptionGroup group1 = new OptionGroup("path",true);
+		OptionGroup group1 = new OptionGroup("path", true);
 		group1.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
 		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true).addNumOfArgs(1).build());
 		options.addOptionGroup(group1);
@@ -420,7 +419,7 @@ public class UranusParserTest {
 		group1.addOption(Option.builder("u").addLongOpt("upload").build());
 		group1.addOption(Option.builder("i").addLongOpt("id").build());
 		options.addOptionGroup(group1);
-		OptionGroup group2 = new OptionGroup("data",true);
+		OptionGroup group2 = new OptionGroup("data", true);
 		group2.addOption(Option.builder("tp").addLongOpt("testPath")
 				.hasArgs(true).addNumOfArgs(1).build());
 		group2.addOption(Option.builder("ep").addLongOpt("expectPath").hasArgs(true).addNumOfArgs(1).build());
@@ -442,5 +441,61 @@ public class UranusParserTest {
 				commandLine.get("data").getOption(opt -> opt.getOpt().equals("tp")));
 		Assert.assertEquals(Option.builder("ep").addLongOpt("expectPath").addValue("input2").build(),
 				commandLine.get("data").getOption(opt -> opt.getOpt().equals("ep")));
+	}
+
+	/**
+	 * 可选参数测试
+	 * 预期参数项一为可选参数 命令行正常输入参数值
+	 * 预期参数项二为可选参数 命令行未输入参数值
+	 * 设置不接受-或--的参数值
+	 * 结果两个参数项都保留
+	 */
+	@Test
+	public void test24() throws UranusException {
+		UranusParser parser = new UranusParser();
+		Options options = new Options();
+		OptionGroup group1 = new OptionGroup("group1");
+		group1.addOption(Option.builder("p").addLongOpt("path").isRequired(true)
+				.hasArgs(true).addNumOfArgs(1).addOptionalArg(true).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true)
+				.addNumOfArgs(1).addOptionalArg(true).build());
+		options.addOptionGroup(group1);
+		CommandLine commandLine = parser.parse(options, new String[]{"-j", "-p", "input"}, new HashMap<>(), false);
+		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
+		Assert.assertEquals(1, optionGroups.size());
+		Assert.assertEquals(2, commandLine.get("group1").getGroupSize());
+		Assert.assertEquals(0, commandLine.getUnknownToken().size());
+		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
+				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("p")));
+		Assert.assertEquals(Option.builder("j").addLongOpt("job").build(),
+				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("j")));
+	}
+
+	/**
+	 * 可选参数测试
+	 * 预期参数项一为可选参数 命令行正常输入参数值
+	 * 预期参数项二为可选参数 命令行未输入参数值
+	 * 接受-或--的参数值
+	 * 抛异常
+	 */
+	@Test(expected = UnCompleteException.class)
+	public void test25() throws UranusException {
+		UranusParser parser = new UranusParser();
+		Options options = new Options();
+		OptionGroup group1 = new OptionGroup("group1");
+		group1.addOption(Option.builder("p").addLongOpt("path").isRequired(true)
+				.hasArgs(true).addNumOfArgs(1).addOptionalArg(true).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true)
+				.addNumOfArgs(1).addOptionalArg(true).build());
+		options.addOptionGroup(group1);
+		CommandLine commandLine = parser.parse(options, new String[]{"-j", "-p", "input"});
+		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
+		Assert.assertEquals(1, optionGroups.size());
+		Assert.assertEquals(2, commandLine.get("group1").getGroupSize());
+		Assert.assertEquals(0, commandLine.getUnknownToken().size());
+		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
+				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("p")));
+		Assert.assertEquals(Option.builder("j").addLongOpt("job").build(),
+				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("j")));
 	}
 }

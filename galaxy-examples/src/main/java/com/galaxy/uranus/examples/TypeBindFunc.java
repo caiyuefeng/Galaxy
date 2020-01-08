@@ -9,7 +9,7 @@ import com.galaxy.uranus.annotation.OptionAnnotation;
  * @Date : Create in 21:17 2019/12/30
  * @Modified By:
  */
-@OptionAnnotation(opt = "galaxy", longOpt = "galaxy_test", isRequired = true,
+@OptionAnnotation(opt = "galaxy", longOpt = "galaxy_test",
 		value = "2019", valueSeq = '-', hasArgs = true, numOfArgs = 1,
 		desc = "时间", groupName = "Test")
 public class TypeBindFunc {

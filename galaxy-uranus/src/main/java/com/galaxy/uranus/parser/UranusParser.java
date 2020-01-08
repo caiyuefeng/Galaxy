@@ -1,5 +1,6 @@
 package com.galaxy.uranus.parser;
 
+import com.galaxy.earth.GalaxyLog;
 import com.galaxy.stone.Symbol;
 import com.galaxy.uranus.CommandLine;
 import com.galaxy.uranus.exception.ForbidArgumentException;
@@ -12,8 +13,11 @@ import com.galaxy.uranus.option.Options;
 import com.galaxy.uranus.utils.OptionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @Author: 蔡月峰
@@ -38,7 +42,12 @@ import java.util.function.Function;
 public class UranusParser {
 
 	/**
-	 *
+	 * 默认Map初始化大小
+	 */
+	private static final int ZERO = 0;
+
+	/**
+	 * 预期参数项集合
 	 */
 	private Options options;
 
@@ -51,43 +60,153 @@ public class UranusParser {
 	 * 当前正在处理的参数项
 	 */
 	private Option currentOption;
-
 	/**
 	 * 当前正在处理的参数组
 	 */
 	private OptionGroup currentOptionGroup;
-
 	/**
-	 * 未知参数项
+	 * 命令行未能解析的输入参数
 	 */
 	private List<String> unknownToken;
+	/**
+	 * 参数处理操作缓存
+	 */
+	private Predicate<String>[] handleProcess;
+	/**
+	 * 参数处理执行流程
+	 */
+	private int[] handleSequence = new int[]{0, 1, 2, 3};
 
 	public UranusParser() {
 		unknownToken = new ArrayList<>();
+		initHandleProcess();
 	}
 
+	/**
+	 * 初始化参数处理流程
+	 */
+	private void initHandleProcess() {
+		//noinspection unchecked
+		handleProcess = new Predicate[4];
+		// 1 当前参数项不为空且未接受参数值状态
+		handleProcess[0] = token -> {
+			boolean result = currentOption != null && currentOption.acceptArgs();
+			if (result) {
+				currentOption.addValue(token);
+			}
+			return result;
+		};
+		// 2 处理长参项
+		handleProcess[1] = token -> {
+			boolean result = token.startsWith(Symbol.DOUBLE_SHORT_RUNG.getValue());
+			if (result) {
+				try {
+					handleLongToken(token);
+				} catch (ForbidArgumentException | UnAnalysisException e) {
+					GalaxyLog.FILE_ERROR(String.format("参数%s处理异常", token), e);
+					throw new IllegalStateException(e);
+				}
+			}
+			return result;
+		};
+		// 3 处理短参项
+		handleProcess[2] = token -> {
+			boolean result = token.startsWith(Symbol.SHORT_RUNG.getValue());
+			if (result) {
+				try {
+					handleShortToken(token);
+				} catch (UnAnalysisException | ForbidArgumentException e) {
+					GalaxyLog.FILE_ERROR(String.format("参数%s处理异常", token), e);
+					throw new IllegalStateException(e);
+				}
+			}
+			return result;
+		};
+		// 4 处理未知参数项
+		handleProcess[3] = token -> {
+			unknownToken.add(token);
+			return true;
+		};
+	}
+
+	/**
+	 * 解析命令行参数
+	 * 该解析方式下:
+	 * 1、参数项无默认参数值
+	 * 2、接受以-或--开头的参数值
+	 *
+	 * @param options 预期参数项集合
+	 * @param args    命令行参数
+	 * @return 命令行参数项
+	 * @throws UranusException 解析异常
+	 */
 	public CommandLine parse(Options options, String[] args) throws UranusException {
+		return parse(options, args, new HashMap<>(ZERO), true);
+	}
+
+	/**
+	 * 解析带有默认值的参数项
+	 * 该解析方式默认接受以-或--开头的参数值
+	 *
+	 * @param options    预期参数项集合
+	 * @param args       命令行参数
+	 * @param properties 默认参数值缓存
+	 * @return 命令行参数项集合
+	 * @throws UranusException 解析异常
+	 */
+	public CommandLine parse(Options options, String[] args, Map<String, List<String>> properties) throws UranusException {
+		return parse(options, args, properties, true);
+	}
+
+	/**
+	 * 按照预期的所有参数项解析命令行输入的参数
+	 *
+	 * @param options                    预期参数项集合
+	 * @param args                       命令行输入参数
+	 * @param properties                 参数项默认值
+	 * @param isAcceptOptionSignArgument 是否接受-或--开头的参数值，即是否把以-或--开头的
+	 *                                   都解释未参数项而非参数值，当参数项的参数值未可选参数值时
+	 *                                   命令行连续输入多个参数项，则此时需要将该参数设置未false
+	 *                                   以让所有参数项都正确解析
+	 * @return 命令行参数项实例
+	 * @throws UranusException 解析异常
+	 */
+	public CommandLine parse(Options options, String[] args, Map<String, List<String>> properties, boolean isAcceptOptionSignArgument) throws UranusException {
 		this.options = options;
+		// 根据标志为调整执行顺序
+		if (!isAcceptOptionSignArgument) {
+			handleSequence[0] = 1;
+			handleSequence[1] = 2;
+			handleSequence[2] = 0;
+		}
 		commandLine = new CommandLine();
 		for (String token : args) {
 			handleToken(token);
 		}
-
-		if (currentOption != null && currentOptionGroup.isComplete()) {
+		// 将最后的参数组添加至命令行参数项
+		if (currentOption != null && currentOptionGroup != null) {
 			commandLine.add(currentOptionGroup);
 		}
 
+		// 设置未处理或为解析的参数项
+		commandLine.setUnknownToken(unknownToken);
+		// 为参数项添加默认参数值
+		commandLine.getOptionGroups().forEach(optionGroup -> properties.forEach((opt, values) -> {
+			Option option = optionGroup.getOption(obtain -> obtain.getOpt().equals(opt));
+			if (option.isOptionalArg() && option.acceptArgs()) {
+				values.forEach(option::addValue);
+			}
+		}));
 		// 检查参数缓存器是否已经输入完成
 		if (!options.isComplete()) {
 			throw new UnCompleteException(options.getOptionGroup(group -> !group.isComplete(), "")
 					.getOption(option -> (option.isRequired() && !option.hasIpt()) || (option.acceptArgs())));
 		}
-		// 设置未处理或为解析的参数项
-		commandLine.setUnknownToken(unknownToken);
 		// 清除所有命令行未输入的参数项
 		commandLine.getOptionGroups().forEach(OptionGroup::clearUnInputOption);
 		return commandLine;
 	}
+
 
 	/**
 	 * 处理输入的参数Token
@@ -96,22 +215,11 @@ public class UranusParser {
 	 *
 	 * @param token 参数token
 	 */
-	private void handleToken(String token) throws UnAnalysisException, ForbidArgumentException {
-		// 1 当前参数项不为空且未接受参数值状态
-		if (currentOption != null && currentOption.acceptArgs()) {
-			currentOption.addValue(token);
-		}
-		// 2 处理长参项
-		else if (token.startsWith(Symbol.DOUBLE_SHORT_RUNG.getValue())) {
-			handleLongToken(token);
-		}
-		// 3 处理短参项
-		else if (token.startsWith(Symbol.SHORT_RUNG.getValue())) {
-			handleShortToken(token);
-		}
-		// 4 处理未知参数项
-		else {
-			unknownToken.add(token);
+	private void handleToken(String token) {
+		for (int sequence : handleSequence) {
+			if (handleProcess[sequence].test(token)) {
+				break;
+			}
 		}
 	}
 
@@ -216,7 +324,7 @@ public class UranusParser {
 			option.addValue(value);
 			handleOption(option);
 		} else if (!OptionUtils.isJavaProperty(key)) {
-			throw new UnAnalysisException(String.format("不能解析输入参数:%s", token));
+			throw new UnAnalysisException(token);
 		}
 		final String subKey = key.substring(1);
 		option = options.getOption(opt -> function.apply(opt).equals(subKey));
@@ -224,7 +332,7 @@ public class UranusParser {
 			option.addValue(value);
 			handleOption(option);
 		} else {
-			throw new UnAnalysisException(String.format("不能解析输入参数:%s", token));
+			throw new UnAnalysisException(token);
 		}
 	}
 
@@ -240,7 +348,7 @@ public class UranusParser {
 		if (option != null) {
 			handleOption(option);
 		} else {
-			throw new UnAnalysisException(String.format("不能解析输入参数:%s", token));
+			throw new UnAnalysisException(token);
 		}
 	}
 
@@ -251,7 +359,7 @@ public class UranusParser {
 	 * @throws ForbidArgumentException 参数值接受异常
 	 */
 	private void handleOption(Option option) throws ForbidArgumentException {
-		if (currentOption != null && currentOption.acceptArgs()) {
+		if (currentOption != null && !currentOption.isComplete()) {
 			throw new ForbidArgumentException(String.format("参数项:%s未输入完毕", currentOption.getOpt()));
 		}
 		// 设置输入标志
@@ -260,7 +368,7 @@ public class UranusParser {
 			currentOption = option;
 		}
 		currentOptionGroup = option.getOptionGroup();
-		if (currentOptionGroup != null && currentOptionGroup.isComplete()) {
+		if (currentOptionGroup != null) {
 			commandLine.add(currentOptionGroup);
 		}
 	}

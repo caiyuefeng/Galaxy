@@ -12,4 +12,9 @@ public class SpecialConstantStr {
 	 * Jar文件后缀
 	 */
 	public static final String JAR_TAIL = "jar";
+
+	/**
+	 * Class文件后缀
+	 */
+	public static final String CLASS_TAIL = "class";
 }

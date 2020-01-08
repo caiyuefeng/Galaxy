@@ -14,7 +14,7 @@ public class UnAnalysisException extends UranusException {
 		super(message, e);
 	}
 
-	public UnAnalysisException(String message) {
-		super(message);
+	public UnAnalysisException(String token) {
+		super(String.format("不能解析输入参数:%s", token));
 	}
 }

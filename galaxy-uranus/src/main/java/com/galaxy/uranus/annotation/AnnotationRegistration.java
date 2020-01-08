@@ -1,7 +1,6 @@
 package com.galaxy.uranus.annotation;
 
 import com.galaxy.earth.FileUtils;
-import com.galaxy.earth.GalaxyLog;
 import com.galaxy.stone.ConfigurationHelp;
 import com.galaxy.stone.SpecialConstantStr;
 import com.galaxy.stone.Symbol;
@@ -20,6 +19,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipException;
 
 /**
  * @Author: 蔡月峰
@@ -44,14 +44,10 @@ public class AnnotationRegistration {
 		annotationClass = new HashMap<>();
 	}
 
-	public static AnnotationRegistration getInstance() {
+	public static AnnotationRegistration getInstance() throws IOException, ClassNotFoundException {
 		if (instance == null) {
 			instance = new AnnotationRegistration();
-			try {
-				instance.load();
-			} catch (IOException e) {
-				GalaxyLog.FILE_ERROR("加载依赖包异常!", e);
-			}
+			instance.load();
 		}
 		return instance;
 	}
@@ -80,12 +76,12 @@ public class AnnotationRegistration {
 	 *
 	 * @param file Class文件路径
 	 */
-	private void loadAnnotationByFile(File file) {
+	private void loadAnnotationByFile(File file) throws IOException {
 		if (file.getName().endsWith(Symbol.DOT.getValue() + SpecialConstantStr.JAR_TAIL)) {
 			try {
 				loadAnnotationByJar(new JarFile(file));
-			} catch (IOException e) {
-				GalaxyLog.FILE_ERROR("加载依赖包异常!", e);
+			} catch (ZipException e) {
+				// 不处理
 			}
 		}
 	}
@@ -101,12 +97,12 @@ public class AnnotationRegistration {
 			JarEntry entry = jarEntryEnumeration.nextElement();
 			String name = entry.getName();
 			name = formatName(name);
-			if (name.endsWith(".class")) {
-				int pos = name.lastIndexOf(".");
+			if (name.endsWith(Symbol.DOT.getValue() + SpecialConstantStr.CLASS_TAIL)) {
+				int pos = name.lastIndexOf(Symbol.DOT.getValue());
 				try {
 					loadAnnotation(Class.forName(name.substring(0, pos)));
-				} catch (NoClassDefFoundError | ClassNotFoundException error) {
-					GalaxyLog.FILE_ERROR("类加载失败", error);
+				} catch (ClassNotFoundException e) {
+					// 依赖类未法相或不能加载 则放弃对应Jar包的加载
 				}
 			}
 		}
