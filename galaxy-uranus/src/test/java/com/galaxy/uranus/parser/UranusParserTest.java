@@ -143,7 +143,7 @@ public class UranusParserTest {
 	public void testSevenB() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(2).build());
+		options.addOption(Option.builder("p").addLongOpt("path").hasArg(true).numOfArg(2).build());
 		parser.parse(options, new String[]{"-p", "path"});
 	}
 
@@ -190,7 +190,7 @@ public class UranusParserTest {
 	public void testTen() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("p").hasArg(true).numOfArg(1).build());
 		CommandLine commandLine = parser.parse(options, new String[]{"-p", "input"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
@@ -207,7 +207,7 @@ public class UranusParserTest {
 	public void test11() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("path").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("path").hasArg(true).numOfArg(1).build());
 		CommandLine commandLine = parser.parse(options, new String[]{"-path", "input"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
@@ -224,7 +224,7 @@ public class UranusParserTest {
 	public void test12() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("p").hasArg(true).numOfArg(1).build());
 		parser.parse(options, new String[]{"-p"});
 	}
 
@@ -237,7 +237,7 @@ public class UranusParserTest {
 	public void test13() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("path").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("path").hasArg(true).numOfArg(1).build());
 		parser.parse(options, new String[]{"-path"});
 	}
 
@@ -284,7 +284,7 @@ public class UranusParserTest {
 	public void test16() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("path").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("path").hasArg(true).numOfArg(1).build());
 		parser.parse(options, new String[]{"-Dp=v"});
 	}
 
@@ -297,7 +297,7 @@ public class UranusParserTest {
 	public void test17() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("p").hasArg(true).numOfArg(1).build());
 		options.addOption(Option.builder("j").build());
 		options.addOption(Option.builder("u").build());
 		CommandLine commandLine = parser.parse(options, new String[]{"-jup", "input"});
@@ -321,8 +321,8 @@ public class UranusParserTest {
 	public void test18() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").hasArgs(true).addNumOfArgs(1).build());
-		options.addOption(Option.builder("j").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("p").hasArg(true).numOfArg(1).build());
+		options.addOption(Option.builder("j").hasArg(true).numOfArg(1).build());
 		options.addOption(Option.builder("u").build());
 		parser.parse(options, new String[]{"-jup", "input"});
 	}
@@ -340,7 +340,7 @@ public class UranusParserTest {
 		Options options = new Options();
 		options.addOption(Option.builder("i").addLongOpt("j").build());
 		options.addOption(Option.builder("p").addLongOpt("path").build());
-		options.addOption(Option.builder("u").addLongOpt("upload").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("u").addLongOpt("upload").hasArg(true).numOfArg(1).build());
 		CommandLine commandLine = parser.parse(options, new String[]{"--j", "--path", "--Dupload=v"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
@@ -362,7 +362,7 @@ public class UranusParserTest {
 	public void test20() throws UranusException {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
-		options.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
+		options.addOption(Option.builder("p").addLongOpt("path").hasArg(true).numOfArg(1).build());
 		parser.parse(options, new String[]{"--path"});
 	}
 
@@ -375,8 +375,8 @@ public class UranusParserTest {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
 		OptionGroup group1 = new OptionGroup("path", true);
-		group1.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
-		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true).addNumOfArgs(1).build());
+		group1.addOption(Option.builder("p").addLongOpt("path").hasArg(true).numOfArg(1).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArg(true).numOfArg(1).build());
 		options.addOptionGroup(group1);
 		CommandLine commandLine = parser.parse(options, new String[]{"--path", "input"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
@@ -396,8 +396,8 @@ public class UranusParserTest {
 		UranusParser parser = new UranusParser();
 		Options options = new Options();
 		OptionGroup group1 = new OptionGroup("path", true);
-		group1.addOption(Option.builder("p").addLongOpt("path").hasArgs(true).addNumOfArgs(1).build());
-		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true).addNumOfArgs(1).build());
+		group1.addOption(Option.builder("p").addLongOpt("path").hasArg(true).numOfArg(1).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArg(true).numOfArg(1).build());
 		options.addOptionGroup(group1);
 		parser.parse(options, new String[]{});
 	}
@@ -414,15 +414,15 @@ public class UranusParserTest {
 		Options options = new Options();
 		OptionGroup group1 = new OptionGroup("path");
 		group1.addOption(Option.builder("p").addLongOpt("path").isRequired(true)
-				.hasArgs(true).addNumOfArgs(1).build());
+				.hasArg(true).numOfArg(1).build());
 		group1.addOption(Option.builder("j").addLongOpt("job").build());
 		group1.addOption(Option.builder("u").addLongOpt("upload").build());
 		group1.addOption(Option.builder("i").addLongOpt("id").build());
 		options.addOptionGroup(group1);
 		OptionGroup group2 = new OptionGroup("data", true);
 		group2.addOption(Option.builder("tp").addLongOpt("testPath")
-				.hasArgs(true).addNumOfArgs(1).build());
-		group2.addOption(Option.builder("ep").addLongOpt("expectPath").hasArgs(true).addNumOfArgs(1).build());
+				.hasArg(true).numOfArg(1).build());
+		group2.addOption(Option.builder("ep").addLongOpt("expectPath").hasArg(true).numOfArg(1).build());
 		group2.addOption(Option.builder("m").addLongOpt("mode").build());
 		options.addOptionGroup(group2);
 		CommandLine commandLine = parser.parse(options, new String[]{"-p", "input", "-ju", "--testPath", "input1", "--expectPath", "input2"});
@@ -456,9 +456,9 @@ public class UranusParserTest {
 		Options options = new Options();
 		OptionGroup group1 = new OptionGroup("group1");
 		group1.addOption(Option.builder("p").addLongOpt("path").isRequired(true)
-				.hasArgs(true).addNumOfArgs(1).addOptionalArg(true).build());
-		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true)
-				.addNumOfArgs(1).addOptionalArg(true).build());
+				.hasArg(true).numOfArg(1).isOptionalArg(true).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArg(true)
+				.numOfArg(1).isOptionalArg(true).build());
 		options.addOptionGroup(group1);
 		CommandLine commandLine = parser.parse(options, new String[]{"-j", "-p", "input"}, new HashMap<>(), false);
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
@@ -484,9 +484,9 @@ public class UranusParserTest {
 		Options options = new Options();
 		OptionGroup group1 = new OptionGroup("group1");
 		group1.addOption(Option.builder("p").addLongOpt("path").isRequired(true)
-				.hasArgs(true).addNumOfArgs(1).addOptionalArg(true).build());
-		group1.addOption(Option.builder("j").addLongOpt("job").hasArgs(true)
-				.addNumOfArgs(1).addOptionalArg(true).build());
+				.hasArg(true).numOfArg(1).isOptionalArg(true).build());
+		group1.addOption(Option.builder("j").addLongOpt("job").hasArg(true)
+				.numOfArg(1).isOptionalArg(true).build());
 		options.addOptionGroup(group1);
 		CommandLine commandLine = parser.parse(options, new String[]{"-j", "-p", "input"});
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 蔡月峰
@@ -30,6 +31,21 @@ public class Options {
 	 */
 	private Map<String, OptionGroup> optionGroups;
 
+	/**
+	 * 内置的帮助文档参数项
+	 */
+	public static final Option HELP_OPTION;
+
+	/**
+	 * 内置的版本信息参数项
+	 */
+	public static final Option VERSION_OPTION;
+
+	static {
+		HELP_OPTION = Option.builder("h").addLongOpt("help").build();
+		VERSION_OPTION = Option.builder("v").addLongOpt("version").build();
+	}
+
 	public Options() {
 		optionGroups = new HashMap<>();
 	}
@@ -51,6 +67,10 @@ public class Options {
 					Option option = optionGroup.getOption(predicate);
 					return option == null ? Option.builder("").build() : option;
 				}).filter(option -> !"".equals(option.getOpt())).findFirst().orElse(null);
+	}
+
+	public List<Option> getAllOption() {
+		return optionGroups.values().stream().map(OptionGroup::getAllOption).flatMap(List::stream).collect(Collectors.toList());
 	}
 
 	/**
@@ -120,6 +140,15 @@ public class Options {
 			optionGroups.add(optionGroup);
 		}
 
+		/**
+		 * 期望参数集构建函数
+		 * 该构建会扫描Jar包中所有使用OptionAnnotation注解的参数项
+		 * 并将对应参数项解析放入至期望参数集中
+		 *
+		 * @return 期望参数集
+		 * @throws IOException            异常
+		 * @throws ClassNotFoundException 异常
+		 */
 		public Options build() throws IOException, ClassNotFoundException {
 			Options instance = new Options();
 			options.forEach(opt -> {
@@ -136,6 +165,10 @@ public class Options {
 				Map.Entry<Annotation, Class<?>> entry = iterator.next();
 				OptionAnnotation annotation = (OptionAnnotation) entry.getKey();
 				try {
+					// 加入内置参数项
+					instance.addOption(HELP_OPTION);
+					instance.addOption(VERSION_OPTION);
+					// 加入注解类参数项
 					boolean isValueBind = false;
 					boolean isOptionalArg = false;
 					for (Annotation obtain : entry.getValue().getAnnotations()) {
@@ -149,11 +182,15 @@ public class Options {
 					// 获取参数项所在的参数组
 					OptionGroup optionGroup = instance.getOptionGroup(group -> group.getGroupName().equals(annotation.groupName()),
 							annotation.groupName());
-					// 解析参数注解并构建参数项
-					optionGroup.addOption(Option.builder(annotation.opt()).addLongOpt(annotation.longOpt())
-							.hasArgs(annotation.hasArgs()).isRequired(annotation.isRequired()).addNumOfArgs(annotation.numOfArgs())
-							.addDesc(annotation.desc()).addBindClass(isValueBind ? annotation.value() : annotation.opt(), entry.getValue())
-							.addValueSep(annotation.valueSeq()).addOptionalArg(isOptionalArg).build());
+					// 获取参数项
+					final Option newOpt = Option.builder(annotation.opt()).addLongOpt(annotation.longOpt())
+							.hasArg(annotation.hasArgs()).isRequired(annotation.isRequired()).numOfArg(annotation.numOfArgs())
+							.addDesc(annotation.desc()).addValueSep(annotation.valueSeq()).isOptionalArg(isOptionalArg).build();
+					Option option = optionGroup.getOption(opt -> opt.getOpt().equals(newOpt.getOpt()), newOpt);
+					// 设置绑定函数
+					option.addBindClass(isValueBind ? annotation.bindValue() : annotation.opt(), entry.getValue());
+					// 保存解析完成的参数项
+					optionGroup.addOption(option);
 					instance.addOptionGroup(optionGroup);
 				} catch (MultiOptionGroupException e) {
 					throw new IllegalStateException(e);

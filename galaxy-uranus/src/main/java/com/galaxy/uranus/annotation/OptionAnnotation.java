@@ -29,14 +29,14 @@ public @interface OptionAnnotation {
 	String longOpt() default "";
 
 	/**
-	 * @return 必须填入
+	 * @return 参数项是否必须输入
 	 */
 	boolean isRequired() default false;
 
 	/**
-	 * @return 参数值
+	 * @return 绑定的参数值
 	 */
-	String value() default "";
+	String bindValue() default "";
 
 	/**
 	 * @return 参数值分隔符

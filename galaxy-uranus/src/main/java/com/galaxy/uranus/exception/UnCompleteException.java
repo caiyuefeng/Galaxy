@@ -23,6 +23,6 @@ public class UnCompleteException extends UranusException {
 
 	public UnCompleteException(Option option) {
 		this(option == null ? "命令行未输入必须的参数" : !option.hasIpt() ? String.format("命令行未输入必须的参数项 %s", option.getOpt()) :
-				String.format("参数项输入参数不足%d个参数", option.getNumOfArgs()));
+				String.format("参数项输入参数不足%d个参数", option.getNumOfArg()));
 	}
 }

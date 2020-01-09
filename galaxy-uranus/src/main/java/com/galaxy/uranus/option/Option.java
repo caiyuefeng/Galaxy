@@ -46,12 +46,12 @@ public class Option {
 	/**
 	 * 是否接受参数值
 	 */
-	private boolean hasArgs;
+	private boolean hasArg;
 
 	/**
 	 * 参数值个数
 	 */
-	private int numOfArgs;
+	private int numOfArg;
 
 	/**
 	 * 命令行是否已经输入
@@ -71,7 +71,7 @@ public class Option {
 	/**
 	 * 参数值时可选填
 	 */
-	private boolean optionalArg;
+	private boolean isOptionalArg;
 
 	/**
 	 * 绑定的功能类
@@ -98,8 +98,8 @@ public class Option {
 		return values;
 	}
 
-	public int getNumOfArgs() {
-		return numOfArgs;
+	public int getNumOfArg() {
+		return numOfArg;
 	}
 
 	public boolean hasIpt() {
@@ -117,7 +117,7 @@ public class Option {
 	 * @return 标志
 	 */
 	public boolean acceptArgs() {
-		return hasIpt && hasArgs && values.size() < numOfArgs;
+		return hasIpt && hasArg && values.size() < numOfArg;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Option {
 	 * @return 检查结果
 	 */
 	public boolean isComplete() {
-		return !acceptArgs() || (hasIpt && optionalArg);
+		return !acceptArgs() || (hasIpt && isOptionalArg);
 	}
 
 	public OptionGroup getOptionGroup() {
@@ -141,7 +141,7 @@ public class Option {
 	}
 
 	public boolean isOptionalArg() {
-		return optionalArg;
+		return isOptionalArg;
 	}
 
 	public Object getBindFunc() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -183,6 +183,17 @@ public class Option {
 		this.optionGroup = optionGroup;
 	}
 
+	/**
+	 * 加入绑定函数
+	 * 一个参数项若通过值绑定可以绑定多个函数
+	 *
+	 * @param bindValue 绑定的参数值或参数项
+	 * @param clazz     函数类签名
+	 */
+	void addBindClass(String bindValue, Class<?> clazz) {
+		this.bindClazz.put(bindValue, clazz);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -200,7 +211,7 @@ public class Option {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(opt, longOpt, isRequired, values, valueSep, hasArgs, numOfArgs, hasIpt, optionGroup, desc);
+		return Objects.hash(opt, longOpt, isRequired, values, valueSep, hasArg, numOfArg, hasIpt, optionGroup, desc);
 	}
 
 	public static OptionBuilder builder(String opt) {
@@ -243,7 +254,7 @@ public class Option {
 		/**
 		 * 参数值个数
 		 */
-		private int numOfArgs = -1;
+		private int numOfArg = -1;
 
 		/**
 		 * 所属参数组
@@ -258,7 +269,7 @@ public class Option {
 		/**
 		 * 可选参数值标志
 		 */
-		private boolean optionalArg;
+		private boolean isOptionalArg;
 
 		/**
 		 * 绑定的类
@@ -292,13 +303,13 @@ public class Option {
 			return this;
 		}
 
-		public OptionBuilder hasArgs(boolean hasArgs) {
+		public OptionBuilder hasArg(boolean hasArgs) {
 			this.hasArgs = hasArgs;
 			return this;
 		}
 
-		public OptionBuilder addNumOfArgs(int numOfArgs) {
-			this.numOfArgs = numOfArgs;
+		public OptionBuilder numOfArg(int numOfArg) {
+			this.numOfArg = numOfArg;
 			return this;
 		}
 
@@ -313,12 +324,11 @@ public class Option {
 			return this;
 		}
 
-		public OptionBuilder addOptionalArg(boolean optionalArg) {
-			this.optionalArg = optionalArg;
+		public OptionBuilder isOptionalArg(boolean isOptionalArg) {
+			this.isOptionalArg = isOptionalArg;
 			return this;
 		}
 
-		@SuppressWarnings("WeakerAccess")
 		public OptionBuilder addBindClass(String key, Class<?> clazz) {
 			this.bindClazz.put(key, clazz);
 			return this;
@@ -329,14 +339,14 @@ public class Option {
 			option.opt = this.opt;
 			option.longOpt = this.longOpt;
 			option.isRequired = this.isRequired;
-			option.numOfArgs = this.numOfArgs;
-			option.hasArgs = this.hasArgs;
+			option.numOfArg = this.numOfArg;
+			option.hasArg = this.hasArgs;
 			option.values = this.values;
 			option.valueSep = this.valueSep;
 			option.desc = this.desc;
 			option.optionGroup = this.optionGroup;
 			option.bindClazz = this.bindClazz;
-			option.optionalArg = this.optionalArg;
+			option.isOptionalArg = this.isOptionalArg;
 			return option;
 		}
 	}

@@ -3,10 +3,8 @@ package com.galaxy.uranus;
 import com.galaxy.uranus.option.Option;
 import com.galaxy.uranus.option.OptionGroup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: 蔡月峰
@@ -15,6 +13,7 @@ import java.util.Map;
  * @Date : Create in 22:11 2019/12/18
  * @Modified By:
  */
+@SuppressWarnings("WeakerAccess")
 public class CommandLine {
 
 	/**
@@ -23,6 +22,9 @@ public class CommandLine {
 	 */
 	private Map<String, OptionGroup> optionGroupMap = new HashMap<>();
 
+	/**
+	 * 命令行输入未能解析参数集
+	 */
 	private List<String> unknownToken = new ArrayList<>();
 
 	public void add(final OptionGroup optionGroup) {
@@ -46,20 +48,41 @@ public class CommandLine {
 	 * @param option 参数项
 	 * @return 参数组对象
 	 */
-	@SuppressWarnings("unused")
 	public OptionGroup get(Option option) {
-		return new OptionGroup("");
+		return optionGroupMap.values().stream().filter(optionGroup -> optionGroup.hasOption(option)).findFirst().orElse(null);
+	}
+
+	/**
+	 * 获取匹配指定参数组名内的谓词的参数项
+	 *
+	 * @param match 谓词
+	 * @return 目标参数项集合
+	 */
+	public List<Option> get(Match<Option> match) {
+		return optionGroupMap.entrySet().stream().flatMap(entry ->
+				entry.getValue().getAllOption().stream()
+						.filter(opt -> match.match(entry.getKey(), opt))).collect(Collectors.toList());
 	}
 
 	public List<OptionGroup> getOptionGroups() {
-		return new ArrayList<>(optionGroupMap.values());
+		return Collections.unmodifiableList(new ArrayList<>(optionGroupMap.values()));
 	}
 
 	public List<String> getUnknownToken() {
-		return unknownToken;
+		return Collections.unmodifiableList(unknownToken);
 	}
 
-	public void setUnknownToken(List<String> unknownToken) {
+	public void setUnknownToken(final List<String> unknownToken) {
 		this.unknownToken = unknownToken;
+	}
+
+	/**
+	 * 参数组名，及参数组其他要素匹配器
+	 *
+	 * @param <T> 参数组其他要素
+	 */
+	@FunctionalInterface
+	public interface Match<T> {
+		boolean match(String groupName, T t);
 	}
 }

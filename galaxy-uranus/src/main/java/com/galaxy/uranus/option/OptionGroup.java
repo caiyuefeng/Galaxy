@@ -2,9 +2,7 @@ package com.galaxy.uranus.option;
 
 import com.galaxy.uranus.exception.MultiOptionGroupException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -55,7 +53,7 @@ public class OptionGroup {
 	 */
 	public void addOption(Option option) throws MultiOptionGroupException {
 		// 检查新增参数项是否已经指定过参数组
-		if (option.getOptionGroup() != null && !this.equals(option.getOptionGroup())) {
+		if (option.getOptionGroup() != null && !this.groupName.equals(option.getOptionGroup().groupName)) {
 			throw new MultiOptionGroupException(option);
 		}
 		opts.put(option.getOpt(), option);
@@ -63,8 +61,30 @@ public class OptionGroup {
 		option.setOptionGroup(this);
 	}
 
+	/**
+	 * 获取指定谓词的参数项，若未获取到则返回NULL
+	 *
+	 * @param predicate 谓词
+	 * @return 符合谓词的参数项
+	 */
 	public Option getOption(Predicate<Option> predicate) {
-		return opts.values().stream().filter(predicate).findFirst().orElse(null);
+		return getOption(predicate, null);
+	}
+
+	/**
+	 * 获取指定的参数项，若未获取到则返回默认参数项
+	 *
+	 * @param predicate     匹配参数项谓词
+	 * @param defaultOption 默认参数项
+	 * @return 匹配的参数项
+	 */
+	@SuppressWarnings("WeakerAccess")
+	public Option getOption(Predicate<Option> predicate, Option defaultOption) {
+		return opts.values().stream().filter(predicate).findFirst().orElse(defaultOption);
+	}
+
+	public List<Option> getAllOption() {
+		return Collections.unmodifiableList(new ArrayList<>(opts.values()));
 	}
 
 	/**
@@ -106,5 +126,9 @@ public class OptionGroup {
 		opts.clear();
 		// 保存命令行输入的参数项
 		shortInput.forEach(opt -> opts.put(opt.getOpt(), opt));
+	}
+
+	public boolean hasOption(Option option) {
+		return opts.values().stream().anyMatch(opt -> opt.equals(option));
 	}
 }
