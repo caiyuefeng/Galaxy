@@ -19,8 +19,8 @@ import static com.galaxy.sun.base.ConstantPath.SUCCESS_STATE;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 断点工作流任务
- * @date : 2018/12/10 15:17
+ *  断点工作流任务
+ * @date 2018/12/10 15:17
  **/
 public class BreakPointWorkflow {
 

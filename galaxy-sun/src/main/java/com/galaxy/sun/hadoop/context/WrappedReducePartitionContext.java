@@ -13,8 +13,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区任务Reduce上下文包装器
- * @date : 2018/12/11 9:59
+ *  分区任务Reduce上下文包装器
+ * @date 2018/12/11 9:59
  **/
 public class WrappedReducePartitionContext<K, V> implements WrappedContext {
 

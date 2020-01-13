@@ -6,14 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: Option注解类
+ * @author 蔡月峰
+ * @version 1.0
+ *  Option注解类
  * 该注解类用于标识在功能模块类上，和命令行参数进行绑定
  * 参数解析在命令行参数时，会先进行命令参数模块绑定，
  * 在用户代码根据输入的命令行参数项直接获取到对应的功能模块实例
- * @Date : Create in 13:05 2019/12/29
- * @Modified By:
+ * @date Create in 13:05 2019/12/29
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

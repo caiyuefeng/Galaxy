@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 19:32 2019/12/28
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 19:32 2019/12/28
+ *
  */
 public class UranusParserTest {
 

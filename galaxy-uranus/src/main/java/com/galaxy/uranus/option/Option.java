@@ -7,13 +7,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 参数项对象
+ * @author 蔡月峰
+ * @version 1.0
+ *  参数项对象
  * 该对象用于描述参数的各中属性
  * 用于保存从命令行传入的参数相关的内容
- * @Date : Create in 22:09 2019/12/18
- * @Modified By:
+ * @date Create in 22:09 2019/12/18
+ *
  */
 @SuppressWarnings("unused")
 public class Option {

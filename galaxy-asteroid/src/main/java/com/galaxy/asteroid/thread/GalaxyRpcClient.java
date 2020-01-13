@@ -8,11 +8,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 20:49 2019/5/4
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 20:49 2019/5/4
+ *
  */
 public class GalaxyRpcClient {
 

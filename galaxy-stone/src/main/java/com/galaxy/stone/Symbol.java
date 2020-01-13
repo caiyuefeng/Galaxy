@@ -1,11 +1,11 @@
 package com.galaxy.stone;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 22:46 2019/8/14
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 22:46 2019/8/14
+ *
  */
 public enum Symbol {
 	/**

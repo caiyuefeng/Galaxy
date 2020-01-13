@@ -29,8 +29,8 @@ import static com.galaxy.sun.base.ConstantConfItem.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/10 14:10
+ *
+ * @date 2018/12/10 14:10
  **/
 public class DefaultJob {
 

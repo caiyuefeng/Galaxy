@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 输出文件名基类
- * @date : 2018/12/10 14:21
+ *  输出文件名基类
+ * @date 2018/12/10 14:21
  **/
 public abstract class BaseFileOutputFormat<K, V> extends FileOutputFormat<K, V> {
 

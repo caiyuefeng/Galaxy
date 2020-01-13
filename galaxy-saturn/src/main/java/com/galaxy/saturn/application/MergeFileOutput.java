@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 文件合并输出方法
- * @date : 2018/12/24 9:53
+ *  文件合并输出方法
+ * @date 2018/12/24 9:53
  **/
 public class MergeFileOutput implements Output {
 

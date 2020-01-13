@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 点对象集合
- * @Date : Create in 21:35 2019/5/14
- * @Modified By:
+ * @author  蔡月峰
+ * @version 1.0
+ *  点对象集合
+ * @date  Create in 21:35 2019/5/14
+ *
  */
 public class Vertexes {
 

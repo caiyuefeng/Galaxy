@@ -15,11 +15,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 21:41 2019/8/5
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 21:41 2019/8/5
+ *
  */
 @SuppressWarnings("unused")
 public class ClassUtils {

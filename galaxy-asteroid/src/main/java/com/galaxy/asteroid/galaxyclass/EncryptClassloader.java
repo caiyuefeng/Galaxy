@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 自定义类加载器
- * @date : 2019/3/12 9:00
+ *  自定义类加载器
+ * @date 2019/3/12 9:00
  **/
 public class EncryptClassloader extends ClassLoader {
     /**

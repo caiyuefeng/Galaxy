@@ -6,11 +6,11 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 22:15 2019/12/30
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 22:15 2019/12/30
+ *
  */
 public class OptionsTest {
 

@@ -7,8 +7,8 @@ import org.apache.hadoop.io.WritableComparator;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 新旧数据分组器
- * @date : 2018/12/11 14:35
+ *  新旧数据分组器
+ * @date 2018/12/11 14:35
  **/
 public class DataTypeGroupComparator extends WritableComparator {
 

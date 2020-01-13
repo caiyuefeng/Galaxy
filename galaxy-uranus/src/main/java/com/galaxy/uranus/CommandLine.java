@@ -7,11 +7,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 命令行输入的参数项 实例
- * @Date : Create in 22:11 2019/12/18
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  命令行输入的参数项 实例
+ * @date Create in 22:11 2019/12/18
+ *
  */
 @SuppressWarnings("WeakerAccess")
 public class CommandLine {

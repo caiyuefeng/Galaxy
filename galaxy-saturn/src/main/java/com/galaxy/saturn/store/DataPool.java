@@ -1,11 +1,11 @@
 package com.galaxy.saturn.store;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 数据池接口
- * @Date : Create in 13:47 2019/10/5
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  数据池接口
+ * @date Create in 13:47 2019/10/5
+ *
  */
 public interface DataPool {
 

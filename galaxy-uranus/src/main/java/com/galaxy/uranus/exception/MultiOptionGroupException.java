@@ -3,11 +3,11 @@ package com.galaxy.uranus.exception;
 import com.galaxy.uranus.option.Option;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 20:39 2019/12/23
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 20:39 2019/12/23
+ *
  */
 @SuppressWarnings("unused")
 public final class MultiOptionGroupException extends UranusException {

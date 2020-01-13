@@ -5,8 +5,8 @@ import org.apache.hadoop.fs.Path;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 公用路径类
- * @date : 2018/12/11 8:39
+ *  公用路径类
+ * @date 2018/12/11 8:39
  **/
 public class ConstantPath {
 

@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: Map基类
- * @date : 2018/12/10 14:11
+ *  Map基类
+ * @date 2018/12/10 14:11
  **/
 public abstract class BaseMap<KI, VI, KO, VO> extends Mapper<KI, VI, KO, VO> {
 

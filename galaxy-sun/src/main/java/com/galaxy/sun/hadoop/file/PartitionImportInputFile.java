@@ -20,9 +20,9 @@ import static com.galaxy.sun.base.ConstantPath.RECORD;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区文件增量获取策略
+ *  分区文件增量获取策略
  * 根据分区记录信息获取存在更新的分区下的所有文件
- * @date : 2018/12/10 17:24
+ * @date 2018/12/10 17:24
  **/
 public class PartitionImportInputFile implements InputFile {
 

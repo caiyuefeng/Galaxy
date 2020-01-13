@@ -10,11 +10,11 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 21:12 2019/9/15
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 21:12 2019/9/15
+ *
  */
 public class FileUtils {
 

@@ -12,8 +12,8 @@ import static com.galaxy.sun.base.ConstantCounter.GROUP_100;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 15:46
+ *
+ * @date 2018/12/11 15:46
  **/
 public class DemoReduceOne extends BasePartitionReduce<Text, Text> {
     @Override

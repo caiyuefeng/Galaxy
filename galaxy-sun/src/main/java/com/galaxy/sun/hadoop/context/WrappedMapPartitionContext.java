@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区Map任务的上下文包装类型
- * @date : 2018/12/11 9:59
+ *  分区Map任务的上下文包装类型
+ * @date 2018/12/11 9:59
  **/
 public class WrappedMapPartitionContext<K, V> implements WrappedContext {
 

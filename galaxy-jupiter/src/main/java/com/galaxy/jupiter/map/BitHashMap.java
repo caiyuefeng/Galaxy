@@ -4,16 +4,16 @@ import java.util.BitSet;
 import java.util.function.BiConsumer;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 通过BitSet和数组实现的Map映射表
+ * @author  蔡月峰
+ * @version 1.0
+ *  通过BitSet和数组实现的Map映射表
  * 1、使用数组缓存键对象和值对象
  * 2、使用BitSet缓存键对象数组下标，并且使用BitSet判断键对象是否存在
  * 3、采用负载方式避免数组被直接填满，负载因子默认0.75;
  * 4、当容量超过负载容量时进行扩容，每次扩容均为原容量的2倍
  * 5、初始化时会将初始容量扩展为2的幂大小
- * @Date : Create in 21:36 2019/5/14
- * @Modified By:
+ * @date  Create in 21:36 2019/5/14
+ *
  */
 public class BitHashMap<K, V> {
 

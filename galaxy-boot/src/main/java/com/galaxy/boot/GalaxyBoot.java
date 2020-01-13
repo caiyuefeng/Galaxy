@@ -9,11 +9,11 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 8:14 2019/10/1
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 8:14 2019/10/1
+ *
  */
 public class GalaxyBoot {
 

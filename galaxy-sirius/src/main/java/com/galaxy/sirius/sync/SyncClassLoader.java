@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 同步类加载器
- * @Date : Create in 8:16 2019/10/1
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  同步类加载器
+ * @date Create in 8:16 2019/10/1
+ *
  */
 public class SyncClassLoader extends ClassLoader {
 

@@ -6,11 +6,11 @@ import com.galaxy.uranus.option.Options;
 import org.junit.Test;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 23:15 2020/1/9
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 23:15 2020/1/9
+ *
  */
 public class HelpInfoFormatTest {
 

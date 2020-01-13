@@ -8,8 +8,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: Demo主函数入口
- * @date : 2018/12/11 9:22
+ *  Demo主函数入口
+ * @date 2018/12/11 9:22
  **/
 public class DemoMain {
 

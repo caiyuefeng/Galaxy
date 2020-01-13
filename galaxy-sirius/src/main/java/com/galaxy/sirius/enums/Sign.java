@@ -1,11 +1,11 @@
 package com.galaxy.sirius.enums;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 21:43 2019/8/5
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 21:43 2019/8/5
+ *
  */
 public enum Sign {
     /**

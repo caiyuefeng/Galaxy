@@ -8,8 +8,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 自定义Context上下文包装类型
- * @date : 2018/12/11 9:37
+ *  自定义Context上下文包装类型
+ * @date 2018/12/11 9:37
  **/
 public interface WrappedContext {
 

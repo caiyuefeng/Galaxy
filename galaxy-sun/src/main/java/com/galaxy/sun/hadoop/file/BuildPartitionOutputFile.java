@@ -17,10 +17,10 @@ import static com.galaxy.sun.base.ConstantPath.SUCCESS;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区输出文件操作
+ *  分区输出文件操作
  * 将输出文件名称中的分区信息移入对应分区
  * 输出文件名: *PS分区信息PE*.nb
- * @date : 2018/12/10 17:13
+ * @date 2018/12/10 17:13
  **/
 public class BuildPartitionOutputFile implements OutputFile {
     @Override

@@ -21,8 +21,8 @@ import static com.galaxy.sun.base.ConstantPath.STATUS_PATH;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 根据时间戳获取增量输入文件
- * @date : 2018/12/10 17:24
+ *  根据时间戳获取增量输入文件
+ * @date 2018/12/10 17:24
  **/
 public class TimestampImportInputFile implements InputFile {
 

@@ -3,8 +3,8 @@ package com.galaxy.sun.compress;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 数据压缩方法接口
- * @date : 2018/12/11 10:17
+ *  数据压缩方法接口
+ * @date 2018/12/11 10:17
  **/
 public interface DataCompress {
 

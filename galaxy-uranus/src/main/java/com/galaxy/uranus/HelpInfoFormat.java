@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 帮助文档构建器
+ * @author 蔡月峰
+ * @version 1.0
+ *  帮助文档构建器
  * 该工具类通过接受定义好的Options参数项，
  * 显示格式:
  * ${HelpInfo_Head} -> 帮助文档头部信息
@@ -25,8 +25,8 @@ import java.util.List;
  * galaxy -stop sirius
  * options:
  * -start --start
- * @Date : Create in 19:34 2020/1/1
- * @Modified By:
+ * @date Create in 19:34 2020/1/1
+ *
  */
 public class HelpInfoFormat {
 

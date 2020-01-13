@@ -9,8 +9,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/10 15:19
+ *
+ * @date 2018/12/10 15:19
  **/
 public interface OutputFile {
 

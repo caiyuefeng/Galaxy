@@ -18,11 +18,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 同步工厂
- * @Date : Create in 21:03 2019/9/14
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  同步工厂
+ * @date Create in 21:03 2019/9/14
+ *
  */
 @SuppressWarnings("unused")
 public class SyncFactory {

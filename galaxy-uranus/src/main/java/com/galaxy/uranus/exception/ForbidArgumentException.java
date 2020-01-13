@@ -1,11 +1,11 @@
 package com.galaxy.uranus.exception;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 23:00 2019/12/23
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 23:00 2019/12/23
+ *
  */
 @SuppressWarnings("unused")
 public class ForbidArgumentException extends UranusException {

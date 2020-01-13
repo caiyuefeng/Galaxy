@@ -19,8 +19,8 @@ import static com.galaxy.sun.base.ConstantCounter.GROUP_300;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 11:14
+ *
+ * @date 2018/12/11 11:14
  **/
 public abstract class BasePartitionReduce<KI, VI> extends BaseReduce<KI, VI, Text, Text> {
 

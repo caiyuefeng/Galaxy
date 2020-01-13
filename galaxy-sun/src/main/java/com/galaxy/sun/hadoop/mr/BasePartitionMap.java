@@ -19,8 +19,8 @@ import static com.galaxy.sun.base.ConstantCounter.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区任务Map基类
- * @date : 2018/12/11 10:36
+ *  分区任务Map基类
+ * @date 2018/12/11 10:36
  **/
 public abstract class BasePartitionMap<KI, VI> extends BaseMap<KI, VI, Text, Text> {
 

@@ -15,33 +15,56 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 注解中心
- * @Date : Create in 13:23 2019/12/29
- * @Modified By:
+ * 注解中心
+ * @author 蔡月峰
+ * @version 1.0
+ * @date Create in 13:23 2019/12/29
  */
 public class AnnotationRegistration {
 
 	/**
 	 * 注解 - 类签名缓存
 	 */
-	private Map<Annotation, Class<?>> annotationClass;
+	private ConcurrentHashMap<Annotation, Class<?>> annotationClass;
+
+	/**
+	 * Jar包扫描线程池。
+	 * 该线程池最大同时运行的线程为4个，线程结束后不保存直接销毁。
+	 */
+	private ExecutorService threadPool = new ThreadPoolExecutor(4, 4, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<>(), new ThreadFactory() {
+		/**
+		 * 线程编号.
+		 */
+		private int threadNo = 0;
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread thread = new Thread(r);
+			thread.setName("Annotation_Load_Thread-" + threadNo);
+			threadNo++;
+			return thread;
+		}
+	});
 
 	/**
 	 * 单例模式
 	 */
 	private volatile static AnnotationRegistration instance = null;
 
+
 	private AnnotationRegistration() {
-		annotationClass = new HashMap<>();
+		annotationClass = new ConcurrentHashMap<>();
 	}
 
 	public static AnnotationRegistration getInstance() throws IOException, ClassNotFoundException {
@@ -69,6 +92,14 @@ public class AnnotationRegistration {
 					throw new IllegalArgumentException(String.format("参数:%s目前不支持", url.getProtocol()));
 			}
 		}
+		threadPool.shutdown();
+		while (!threadPool.isTerminated()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
 	}
 
 	/**
@@ -80,7 +111,7 @@ public class AnnotationRegistration {
 		if (file.getName().endsWith(Symbol.DOT.getValue() + SpecialConstantStr.JAR_TAIL)) {
 			try {
 				loadAnnotationByJar(new JarFile(file));
-			} catch (ZipException e) {
+			} catch (ZipException | Error e) {
 				// 不处理
 			}
 		}
@@ -92,53 +123,9 @@ public class AnnotationRegistration {
 	 * @param jarFile Jar包路径
 	 */
 	private void loadAnnotationByJar(JarFile jarFile) {
-		Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
-		while (jarEntryEnumeration.hasMoreElements()) {
-			JarEntry entry = jarEntryEnumeration.nextElement();
-			String name = entry.getName();
-			name = formatName(name);
-			if (name.endsWith(Symbol.DOT.getValue() + SpecialConstantStr.CLASS_TAIL)) {
-				int pos = name.lastIndexOf(Symbol.DOT.getValue());
-				try {
-					loadAnnotation(Class.forName(name.substring(0, pos)));
-				} catch (ClassNotFoundException e) {
-					// 依赖类未法相或不能加载 则放弃对应Jar包的加载
-				}
-			}
-		}
+		threadPool.submit(new LoadThread(jarFile, annotationClass));
 	}
 
-	/**
-	 * 格式化报名
-	 * /pgn/pgt/cla.class -> pgn.pgt.cla.class
-	 *
-	 * @param name 原格式名
-	 * @return 格式化后名称
-	 */
-	private String formatName(String name) {
-		name = name.charAt(0) == '/' ? name.substring(1) : name;
-		return name.replace('/', '.');
-	}
-
-	/**
-	 * 加载类中的所有注解
-	 *
-	 * @param clazz 类
-	 */
-	private void loadAnnotation(Class<?> clazz) {
-		Annotation[] annotations = clazz.getAnnotations();
-		if (annotations != null) {
-			for (Annotation annotation : annotations) {
-				if (isNotMetaAnnotation(annotation)) {
-					annotationClass.put(annotation, clazz);
-				}
-			}
-		}
-	}
-
-	private boolean isNotMetaAnnotation(Annotation annotation) {
-		return !(annotation instanceof Retention) && !(annotation instanceof Target);
-	}
 
 	/**
 	 * 获取指定注解类的对应所有类的迭代器
@@ -182,5 +169,67 @@ public class AnnotationRegistration {
 		 * 普通文件协议，jar文件URL协议
 		 */
 		file, jar
+	}
+
+	private static class LoadThread implements Runnable {
+
+		private JarFile jarFile;
+
+		private ConcurrentHashMap<Annotation, Class<?>> annotationClass;
+
+		public LoadThread(JarFile jarFile, ConcurrentHashMap<Annotation, Class<?>> annotationClass) {
+			this.jarFile = jarFile;
+			this.annotationClass = annotationClass;
+		}
+
+		@Override
+		public void run() {
+			Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
+			while (jarEntryEnumeration.hasMoreElements()) {
+				JarEntry entry = jarEntryEnumeration.nextElement();
+				String name = entry.getName();
+				name = formatName(name);
+				if (name.endsWith(Symbol.DOT.getValue() + SpecialConstantStr.CLASS_TAIL)) {
+					int pos = name.lastIndexOf(Symbol.DOT.getValue());
+					try {
+						loadAnnotation(Class.forName(name.substring(0, pos)));
+					} catch (ClassNotFoundException e) {
+						// 依赖类未法相或不能加载 则放弃对应Jar包的加载
+					}
+				}
+			}
+		}
+
+		/**
+		 * 格式化报名
+		 * /pgn/pgt/cla.class -> pgn.pgt.cla.class
+		 *
+		 * @param name 原格式名
+		 * @return 格式化后名称
+		 */
+		private String formatName(String name) {
+			name = name.charAt(0) == '/' ? name.substring(1) : name;
+			return name.replace('/', '.');
+		}
+
+		/**
+		 * 加载类中的所有注解
+		 *
+		 * @param clazz 类
+		 */
+		private void loadAnnotation(Class<?> clazz) {
+			Annotation[] annotations = clazz.getAnnotations();
+			if (annotations != null) {
+				for (Annotation annotation : annotations) {
+					if (isNotMetaAnnotation(annotation)) {
+						annotationClass.put(annotation, clazz);
+					}
+				}
+			}
+		}
+
+		private boolean isNotMetaAnnotation(Annotation annotation) {
+			return !(annotation instanceof Retention) && !(annotation instanceof Target);
+		}
 	}
 }

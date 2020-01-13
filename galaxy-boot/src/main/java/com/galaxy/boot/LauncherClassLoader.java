@@ -16,11 +16,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 启动类加载器
- * @Date : Create in 8:14 2019/10/1
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  启动类加载器
+ * @date Create in 8:14 2019/10/1
+ *
  */
 @SuppressWarnings("unused")
 public class LauncherClassLoader extends ClassLoader {

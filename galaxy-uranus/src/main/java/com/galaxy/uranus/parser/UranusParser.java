@@ -20,9 +20,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 参数解析器
+ * @author 蔡月峰
+ * @version 1.0
+ *  参数解析器
  * 1、解析以下风格的参数:
  * -K
  * -K V
@@ -35,8 +35,8 @@ import java.util.function.Predicate;
  * --Key
  * --Key V
  * --DKey=V
- * @Date : Create in 22:10 2019/12/18
- * @Modified By:
+ * @date Create in 22:10 2019/12/18
+ *
  */
 @SuppressWarnings("WeakerAccess")
 public class UranusParser {

@@ -3,8 +3,8 @@ package com.galaxy.sun.partitioner;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区器接口
- * @date : 2018/12/11 10:14
+ *  分区器接口
+ * @date 2018/12/11 10:14
  **/
 public interface DataPartitioner<Type> {
 

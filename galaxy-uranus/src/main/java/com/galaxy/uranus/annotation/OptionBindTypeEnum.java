@@ -1,11 +1,11 @@
 package com.galaxy.uranus.annotation;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 参数模块绑定类 枚举类
- * @Date : Create in 13:15 2019/12/29
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  参数模块绑定类 枚举类
+ * @date Create in 13:15 2019/12/29
+ *
  */
 public enum OptionBindTypeEnum {
 	/**

@@ -3,8 +3,8 @@ package com.galaxy.asteroid.galaxyclass;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 加密算法接口
- * @date : 2019/3/12 9:03
+ *  加密算法接口
+ * @date 2019/3/12 9:03
  **/
 public interface EncryptAlgorithm {
 

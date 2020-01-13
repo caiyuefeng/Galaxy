@@ -12,8 +12,8 @@ import java.util.Objects;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 新旧数据的二次排序键
- * @date : 2018/12/11 13:49
+ *  新旧数据的二次排序键
+ * @date 2018/12/11 13:49
  **/
 public class DataTypeKey implements WritableComparable<DataTypeKey> {
 

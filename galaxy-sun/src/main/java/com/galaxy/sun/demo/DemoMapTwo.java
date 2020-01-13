@@ -14,8 +14,8 @@ import static com.galaxy.sun.base.ConstantCounter.GROUP_200;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 15:46
+ *
+ * @date 2018/12/11 15:46
  **/
 public class DemoMapTwo extends BaseSecondarySortMap<LongWritable, Text> {
 

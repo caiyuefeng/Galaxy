@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 顶点分区缓存
+ * @author  蔡月峰
+ * @version 1.0
+ *  顶点分区缓存
  * 1、该分区缓存用于对磁盘上的顶点数据按照需求聚合
  * 2、提供持久化数据到磁盘的能力
- * @Date : Create in 21:36 2019/5/14
- * @Modified By:
+ * @date  Create in 21:36 2019/5/14
+ *
  */
 public class VertexPartition {
 

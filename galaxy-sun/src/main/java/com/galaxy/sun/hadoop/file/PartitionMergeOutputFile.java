@@ -17,9 +17,9 @@ import static com.galaxy.sun.base.ConstantPath.SUCCESS;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 合并分区的输出文件
+ *  合并分区的输出文件
  * 改操作的目标分区是已经存在的,并且已存在分区数据是待移入的分区数据的子集
- * @date : 2018/12/10 17:16
+ * @date 2018/12/10 17:16
  **/
 public class PartitionMergeOutputFile implements OutputFile {
 

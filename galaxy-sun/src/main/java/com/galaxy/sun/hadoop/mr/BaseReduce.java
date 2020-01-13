@@ -8,8 +8,8 @@ import java.io.IOException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: Reduce基类
- * @date : 2018/12/10 15:17
+ *  Reduce基类
+ * @date 2018/12/10 15:17
  **/
 public abstract class BaseReduce<KI, VI, KO, VO> extends Reducer<KI, VI, KO, VO> {
 

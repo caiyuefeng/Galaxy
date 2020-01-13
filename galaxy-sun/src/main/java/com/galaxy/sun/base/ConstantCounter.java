@@ -3,8 +3,8 @@ package com.galaxy.sun.base;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 公共统计量编码
- * @date : 2018/12/11 11:01
+ *  公共统计量编码
+ * @date 2018/12/11 11:01
  **/
 public class ConstantCounter {
 

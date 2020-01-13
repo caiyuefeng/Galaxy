@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 分区输入文件操作策略接口
- * @date : 2018/12/10 17:13
+ *  分区输入文件操作策略接口
+ * @date 2018/12/10 17:13
  **/
 public interface InputFile {
 

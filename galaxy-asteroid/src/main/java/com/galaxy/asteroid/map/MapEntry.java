@@ -5,8 +5,8 @@ import java.util.Objects;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2019/3/12 17:00
+ *
+ * @date 2019/3/12 17:00
  **/
 public class MapEntry<K, V> {
     private K key;

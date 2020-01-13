@@ -17,8 +17,8 @@ import static com.galaxy.sun.base.ConstantCounter.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 二次排序 Map基类
- * @date : 2018/12/11 13:48
+ *  二次排序 Map基类
+ * @date 2018/12/11 13:48
  **/
 public abstract class BaseSecondarySortMap<KI, VI> extends BaseMap<KI, VI, DataTypeKey,Text> {
 

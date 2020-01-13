@@ -7,13 +7,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 参数组
+ * @author 蔡月峰
+ * @version 1.0
+ *  参数组
  * 用于存储一组表示相同含义的不同参数
  * 如 同一组运行同一功能的不同实现
- * @Date : Create in 22:09 2019/12/18
- * @Modified By:
+ * @date Create in 22:09 2019/12/18
+ *
  */
 public class OptionGroup {
 

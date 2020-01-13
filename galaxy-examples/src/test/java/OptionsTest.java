@@ -1,7 +1,5 @@
 import com.galaxy.uranus.CommandLine;
-import com.galaxy.uranus.examples.OptionalValueBindFunc;
-import com.galaxy.uranus.examples.TypeBindFunc;
-import com.galaxy.uranus.examples.ValueBindFunc;
+import com.galaxy.uranus.examples.*;
 import com.galaxy.uranus.exception.UranusException;
 import com.galaxy.uranus.option.Option;
 import com.galaxy.uranus.option.OptionGroup;
@@ -16,11 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 22:15 2019/12/30
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 22:15 2019/12/30
+ *
  */
 public class OptionsTest {
 
@@ -59,9 +57,46 @@ public class OptionsTest {
 		OptionGroup optionGroup = optionGroups.get(0);
 		Assert.assertEquals(1, optionGroup.getGroupSize());
 		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("opt"));
-		Assert.assertEquals(Option.builder("opt").addLongOpt("optional").hasArgs(true)
-				.addNumOfArgs(2).addValue("2017").addValue("2018").build(), option);
+		Assert.assertEquals(Option.builder("opt").addLongOpt("optional").hasArg(true)
+				.numOfArg(2).addValue("2017").addValue("2018").build(), option);
 		Assert.assertEquals(OptionalValueBindFunc.class, option.getBindFunc().getClass());
 	}
 
+	/**
+	 * 一个参数项的存在两个值绑定类型函数
+	 * 命令行输入其中一个值获取对应的值绑定函数
+	 */
+	@Test
+	public void testThree() throws IOException, ClassNotFoundException, UranusException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		Options options = Options.builder().build();
+		UranusParser parser = new UranusParser();
+		CommandLine commandLine = parser.parse(options, new String[]{"-m", "a"}, OptionUtils.getPropertiesFromOptionAnnotation());
+		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
+		Assert.assertEquals(1, optionGroups.size());
+		OptionGroup optionGroup = optionGroups.get(0);
+		Assert.assertEquals(1, optionGroup.getGroupSize());
+		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("m"));
+		Assert.assertEquals(Option.builder("m").addLongOpt("mode").hasArg(true)
+				.numOfArg(1).addValue("a").build(), option);
+		Assert.assertEquals(OptionalValueBindFirstFunc.class, option.getBindFunc().getClass());
+	}
+
+	/**
+	 * 一个参数项的存在两个值绑定类型函数
+	 * 命令行输入其中一个值获取对应的值绑定函数
+	 */
+	@Test
+	public void testFour() throws IOException, ClassNotFoundException, UranusException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		Options options = Options.builder().build();
+		UranusParser parser = new UranusParser();
+		CommandLine commandLine = parser.parse(options, new String[]{"-m", "b"}, OptionUtils.getPropertiesFromOptionAnnotation());
+		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
+		Assert.assertEquals(1, optionGroups.size());
+		OptionGroup optionGroup = optionGroups.get(0);
+		Assert.assertEquals(1, optionGroup.getGroupSize());
+		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("m"));
+		Assert.assertEquals(Option.builder("m").addLongOpt("mode").hasArg(true)
+				.numOfArg(1).addValue("b").build(), option);
+		Assert.assertEquals(OptionValueBindSecondFunc.class, option.getBindFunc().getClass());
+	}
 }

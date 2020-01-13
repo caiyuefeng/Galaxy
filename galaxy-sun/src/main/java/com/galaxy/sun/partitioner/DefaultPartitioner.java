@@ -3,8 +3,8 @@ package com.galaxy.sun.partitioner;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 10:48
+ *
+ * @date 2018/12/11 10:48
  **/
 public class DefaultPartitioner<Type> implements DataPartitioner<Type> {
 

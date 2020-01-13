@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Random;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 22:13 2019/8/11
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 22:13 2019/8/11
+ *
  */
 public class ProducerDemo {
 

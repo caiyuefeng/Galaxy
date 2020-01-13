@@ -5,8 +5,8 @@ import java.io.UnsupportedEncodingException;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 公用字符类
- * @date : 2018/12/10 14:41
+ *  公用字符类
+ * @date 2018/12/10 14:41
  **/
 public class ConstantChar {
 

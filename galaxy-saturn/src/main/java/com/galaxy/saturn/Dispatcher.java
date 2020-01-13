@@ -8,8 +8,8 @@ import java.util.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 文件工具类
- * @date : 2018/12/24 9:55
+ *  文件工具类
+ * @date 2018/12/24 9:55
  **/
 public class Dispatcher {
 

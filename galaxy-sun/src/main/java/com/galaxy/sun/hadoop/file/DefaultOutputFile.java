@@ -11,8 +11,8 @@ import static com.galaxy.sun.base.ConstantPath.SUCCESS;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 默认的输出文件操作
- * @date : 2018/12/10 17:14
+ *  默认的输出文件操作
+ * @date 2018/12/10 17:14
  **/
 public class DefaultOutputFile implements OutputFile {
 

@@ -10,13 +10,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 参数项注册类
+ * @author 蔡月峰
+ * @version 1.0
+ *  参数项注册类
  * 参数项注册默认以参数组形式进行注册
  * 注册时如果注册单个参数项，则默认添加到default参数项组中
- * @Date : Create in 22:18 2019/12/18
- * @Modified By:
+ * @date Create in 22:18 2019/12/18
+ *
  */
 public class Options {
 

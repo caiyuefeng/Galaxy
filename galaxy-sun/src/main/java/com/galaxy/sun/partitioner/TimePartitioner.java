@@ -7,8 +7,8 @@ import java.util.Map;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 时间分区器
- * @date : 2018/12/11 15:41
+ *  时间分区器
+ * @date 2018/12/11 15:41
  **/
 public class TimePartitioner<Type> implements DataPartitioner<Type> {
 

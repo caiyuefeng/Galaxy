@@ -9,11 +9,11 @@ import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 21:58 2019/8/14
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 21:58 2019/8/14
+ *
  */
 public class ConsumerDemo {
     @Stage

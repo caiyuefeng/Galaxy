@@ -11,12 +11,12 @@ import org.slf4j.LoggerFactory;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 监控线程
+ *  监控线程
  * 1、心跳功能：定时检测
  * 2、数据池监控功能
  * 3、机器维护
  * 4、输入器输出器维护
- * @date : 2018/12/24 9:54
+ * @date 2018/12/24 9:54
  **/
 public class SaturnMonitor {
 

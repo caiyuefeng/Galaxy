@@ -8,8 +8,8 @@ import static com.galaxy.sun.base.ConstantChar.UNDERLINE;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 15:38
+ *
+ * @date 2018/12/11 15:38
  **/
 public class GetCurrentPartitioner implements DataPartitioner {
     @Override

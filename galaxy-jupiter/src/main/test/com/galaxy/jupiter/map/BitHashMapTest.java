@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 22:24 2019/5/14
- * @Modified By:
+ * @author  蔡月峰
+ * @version 1.0
+ *
+ * @date  Create in 22:24 2019/5/14
+ *
  */
 public class BitHashMapTest {
     @Test

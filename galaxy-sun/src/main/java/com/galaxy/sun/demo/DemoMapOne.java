@@ -16,8 +16,8 @@ import static com.galaxy.sun.base.ConstantConfItem.MAP_REDUCE_PROPERTIES;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description:
- * @date : 2018/12/11 15:45
+ *
+ * @date 2018/12/11 15:45
  **/
 public class DemoMapOne extends BasePartitionMap<LongWritable, Text> {
 

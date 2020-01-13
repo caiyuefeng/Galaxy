@@ -6,9 +6,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 默认输出文件名
+ *  默认输出文件名
  * 以 指定的字段前缀 + 日期 + 同名文件数 + nb
- * @date : 2018/12/10 14:21
+ * @date 2018/12/10 14:21
  **/
 public class DefaultFileOutputFormat extends BaseFileOutputFormat {
 

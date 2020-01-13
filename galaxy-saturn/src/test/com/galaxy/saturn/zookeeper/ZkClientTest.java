@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 14:35 2019/10/13
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 14:35 2019/10/13
+ *
  */
 public class ZkClientTest {
 

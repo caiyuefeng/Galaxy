@@ -1,12 +1,12 @@
 package com.galaxy.asteroid.jvm;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 内存分配
+ * @author 蔡月峰
+ * @version 1.0
+ *  内存分配
  * 测试堆内存分配情况
- * @Date : Create in 20:41 2019/4/3
- * @Modified By:
+ * @date Create in 20:41 2019/4/3
+ *
  */
 public class GCDemoTwo {
 

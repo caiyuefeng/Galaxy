@@ -5,8 +5,8 @@ import java.util.concurrent.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 自定义线程池
- * @date : 2019/3/14 10:11
+ *  自定义线程池
+ * @date 2019/3/14 10:11
  **/
 public class GalaxyThreadPool {
 

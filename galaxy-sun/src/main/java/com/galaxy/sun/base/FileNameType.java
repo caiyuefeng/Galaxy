@@ -3,8 +3,8 @@ package com.galaxy.sun.base;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 增量全量数据文件标志
- * @date : 2018/12/11 20:20
+ *  增量全量数据文件标志
+ * @date 2018/12/11 20:20
  **/
 public enum FileNameType {
 

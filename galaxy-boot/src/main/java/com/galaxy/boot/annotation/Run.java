@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description:
- * @Date : Create in 15:18 2019/10/3
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *
+ * @date Create in 15:18 2019/10/3
+ *
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

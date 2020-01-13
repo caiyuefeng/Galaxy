@@ -17,8 +17,8 @@ import static com.galaxy.sun.base.ConstantConfItem.*;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 通用工具类
- * @date : 2018/12/10 16:09
+ *  通用工具类
+ * @date 2018/12/10 16:09
  **/
 public class GalaxyUtils {
 

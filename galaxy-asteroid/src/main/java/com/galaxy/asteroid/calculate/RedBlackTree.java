@@ -3,11 +3,11 @@ package com.galaxy.asteroid.calculate;
 import java.util.*;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: 红黑树
- * @Date : Create in 20:57 2019/4/25
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  红黑树
+ * @date Create in 20:57 2019/4/25
+ *
  */
 public class RedBlackTree {
 

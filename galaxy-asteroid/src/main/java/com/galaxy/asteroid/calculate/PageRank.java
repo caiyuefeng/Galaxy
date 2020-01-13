@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * @Author: 蔡月峰
- * @Version： 1.0
- * @Description: PageRank算法
- * @Date : Create in 13:56 2019/4/14
- * @Modified By:
+ * @author 蔡月峰
+ * @version 1.0
+ *  PageRank算法
+ * @date Create in 13:56 2019/4/14
+ *
  */
 public class PageRank {
 

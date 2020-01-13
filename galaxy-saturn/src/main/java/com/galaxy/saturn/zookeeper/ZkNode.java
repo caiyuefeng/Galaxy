@@ -9,8 +9,8 @@ import java.util.Objects;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: ZK操作节点
- * @date : 2018/12/24 9:51
+ *  ZK操作节点
+ * @date 2018/12/24 9:51
  **/
 public class ZkNode implements Comparable<ZkNode> {
 

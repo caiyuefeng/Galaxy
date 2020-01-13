@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 文件读取器
- * @date : 2018/12/24 9:52
+ *  文件读取器
+ * @date 2018/12/24 9:52
  **/
 public class Reader implements IsCloseable {
 

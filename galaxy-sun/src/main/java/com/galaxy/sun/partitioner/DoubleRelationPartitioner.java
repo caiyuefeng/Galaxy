@@ -7,8 +7,8 @@ import static com.galaxy.sun.base.ConstantChar.UNDERLINE;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 身份证关联数据分区器
- * @date : 2018/12/11 15:35
+ *  身份证关联数据分区器
+ * @date 2018/12/11 15:35
  **/
 public class DoubleRelationPartitioner implements DataPartitioner {
 

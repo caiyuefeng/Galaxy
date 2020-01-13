@@ -19,8 +19,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 数据缓存池
- * @date : 2018/12/24 9:54
+ *  数据缓存池
+ * @date 2018/12/24 9:54
  **/
 public class ZKDataPool implements DataPool {
 

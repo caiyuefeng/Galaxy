@@ -45,7 +45,6 @@
     </build>
     <packaging>pom</packaging>
 
-
     <dependencyManagement>
         <dependencies>
             <dependency>

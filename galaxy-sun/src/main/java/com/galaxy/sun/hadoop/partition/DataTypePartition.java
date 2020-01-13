@@ -7,8 +7,8 @@ import org.apache.hadoop.mapreduce.Partitioner;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 新旧数据Shuffle分区器
- * @date : 2018/12/11 14:32
+ *  新旧数据Shuffle分区器
+ * @date 2018/12/11 14:32
  **/
 public class DataTypePartition extends Partitioner<DataTypeKey, Text> {
     @Override

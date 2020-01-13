@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * @author : 蔡月峰
  * @version : 1.0
- * @Description: 输入文件全量获取
- * @date : 2018/12/10 17:18
+ *  输入文件全量获取
+ * @date 2018/12/10 17:18
  **/
 public class TotalInputFile implements InputFile {
 
