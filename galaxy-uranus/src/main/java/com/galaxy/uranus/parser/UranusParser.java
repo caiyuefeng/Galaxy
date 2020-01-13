@@ -20,10 +20,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * @author 蔡月峰
- * @version 1.0
- *  参数解析器
- * 1、解析以下风格的参数:
+ * 参数解析器。
+ * 解析以下风格的参数:
  * -K
  * -K V
  * -Key
@@ -35,45 +33,48 @@ import java.util.function.Predicate;
  * --Key
  * --Key V
  * --DKey=V
- * @date Create in 22:10 2019/12/18
  *
+ * @author 蔡月峰
+ * @version 1.0
+ * @date Create in 22:10 2019/12/18
+ * @since 1.0
  */
 @SuppressWarnings("WeakerAccess")
 public class UranusParser {
 
 	/**
-	 * 默认Map初始化大小
+	 * 默认Map初始化大小。
 	 */
 	private static final int ZERO = 0;
 
 	/**
-	 * 预期参数项集合
+	 * 预期参数集。
 	 */
 	private Options options;
 
 	/**
-	 * 命令行对象
+	 * 命令行对象。
 	 */
 	private CommandLine commandLine;
 
 	/**
-	 * 当前正在处理的参数项
+	 * 当前正在处理的参数项。
 	 */
 	private Option currentOption;
 	/**
-	 * 当前正在处理的参数组
+	 * 当前正在处理的参数组。
 	 */
 	private OptionGroup currentOptionGroup;
 	/**
-	 * 命令行未能解析的输入参数
+	 * 命令行未能解析的输入参数。
 	 */
 	private List<String> unknownToken;
 	/**
-	 * 参数处理操作缓存
+	 * 参数处理操作缓存。
 	 */
 	private Predicate<String>[] handleProcess;
 	/**
-	 * 参数处理执行流程
+	 * 参数处理执行流程。
 	 */
 	private int[] handleSequence = new int[]{0, 1, 2, 3};
 
@@ -83,7 +84,8 @@ public class UranusParser {
 	}
 
 	/**
-	 * 初始化参数处理流程
+	 * 初始化参数处理流程。
+	 * 参数默认处理流程：解析参数值->解析长参类型->解析短参类型->解析未知参数。
 	 */
 	private void initHandleProcess() {
 		//noinspection unchecked
@@ -130,10 +132,12 @@ public class UranusParser {
 	}
 
 	/**
-	 * 解析命令行参数
-	 * 该解析方式下:
-	 * 1、参数项无默认参数值
-	 * 2、接受以-或--开头的参数值
+	 * 解析命令行输入参数。
+	 * 该方法默认解析方式如下:
+	 * <ul>
+	 *     <li>参数项无默认参数值</li>
+	 *     <li>接受以-或--开头的参数值</li>
+	 * </ul>
 	 *
 	 * @param options 预期参数项集合
 	 * @param args    命令行参数
@@ -145,8 +149,11 @@ public class UranusParser {
 	}
 
 	/**
-	 * 解析带有默认值的参数项
-	 * 该解析方式默认接受以-或--开头的参数值
+	 * 解析带有默认值的命令行输入参数。
+	 * 该方法默认解析方式如下:
+	 * <ul>
+	 *     <li>接受以-或--开头的参数值</li>
+	 * </ul>
 	 *
 	 * @param options    预期参数项集合
 	 * @param args       命令行参数
@@ -159,7 +166,7 @@ public class UranusParser {
 	}
 
 	/**
-	 * 按照预期的所有参数项解析命令行输入的参数
+	 * 解析带有默认值的且指定是否接受-或--开头的参数值的命令行输入参数。
 	 *
 	 * @param options                    预期参数项集合
 	 * @param args                       命令行输入参数
@@ -209,9 +216,8 @@ public class UranusParser {
 
 
 	/**
-	 * 处理输入的参数Token
-	 * 1、参数值
-	 * 2、参数项
+	 * 处理输入的参数Token。
+	 * 解析两种类型的参数：1、参数值 2、参数项
 	 *
 	 * @param token 参数token
 	 */
@@ -224,7 +230,8 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理短参项
+	 * 处理短参项。
+	 * 支持以下风格的参数解析：
 	 * -K
 	 * -k
 	 * -K1K2
@@ -252,7 +259,11 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理无等于号的短参
+	 * 处理不带等号的短参。
+	 * 支持以下风格的参数解析：
+	 * -k
+	 * -K
+	 * -Key
 	 *
 	 * @param token 命令行TOKEN
 	 * @throws ForbidArgumentException 参数异常
@@ -279,7 +290,8 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理长参数项
+	 * 处理长参数项。
+	 * 支持以下风格的参数解析：
 	 * --K
 	 * --k
 	 * --K=V
@@ -302,7 +314,8 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理待等于号的参数
+	 * 处理带等号的参数。
+	 * 支持以下风格的参数解析：
 	 * -K=V
 	 * -Key=V
 	 * -DKey=V
@@ -337,7 +350,8 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理不带等于号的长参项
+	 * 处理不带等号的长参项。
+	 * 支持以下风格的参数解析：
 	 * --K
 	 * --Key
 	 *
@@ -353,7 +367,7 @@ public class UranusParser {
 	}
 
 	/**
-	 * 处理命令行接受的参数项
+	 * 处理命令行接受的参数项。
 	 *
 	 * @param option 参数项
 	 * @throws ForbidArgumentException 参数值接受异常

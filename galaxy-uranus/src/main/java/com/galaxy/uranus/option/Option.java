@@ -7,13 +7,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
+ * 参数项。
+ * 该类用于描述参数的各种属性，用于保存从命令行传入的参数值。
+ * <p>
+ * 参数项不可以通过new关键字进行新建对象，只能通过OptionBuilder构建器进行构建。
+ *
  * @author 蔡月峰
  * @version 1.0
- *  参数项对象
- * 该对象用于描述参数的各中属性
- * 用于保存从命令行传入的参数相关的内容
  * @date Create in 22:09 2019/12/18
- *
+ * @see OptionBuilder
  */
 @SuppressWarnings("unused")
 public class Option {
@@ -39,7 +41,10 @@ public class Option {
 	private List<String> values;
 
 	/**
-	 * 参数值分隔符
+	 * 参数值分隔符。
+	 * 该字段默认值未单个空格，通常从命令行输入参数时，默认会以空白符作为输入参数
+	 * 的分隔符，在未使用转义字符(\)的情况下，所有输入参数均不会包含空格，因此默认
+	 * 情况下不会切分参数值。
 	 */
 	private char valueSep = ' ';
 
@@ -54,7 +59,7 @@ public class Option {
 	private int numOfArg;
 
 	/**
-	 * 命令行是否已经输入
+	 * 参数项输入标识
 	 */
 	private boolean hasIpt;
 
@@ -64,17 +69,22 @@ public class Option {
 	private OptionGroup optionGroup;
 
 	/**
-	 * 参数描述
+	 * 参数项描述
 	 */
 	private String desc;
 
 	/**
-	 * 参数值时可选填
+	 * 参数值是否可选填
 	 */
 	private boolean isOptionalArg;
 
 	/**
-	 * 绑定的功能类
+	 * 绑定的功能类。
+	 * 该缓存用于保存参数项绑定的功能类，绑定的情况如下：
+	 * <ul>
+	 *     <li>如果参数项是类型绑定，则key值则为短参名;</li>
+	 *     <li>如果参数项时，则key为对应的参数值</li>
+	 * </ul>
 	 */
 	private Map<String, Class<?>> bindClazz;
 
@@ -121,10 +131,12 @@ public class Option {
 	}
 
 	/**
-	 * 检查该参数项是否可以结束，即停止参数处理
-	 * 满足以下两种条件
-	 * 1、参数项不再接受参数
-	 * 2、参数项的已经输入且参数项值未可选参数值
+	 * 检查该参数项是否已经输入完毕。
+	 * 参数项输入完毕满足以下两种条件任一即可：
+	 * <ul>
+	 *     <li>参数项不再接受参数；</li>
+	 *     <li>参数项的已经输入且参数项值未可选参数值。</li>
+	 * </ul>
 	 *
 	 * @return 检查结果
 	 */
@@ -144,6 +156,17 @@ public class Option {
 		return isOptionalArg;
 	}
 
+	/**
+	 * 获取绑定的功能类实例。
+	 * 获取实例时，默认会先通过短参名获取，如果未获取到
+	 * 则使用参数值进行获取，如果还未获取到则返回NULL
+	 *
+	 * @return 实例对象
+	 * @throws NoSuchMethodException     无方法异常
+	 * @throws IllegalAccessException    非法权限异常
+	 * @throws InvocationTargetException 反射异常
+	 * @throws InstantiationException    反射异常
+	 */
 	public Object getBindFunc() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 		Class<?> clazz = bindClazz.get(opt);
 		if (clazz == null && !values.isEmpty()) {
@@ -184,8 +207,8 @@ public class Option {
 	}
 
 	/**
-	 * 加入绑定函数
-	 * 一个参数项若通过值绑定可以绑定多个函数
+	 * 加入绑定函数。
+	 * 如果参数项时值绑定时，就可能会通过不同的值绑定多个功能类。
 	 *
 	 * @param bindValue 绑定的参数值或参数项
 	 * @param clazz     函数类签名
@@ -218,6 +241,15 @@ public class Option {
 		return new OptionBuilder(opt);
 	}
 
+	/**
+	 * 参数项构建器。
+	 * 构建器使用方法如下：
+	 * <pre>
+	 *     <code>
+	 *      OptionBuilder builder = new OptionBuilder("p").longOpt("process").build();
+	 *     </code>
+	 * </pre>
+	 */
 	@SuppressWarnings("WeakerAccess")
 	public static class OptionBuilder {
 
@@ -318,7 +350,6 @@ public class Option {
 			return this;
 		}
 
-		@SuppressWarnings("WeakerAccess")
 		public OptionBuilder addDesc(String desc) {
 			this.desc = desc;
 			return this;

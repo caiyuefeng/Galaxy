@@ -12,9 +12,7 @@ import java.util.List;
 /**
  * @author 蔡月峰
  * @version 1.0
- *
  * @date Create in 21:13 2020/1/9
- *
  */
 public class CommandLineTest {
 
@@ -32,7 +30,9 @@ public class CommandLineTest {
 		Assert.assertEquals(1, commandLine.getOptionGroups().size());
 		OptionGroup expect = new OptionGroup("test");
 		expect.addOption(Option.builder("m").build());
-		Assert.assertEquals(expect, commandLine.get("test"));
+		OptionGroup input = commandLine.get("test");
+		Assert.assertEquals(1, input.getGroupSize());
+		Assert.assertEquals(expect.getOption(opt -> true), input.getOption(opt -> true));
 	}
 
 	/**
@@ -48,7 +48,9 @@ public class CommandLineTest {
 		Assert.assertEquals(1, commandLine.getOptionGroups().size());
 		OptionGroup expect = new OptionGroup("test");
 		expect.addOption(Option.builder("m").build());
-		Assert.assertEquals(expect, commandLine.get(Option.builder("m").build()));
+		OptionGroup input = commandLine.get(Option.builder("m").build());
+		Assert.assertEquals(1, input.getGroupSize());
+		Assert.assertEquals(expect.getOption(opt -> true), input.getOption(opt -> true));
 	}
 
 	/**

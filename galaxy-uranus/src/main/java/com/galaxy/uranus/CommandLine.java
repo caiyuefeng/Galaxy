@@ -7,23 +7,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 命令行输入的参数项实例。
+ *
  * @author 蔡月峰
  * @version 1.0
- *  命令行输入的参数项 实例
  * @date Create in 22:11 2019/12/18
- *
  */
 @SuppressWarnings("WeakerAccess")
 public class CommandLine {
 
 	/**
-	 * 参数项组缓存
-	 * 参数项组组名-参数项组实例
+	 * 参数项组缓存。
+	 * 存储格式：参数项组组名-参数项组实例。
 	 */
 	private Map<String, OptionGroup> optionGroupMap = new HashMap<>();
 
 	/**
-	 * 命令行输入未能解析参数集
+	 * 命令行输入未能解析参数集。
 	 */
 	private List<String> unknownToken = new ArrayList<>();
 
@@ -32,7 +32,7 @@ public class CommandLine {
 	}
 
 	/**
-	 * 通过参数组的组名获取对应的参数组
+	 * 通过参数组的组名获取对应的参数组。
 	 *
 	 * @param groupName 参数组 组名
 	 * @return 参数组对象
@@ -42,8 +42,8 @@ public class CommandLine {
 	}
 
 	/**
-	 * 通过参数项获取所在参数组
-	 * 获取方式通过参数项的短参名和长参名进行获取
+	 * 通过参数项获取所在参数组。
+	 * 获取方式通过参数项的短参名和长参名进行获取。
 	 *
 	 * @param option 参数项
 	 * @return 参数组对象
@@ -53,7 +53,7 @@ public class CommandLine {
 	}
 
 	/**
-	 * 获取匹配指定参数组名内的谓词的参数项
+	 * 获取匹配指定参数组名内的谓词的参数项。
 	 *
 	 * @param match 谓词
 	 * @return 目标参数项集合
@@ -64,6 +64,9 @@ public class CommandLine {
 						.filter(opt -> match.match(entry.getKey(), opt))).collect(Collectors.toList());
 	}
 
+	/**
+	 * @return 获取命令行输入的所有参数组
+	 */
 	public List<OptionGroup> getOptionGroups() {
 		return Collections.unmodifiableList(new ArrayList<>(optionGroupMap.values()));
 	}
@@ -77,12 +80,19 @@ public class CommandLine {
 	}
 
 	/**
-	 * 参数组名，及参数组其他要素匹配器
+	 * 参数组名，及参数组其他要素匹配器。
 	 *
 	 * @param <T> 参数组其他要素
 	 */
 	@FunctionalInterface
 	public interface Match<T> {
+		/**
+		 * 匹配接口方法
+		 *
+		 * @param groupName 参数组名
+		 * @param t         泛型
+		 * @return 匹配结果
+		 */
 		boolean match(String groupName, T t);
 	}
 }
