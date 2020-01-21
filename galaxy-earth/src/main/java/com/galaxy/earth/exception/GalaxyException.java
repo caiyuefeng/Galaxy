@@ -7,13 +7,13 @@ package com.galaxy.earth.exception;
  * @date Create in 19:34 2019/12/30
  *
  */
-public class GalaxyIOException extends Exception {
+public class GalaxyException extends Exception {
 
-	public GalaxyIOException(String message, Throwable e) {
+	public GalaxyException(String message, Throwable e) {
 		super(message, e);
 	}
 
-	public GalaxyIOException(String message) {
+	public GalaxyException(String message) {
 		super(message);
 	}
 }

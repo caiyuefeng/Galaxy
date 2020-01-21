@@ -49,7 +49,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Option expect = Option.builder("p").addLongOpt("path").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Option expect = Option.builder("p").addLongOpt("path").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class UranusParserTest {
 		Assert.assertEquals(1, optionGroups.size());
 		Assert.assertEquals(0, commandLine.getUnknownToken().size());
 		Option expect = Option.builder("p").addLongOpt("path").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Option expect = Option.builder("path").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Option expect = Option.builder("path").addValue("input").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -195,7 +195,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Option expect = Option.builder("p").addValue("input").build();
-		Assert.assertEquals(expect, commandLine.get("default").getOption(opt -> true));
+		Assert.assertEquals(expect, commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class UranusParserTest {
 		List<OptionGroup> optionGroups = commandLine.getOptionGroups();
 		Assert.assertEquals(1, optionGroups.size());
 		Assert.assertEquals(Option.builder("path").addValue("input").build(),
-				commandLine.get("default").getOption(opt -> true));
+				commandLine.get("default").getFirstOption(opt -> true));
 	}
 
 	/**
@@ -305,11 +305,11 @@ public class UranusParserTest {
 		Assert.assertEquals(1, optionGroups.size());
 		Assert.assertEquals(3, optionGroups.get(0).getGroupSize());
 		Assert.assertEquals(Option.builder("p").addValue("input").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("p")));
 		Assert.assertEquals(Option.builder("j").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("j")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("j")));
 		Assert.assertEquals(Option.builder("u").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("u")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("u")));
 	}
 
 	/**
@@ -346,11 +346,11 @@ public class UranusParserTest {
 		Assert.assertEquals(1, optionGroups.size());
 		Assert.assertEquals(3, optionGroups.get(0).getGroupSize());
 		Assert.assertEquals(Option.builder("i").addLongOpt("j").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("i")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("i")));
 		Assert.assertEquals(Option.builder("p").addLongOpt("path").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("p")));
 		Assert.assertEquals(Option.builder("u").addLongOpt("upload").addValue("v").build(),
-				commandLine.get("default").getOption(opt -> opt.getOpt().equals("u")));
+				commandLine.get("default").getFirstOption(opt -> opt.getOpt().equals("u")));
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class UranusParserTest {
 		Assert.assertEquals(1, optionGroups.get(0).getGroupSize());
 		Assert.assertEquals(0, commandLine.getUnknownToken().size());
 		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
-				commandLine.get("path").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("path").getFirstOption(opt -> opt.getOpt().equals("p")));
 	}
 
 	/**
@@ -432,15 +432,15 @@ public class UranusParserTest {
 		Assert.assertEquals(2, commandLine.get("data").getGroupSize());
 		Assert.assertEquals(0, commandLine.getUnknownToken().size());
 		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
-				commandLine.get("path").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("path").getFirstOption(opt -> opt.getOpt().equals("p")));
 		Assert.assertEquals(Option.builder("j").addLongOpt("job").build(),
-				commandLine.get("path").getOption(opt -> opt.getOpt().equals("j")));
+				commandLine.get("path").getFirstOption(opt -> opt.getOpt().equals("j")));
 		Assert.assertEquals(Option.builder("u").addLongOpt("upload").build(),
-				commandLine.get("path").getOption(opt -> opt.getOpt().equals("u")));
+				commandLine.get("path").getFirstOption(opt -> opt.getOpt().equals("u")));
 		Assert.assertEquals(Option.builder("tp").addLongOpt("testPath").addValue("input1").build(),
-				commandLine.get("data").getOption(opt -> opt.getOpt().equals("tp")));
+				commandLine.get("data").getFirstOption(opt -> opt.getOpt().equals("tp")));
 		Assert.assertEquals(Option.builder("ep").addLongOpt("expectPath").addValue("input2").build(),
-				commandLine.get("data").getOption(opt -> opt.getOpt().equals("ep")));
+				commandLine.get("data").getFirstOption(opt -> opt.getOpt().equals("ep")));
 	}
 
 	/**
@@ -466,9 +466,9 @@ public class UranusParserTest {
 		Assert.assertEquals(2, commandLine.get("group1").getGroupSize());
 		Assert.assertEquals(0, commandLine.getUnknownToken().size());
 		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
-				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("group1").getFirstOption(opt -> opt.getOpt().equals("p")));
 		Assert.assertEquals(Option.builder("j").addLongOpt("job").build(),
-				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("j")));
+				commandLine.get("group1").getFirstOption(opt -> opt.getOpt().equals("j")));
 	}
 
 	/**
@@ -494,8 +494,8 @@ public class UranusParserTest {
 		Assert.assertEquals(2, commandLine.get("group1").getGroupSize());
 		Assert.assertEquals(0, commandLine.getUnknownToken().size());
 		Assert.assertEquals(Option.builder("p").addLongOpt("path").addValue("input").build(),
-				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("p")));
+				commandLine.get("group1").getFirstOption(opt -> opt.getOpt().equals("p")));
 		Assert.assertEquals(Option.builder("j").addLongOpt("job").build(),
-				commandLine.get("group1").getOption(opt -> opt.getOpt().equals("j")));
+				commandLine.get("group1").getFirstOption(opt -> opt.getOpt().equals("j")));
 	}
 }

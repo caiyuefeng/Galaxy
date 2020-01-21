@@ -74,7 +74,7 @@ public class Options {
 	public Option getOption(Predicate<Option> predicate) {
 		return optionGroups.values().stream()
 				.map(optionGroup -> {
-					Option option = optionGroup.getOption(predicate);
+					Option option = optionGroup.getFirstOption(predicate);
 					return option == null ? Option.builder("").build() : option;
 				}).filter(option -> !"".equals(option.getOpt())).findFirst().orElse(null);
 	}
@@ -206,7 +206,7 @@ public class Options {
 					final Option newOpt = Option.builder(annotation.opt()).addLongOpt(annotation.longOpt())
 							.hasArg(annotation.hasArgs()).isRequired(annotation.isRequired()).numOfArg(annotation.numOfArgs())
 							.addDesc(annotation.desc()).addValueSep(annotation.valueSeq()).isOptionalArg(isOptionalArg).build();
-					Option option = optionGroup.getOption(opt -> opt.getOpt().equals(newOpt.getOpt()), newOpt);
+					Option option = optionGroup.getFirstOption(opt -> opt.getOpt().equals(newOpt.getOpt()), newOpt);
 					// 设置绑定函数
 					option.addBindClass(isValueBind ? annotation.bindValue() : annotation.opt(), entry.getValue());
 					// 保存解析完成的参数项

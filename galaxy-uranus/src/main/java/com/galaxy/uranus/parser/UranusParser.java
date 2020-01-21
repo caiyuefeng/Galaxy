@@ -199,7 +199,7 @@ public class UranusParser {
 		commandLine.setUnknownToken(unknownToken);
 		// 为参数项添加默认参数值
 		commandLine.getOptionGroups().forEach(optionGroup -> properties.forEach((opt, values) -> {
-			Option option = optionGroup.getOption(obtain -> obtain.getOpt().equals(opt));
+			Option option = optionGroup.getFirstOption(obtain -> obtain.getOpt().equals(opt));
 			if (option.isOptionalArg() && option.acceptArgs()) {
 				values.forEach(option::addValue);
 			}
@@ -207,7 +207,7 @@ public class UranusParser {
 		// 检查参数缓存器是否已经输入完成
 		if (!options.isComplete()) {
 			throw new UnCompleteException(options.getOptionGroup(group -> !group.isComplete(), "")
-					.getOption(option -> (option.isRequired() && !option.hasIpt()) || (option.acceptArgs())));
+					.getFirstOption(option -> (option.isRequired() && !option.hasIpt()) || (option.acceptArgs())));
 		}
 		// 清除所有命令行未输入的参数项
 		commandLine.getOptionGroups().forEach(OptionGroup::clearUnInputOption);

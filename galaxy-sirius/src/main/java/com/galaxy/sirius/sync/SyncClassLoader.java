@@ -50,17 +50,22 @@ public class SyncClassLoader extends ClassLoader {
     public void sync() {
         this.classMap.forEach((name, clazz) -> {
             boolean isSync = false;
-            for (Method method : clazz.getDeclaredMethods()) {
-                for (Annotation annotation : method.getDeclaredAnnotations()) {
-                    if (annotation instanceof Sync) {
-                        Class<?> cla = SyncFactory.sync(clazz, this);
-                        if (cla != null) {
-                            classBuffer.put(name, cla);
-                            isSync = true;
+            try {
+                for (Method method : clazz.getDeclaredMethods()) {
+                    for (Annotation annotation : method.getDeclaredAnnotations()) {
+                        if (annotation instanceof Sync) {
+                            Class<?> cla = SyncFactory.sync(clazz, this);
+                            if (cla != null) {
+                                classBuffer.put(name, cla);
+                                isSync = true;
+                            }
                         }
                     }
                 }
+            }catch (LinkageError e){
+                // 不处理
             }
+
             if (!isSync) {
                 try {
                     classBuffer.put(name, define(clazz.getTypeName(), ClassUtils.getBytes(clazz)));

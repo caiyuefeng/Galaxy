@@ -1,4 +1,4 @@
-package com.galaxy.uranus.examples;
+package com.galaxy.examples.uranus;
 
 import com.galaxy.uranus.annotation.OptionAnnotation;
 import com.galaxy.uranus.annotation.OptionBindType;

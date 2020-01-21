@@ -32,7 +32,7 @@ public class CommandLineTest {
 		expect.addOption(Option.builder("m").build());
 		OptionGroup input = commandLine.get("test");
 		Assert.assertEquals(1, input.getGroupSize());
-		Assert.assertEquals(expect.getOption(opt -> true), input.getOption(opt -> true));
+		Assert.assertEquals(expect.getFirstOption(opt -> true), input.getFirstOption(opt -> true));
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class CommandLineTest {
 		expect.addOption(Option.builder("m").build());
 		OptionGroup input = commandLine.get(Option.builder("m").build());
 		Assert.assertEquals(1, input.getGroupSize());
-		Assert.assertEquals(expect.getOption(opt -> true), input.getOption(opt -> true));
+		Assert.assertEquals(expect.getFirstOption(opt -> true), input.getFirstOption(opt -> true));
 	}
 
 	/**

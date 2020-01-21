@@ -1,5 +1,9 @@
+import com.galaxy.examples.uranus.OptionValueBindSecondFunc;
+import com.galaxy.examples.uranus.OptionalValueBindFirstFunc;
+import com.galaxy.examples.uranus.OptionalValueBindFunc;
+import com.galaxy.examples.uranus.TypeBindFunc;
+import com.galaxy.examples.uranus.ValueBindFunc;
 import com.galaxy.uranus.CommandLine;
-import com.galaxy.uranus.examples.*;
 import com.galaxy.uranus.exception.UranusException;
 import com.galaxy.uranus.option.Option;
 import com.galaxy.uranus.option.OptionGroup;
@@ -56,7 +60,7 @@ public class OptionsTest {
 		Assert.assertEquals(1, optionGroups.size());
 		OptionGroup optionGroup = optionGroups.get(0);
 		Assert.assertEquals(1, optionGroup.getGroupSize());
-		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("opt"));
+		Option option = optionGroup.getFirstOption(opt -> opt.getOpt().equals("opt"));
 		Assert.assertEquals(Option.builder("opt").addLongOpt("optional").hasArg(true)
 				.numOfArg(2).addValue("2017").addValue("2018").build(), option);
 		Assert.assertEquals(OptionalValueBindFunc.class, option.getBindFunc().getClass());
@@ -75,7 +79,7 @@ public class OptionsTest {
 		Assert.assertEquals(1, optionGroups.size());
 		OptionGroup optionGroup = optionGroups.get(0);
 		Assert.assertEquals(1, optionGroup.getGroupSize());
-		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("m"));
+		Option option = optionGroup.getFirstOption(opt -> opt.getOpt().equals("m"));
 		Assert.assertEquals(Option.builder("m").addLongOpt("mode").hasArg(true)
 				.numOfArg(1).addValue("a").build(), option);
 		Assert.assertEquals(OptionalValueBindFirstFunc.class, option.getBindFunc().getClass());
@@ -94,7 +98,7 @@ public class OptionsTest {
 		Assert.assertEquals(1, optionGroups.size());
 		OptionGroup optionGroup = optionGroups.get(0);
 		Assert.assertEquals(1, optionGroup.getGroupSize());
-		Option option = optionGroup.getOption(opt -> opt.getOpt().equals("m"));
+		Option option = optionGroup.getFirstOption(opt -> opt.getOpt().equals("m"));
 		Assert.assertEquals(Option.builder("m").addLongOpt("mode").hasArg(true)
 				.numOfArg(1).addValue("b").build(), option);
 		Assert.assertEquals(OptionValueBindSecondFunc.class, option.getBindFunc().getClass());

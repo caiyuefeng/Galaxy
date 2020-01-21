@@ -1,12 +1,11 @@
 package com.galaxy.earth;
 
-import com.galaxy.earth.exception.GalaxyIOException;
+import com.galaxy.earth.exception.GalaxyException;
 
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 /**
@@ -18,13 +17,13 @@ import java.util.stream.Collectors;
  */
 public class FileUtils {
 
-	public static void mkdir(File dir) throws GalaxyIOException {
+	public static void mkdir(File dir) throws GalaxyException {
 		File parent = dir.getParentFile();
 		if (!parent.isDirectory()) {
 			mkdir(parent);
 		}
 		if (!dir.mkdir()) {
-			throw new GalaxyIOException(String.format("文件夹:%s创建失败", dir.getAbsolutePath()));
+			throw new GalaxyException(String.format("文件夹:%s创建失败", dir.getAbsolutePath()));
 		}
 	}
 

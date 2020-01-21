@@ -50,6 +50,11 @@ public class GalaxyLog {
 		LOG_FILE.error(message, e);
 	}
 
+	public static void CONSOLE_FILE_ERROR(String message, Object... values) {
+		LOG_CONSOLE.error(message, values);
+		LOG_FILE.error(message, values);
+	}
+
 	public static void FILE_INFO(String message) {
 		LOG_FILE.info(message);
 	}
@@ -65,4 +70,21 @@ public class GalaxyLog {
 	public static void FILE_ERROR(String message, Object... values) {
 		LOG_FILE.error(message, values);
 	}
+
+	public static void FILE_WARN(String message) {
+		LOG_FILE.warn(message);
+	}
+
+	public static void FILE_WARN(String message, Object... values) {
+		LOG_FILE.warn(message, values);
+	}
+
+	public static void FILE_DEBUG(String message) {
+		LOG_FILE.debug(message);
+	}
+
+	public static void FILE_DEBUG(String message, Object... values) {
+		LOG_FILE.debug(message, values);
+	}
+
 }

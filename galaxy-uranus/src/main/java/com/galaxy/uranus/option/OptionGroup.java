@@ -77,27 +77,27 @@ public class OptionGroup {
 	 * 获取符合Option lambda表达式的第一个参数项。
 	 * 如果参数组中无符合条件的参数项，则返回NULL。
 	 * <p>
-	 * 该类提供了一个带有默认值的重载方法 {@link OptionGroup#getOption(Predicate, Option)}
+	 * 该类提供了一个带有默认值的重载方法 {@link OptionGroup#getFirstOption(Predicate, Option)}
 	 *
 	 * @param predicate Option lambda 表达式
 	 * @return 参数项
 	 */
-	public Option getOption(Predicate<Option> predicate) {
-		return getOption(predicate, null);
+	public Option getFirstOption(Predicate<Option> predicate) {
+		return getFirstOption(predicate, null);
 	}
 
 	/**
 	 * 获取符合 Option lambda表达式的第一个参数项，若未获取到，
 	 * 则返回默认的参数项。
 	 * <p>
-	 * 该类同时提供了一个不带有默认值的重载方法{@link OptionGroup#getOption(Predicate)}
+	 * 该类同时提供了一个不带有默认值的重载方法{@link OptionGroup#getFirstOption(Predicate)}
 	 *
 	 * @param predicate     匹配参数项谓词
 	 * @param defaultOption 默认参数项
 	 * @return 匹配的参数项
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public Option getOption(Predicate<Option> predicate, Option defaultOption) {
+	public Option getFirstOption(Predicate<Option> predicate, Option defaultOption) {
 		return opts.values().stream().filter(predicate).findFirst().orElse(defaultOption);
 	}
 
