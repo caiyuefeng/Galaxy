@@ -1,17 +1,15 @@
-package com.galaxy.boot;
+package com.galaxy.sirius.classloader;
 
-
-import com.galaxy.boot.annotation.Run;
 import com.galaxy.earth.GalaxyLog;
 import com.galaxy.earth.exception.GalaxyException;
+import com.galaxy.sirius.exception.UnSupportFileFormatException;
+import com.galaxy.sirius.exception.UnSupportProtocolException;
 import com.galaxy.stone.Symbol;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,21 +29,7 @@ import java.util.jar.JarFile;
  * @date Create in 8:14 2019/10/1
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class LauncherClassLoader extends ClassLoader {
-	/**
-	 * 类缓存
-	 */
-	private Map<String, Class<?>> classBuffer = new HashMap<>();
-
-	/**
-	 * 类文件路径缓存
-	 */
-	private Map<String, String> classPathBuffer = new HashMap<>();
-
-	/**
-	 * 类名=>类字节码。
-	 */
-	private Map<String, byte[]> classByteBuffer = new HashMap<>();
+public class LauncherClassLoader extends ClassLoader implements BaseClassLoader {
 
 	public static LauncherClassLoader getInstance() {
 		return new LauncherClassLoader();
@@ -53,12 +37,11 @@ public class LauncherClassLoader extends ClassLoader {
 
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		Class<?> clazz = classBuffer.get(name);
+		Class<?> clazz = CLASS_BUFFER.get(name);
 		if (clazz == null) {
-			if (classByteBuffer.containsKey(name)) {
-				clazz = define(name, classByteBuffer.get(name));
-				System.out.println(clazz);
-				classBuffer.put(name, clazz);
+			if (CLASS_BYTE_BUFFER.containsKey(name)) {
+				clazz = define(name, CLASS_BYTE_BUFFER.get(name));
+				CLASS_BUFFER.put(name, clazz);
 			}
 		}
 		return clazz == null ? super.findClass(name) : clazz;
@@ -76,7 +59,7 @@ public class LauncherClassLoader extends ClassLoader {
 		} catch (GalaxyException | IOException e) {
 			GalaxyLog.CONSOLE_FILE_ERROR("类加载异常!", e);
 		}
-		loadClass(classByteBuffer);
+		loadClass(CLASS_BYTE_BUFFER);
 	}
 
 	/**
@@ -146,7 +129,7 @@ public class LauncherClassLoader extends ClassLoader {
 		}
 	}
 
-	private void loadClassBytes(String qualifiedName, File file) throws UnSupportFileFormatException, IOException {
+	private void loadClassBytes(String qualifiedName, File file) throws UnSupportFileFormatException {
 		String fileName = file.getName();
 		String suffix = getSuffixName(fileName);
 		switch (Suffix.valueOf(getSuffixName(fileName).toUpperCase())) {
@@ -167,8 +150,8 @@ public class LauncherClassLoader extends ClassLoader {
 
 	private void loadClassBytesByClassFile(String qualifiedName, File classFile) {
 		try (InputStream in = new FileInputStream(classFile)) {
-			classByteBuffer.put(qualifiedName, loadBytes(in));
-			classPathBuffer.put(qualifiedName, classFile.getAbsolutePath());
+			CLASS_BYTE_BUFFER.put(qualifiedName, loadBytes(in));
+			CLASS_PATH_BUFFER.put(qualifiedName, classFile.getAbsolutePath());
 		} catch (IOException e) {
 			GalaxyLog.CONSOLE_FILE_ERROR(String.format("读取文件[%s]出现异常", classFile.getAbsolutePath()), e);
 		}
@@ -188,8 +171,8 @@ public class LauncherClassLoader extends ClassLoader {
 			String name = formatName(entry.getName());
 			if (name.endsWith(Symbol.DOT.getValue() + Suffix.CLASS.name().toLowerCase())) {
 				name = name.substring(0, name.lastIndexOf(Symbol.DOT.getValue()));
-				classByteBuffer.put(name, loadBytes(jarFile.getInputStream(entry)));
-				classPathBuffer.put(name, "jar:file:" + classPath + "!/" + entry.getName());
+				CLASS_BYTE_BUFFER.put(name, loadBytes(jarFile.getInputStream(entry)));
+				CLASS_PATH_BUFFER.put(name, "jar:file:" + classPath + "!/" + entry.getName());
 			}
 		}
 	}
@@ -211,12 +194,12 @@ public class LauncherClassLoader extends ClassLoader {
 	 */
 	public void loadClass(Map<String, byte[]> classByteBuffer) {
 		classByteBuffer.forEach((name, bytes) -> {
-			if (!classBuffer.containsKey(name)) {
+			if (!CLASS_BUFFER.containsKey(name)) {
 				try {
-					classBuffer.put(name, define(name, bytes));
+					CLASS_BUFFER.put(name, define(name, bytes));
 				} catch (LinkageError e) {
 					try {
-						classBuffer.put(name, super.loadClass(name));
+						CLASS_BUFFER.put(name, super.loadClass(name));
 					} catch (ClassNotFoundException | Error ex) {
 						GalaxyLog.FILE_ERROR("类加载异常!", ex);
 					}
@@ -248,8 +231,8 @@ public class LauncherClassLoader extends ClassLoader {
 		return value == null || "".equals(value);
 	}
 
-	Map<String, Class<?>> getClassBuffer() {
-		return classBuffer;
+	public Map<String, Class<?>> getClassBuffer() {
+		return CLASS_BUFFER;
 	}
 
 	/**
@@ -260,45 +243,7 @@ public class LauncherClassLoader extends ClassLoader {
 	 * @return 类文件路径
 	 */
 	public String getClassPath(String qualifiedName) {
-		return classPathBuffer.get(qualifiedName);
-	}
-
-	/**
-	 * 获取执行主类。
-	 *
-	 * @return 主类签名
-	 */
-	Class<?> getExecutorClass() {
-		for (Class<?> clazz : classBuffer.values()) {
-			try {
-				Method[] methods = clazz.getMethods();
-				for (Method method : methods) {
-					if (isExecutorMethod(method)) {
-						return clazz;
-					}
-				}
-			} catch (Error e) {
-				// 不处理
-			}
-
-		}
-		return null;
-	}
-
-	/**
-	 * 检查传入的方法上的注解是否是{@link Run} 注解。
-	 *
-	 * @param method 方法实例
-	 * @return 检查结果
-	 */
-	private boolean isExecutorMethod(Method method) {
-		Annotation[] annotations = method.getDeclaredAnnotations();
-		for (Annotation annotation : annotations) {
-			if (annotation instanceof Run) {
-				return true;
-			}
-		}
-		return false;
+		return CLASS_PATH_BUFFER.get(qualifiedName);
 	}
 
 	private enum Protocol {

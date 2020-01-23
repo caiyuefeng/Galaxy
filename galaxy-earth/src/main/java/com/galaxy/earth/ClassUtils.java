@@ -142,66 +142,7 @@ public class ClassUtils {
         }
     }
 
-    /**
-     * 获取Class类的字节数组
-     *
-     * @param clazz class类名
-     * @return 字节数组
-     */
-    public static byte[] getBytes(Class<?> clazz) {
-        String classPath = "";
-        if (clazz.getClassLoader().getClass().getTypeName().equals("com.galaxy.boot.LauncherClassLoader")) {
-            Class<?> loaderClazz = clazz.getClassLoader().getClass();
-            try {
-                Method method = loaderClazz.getDeclaredMethod("getClassPath", String.class);
-                classPath = (String) method.invoke(clazz.getClassLoader(), clazz.getName());
-                // 读取Jar包中class文件
-                if (classPath.startsWith("jar:file")) {
-                    URL url = new URL(classPath);
-                    JarURLConnection connection = (JarURLConnection) url.openConnection();
-                    return loadBytes(connection.getJarFile().getInputStream(connection.getJarEntry()));
-                }
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                LOG.error("类com.galaxy.boot.LauncherClassLoader反射方法getClassPath异常!", e);
-            } catch (IOException e) {
-                LOG.error(String.format("路径[%s]获取失败!", classPath), e);
-            }
-        } else {
-            classPath = clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
-        }
-        File file = new File(classPath);
-        if (file.isDirectory()) {
-            file = new File(file, clazz.getTypeName().replace(Symbol.DOT.getValue(), Symbol.SLASH.getValue()) + Symbol.DOT.getValue() + CLASS_TAIL);
-        }
-        try (InputStream in = new FileInputStream(file)) {
-            return loadBytes(in);
-        } catch (IOException e) {
-            LOG.error(String.format("读取文件[%s]异常", clazz.getName()), e);
-            throw new RuntimeException(e);
-        }
-    }
 
-    private static byte[] loadBytes(InputStream in) throws IOException {
-        int len = in.available();
-        byte[] bytes = new byte[len];
-        int readLen = in.read(bytes);
-        if (len != readLen) {
-            LOG.warn(String.format("读取字节数[%d]不等于输入字节数[%d]！", readLen, len));
-        }
-        return bytes;
-    }
-
-    public static void saveClass(Class<?> clazz, File savePath) {
-        File classFile = new File(savePath, clazz.getSimpleName() + ".class");
-        try (FileOutputStream out = new FileOutputStream(classFile)) {
-            LOG.debug("开始保存类[{}],保存路径:[{}].", clazz.getName(), classFile.getAbsoluteFile().toString());
-            out.write(ClassUtils.getBytes(clazz));
-            out.flush();
-        } catch (IOException e) {
-            LOG.error("保存类[{}]文件失败!", clazz.getName(), e);
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 根据字节数组加载对应类

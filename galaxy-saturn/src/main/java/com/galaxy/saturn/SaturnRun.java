@@ -1,7 +1,7 @@
 package com.galaxy.saturn;
 
-import com.galaxy.boot.annotation.Run;
 import com.galaxy.saturn.zookeeper.ZkClient;
+import com.galaxy.sirius.annotation.Run;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

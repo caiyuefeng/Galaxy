@@ -15,8 +15,14 @@ import java.util.concurrent.ExecutorService;
 @SuppressWarnings("unused")
 public class SyncExecutor {
 
+	/**
+	 * 线程池。
+	 */
 	private ExecutorService threadPool;
 
+	/**
+	 * 单例对象。
+	 */
 	private static volatile SyncExecutor INSTANCE = null;
 
 	private SyncExecutor() {
@@ -77,11 +83,11 @@ public class SyncExecutor {
 		@Override
 		public void run() {
 			try {
-				GalaxyLog.FILE_DEBUG("线程：{} 开始执行runSync方法!", Thread.currentThread().getName());
+				GalaxyLog.FILE_INFO("线程：{} 开始执行runSync方法!", Thread.currentThread().getName());
 				Method method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
 				method.setAccessible(true);
 				method.invoke(object, parameterValues);
-				GalaxyLog.FILE_DEBUG("线程：{} 执行runSync方法完毕!", Thread.currentThread().getName());
+				GalaxyLog.FILE_INFO("线程：{} 执行runSync方法完毕!", Thread.currentThread().getName());
 			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 				GalaxyLog.FILE_ERROR("调用代理方法异常!", e);
 			}

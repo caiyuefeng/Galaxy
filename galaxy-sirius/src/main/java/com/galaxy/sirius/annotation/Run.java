@@ -1,4 +1,4 @@
-package com.galaxy.boot.annotation;
+package com.galaxy.sirius.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

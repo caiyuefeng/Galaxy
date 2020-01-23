@@ -98,7 +98,7 @@ public class SyncMethodAdapter extends ClassVisitor {
 			// Class<?>[] classes = AsmUtils.getParameterTypes(this.getClass())
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "getClass", "()Ljava/lang/Class;", false);
-			mv.visitMethodInsn(INVOKESTATIC, "com/galaxy/sirius/AsmUtils", "getParameterTypes", "(Ljava/lang/Class;)[Ljava/lang/Class;", false);
+			mv.visitMethodInsn(INVOKESTATIC, "com/galaxy/sirius/utils/AsmUtils", "getParameterTypes", "(Ljava/lang/Class;)[Ljava/lang/Class;", false);
 			mv.visitVarInsn(ASTORE, parameterSize + 2);
 			// Object[] object = new Object[${parameterSize}];
 			mv.visitLdcInsn(parameterTypes.length);

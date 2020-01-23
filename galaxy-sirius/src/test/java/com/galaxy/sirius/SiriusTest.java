@@ -1,7 +1,7 @@
 package com.galaxy.sirius;
 
 import com.galaxy.sirius.sync.SyncExecutor;
-import org.junit.Test;
+import com.galaxy.sirius.utils.AsmUtils;
 
 /**
  * @author 蔡月峰

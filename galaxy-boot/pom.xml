@@ -35,6 +35,10 @@
             <artifactId>galaxy-earth</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.galaxy</groupId>
+            <artifactId>galaxy-sirius</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>

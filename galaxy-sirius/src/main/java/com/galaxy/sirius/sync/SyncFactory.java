@@ -1,11 +1,11 @@
 package com.galaxy.sirius.sync;
 
-import com.galaxy.earth.ClassUtils;
 import com.galaxy.earth.FileUtils;
 import com.galaxy.earth.GalaxyLog;
 import com.galaxy.earth.exception.GalaxyException;
-import com.galaxy.sirius.SyncClassLoader;
 import com.galaxy.sirius.annotation.Sync;
+import com.galaxy.sirius.classloader.SyncClassLoader;
+import com.galaxy.sirius.utils.AsmUtils;
 import com.galaxy.stone.Digit;
 import jdk.internal.org.objectweb.asm.ClassReader;
 import jdk.internal.org.objectweb.asm.ClassWriter;
@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 
 /**
  * 同步工厂
@@ -46,34 +45,37 @@ public class SyncFactory {
 	}
 
 	private static byte[] transform(Class<?> clazz) {
-		Method syncMethod = null;
-		for (Method method : clazz.getDeclaredMethods()) {
-			Annotation[] annotations = method.getDeclaredAnnotations();
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Sync) {
-					syncMethod = method;
-					break;
-				}
-			}
-		}
+		Method syncMethod = findSyncMethod(clazz);
 		if (syncMethod == null) {
-			GalaxyLog.CONSOLE_FILE_ERROR("类[{}]未找到同步方式,请使用Sync注解标识出同步方法!", clazz.getName());
 			return null;
 		}
-		ClassReader cr = new ClassReader(ClassUtils.getBytes(clazz));
+		ClassReader cr = new ClassReader(AsmUtils.getBytes(clazz));
 		ClassWriter cw = new ClassWriter(Digit.ZERO.toInt());
 		SyncMethodAdapter adapter = new SyncMethodAdapter(cw, syncMethod);
 		cr.accept(adapter, Digit.ZERO.toInt());
 		return cw.toByteArray();
 	}
 
+	public static Method findSyncMethod(Class<?> clazz) {
+		for (Method method : clazz.getDeclaredMethods()) {
+			Annotation[] annotations = method.getDeclaredAnnotations();
+			for (Annotation annotation : annotations) {
+				if (annotation.annotationType().getTypeName().equals(Sync.class.getTypeName())) {
+					return method;
+				}
+			}
+		}
+		GalaxyLog.CONSOLE_FILE_ERROR("类[{}]未找到同步方式,请使用Sync注解标识出同步方法!", clazz.getName());
+		return null;
+	}
+
 	public static Class<?> sync(Class<?> clazz, SyncClassLoader loader) {
 		byte[] bytes = transform(clazz);
-		return bytes != null ? loader.define(clazz.getName(), bytes) : null;
+		return loader.define(clazz.getName(), bytes);
 	}
 
 	public static Class<?> sync(Class<?> clazz) {
 		byte[] bytes = transform(clazz);
-		return bytes != null ? new SyncClassLoader(new HashMap<>(16)).define(clazz.getName(), bytes) : null;
+		return bytes != null ? SyncClassLoader.getInstance().define(clazz.getName(), bytes) : null;
 	}
 }

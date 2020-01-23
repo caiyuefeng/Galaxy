@@ -1,4 +1,4 @@
-package com.galaxy.boot;
+package com.galaxy.sirius.exception;
 
 import com.galaxy.earth.exception.GalaxyException;
 
